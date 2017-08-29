@@ -13,7 +13,7 @@
     "build": "npm-run-all clean rollup minify",
     "lint": "eslint src/*.js test/*.js",
     "test": "npm-run-all build lint mocha karma",
-    "mocha": "nyc --reporter=test-lcov mocha test/test.js | coveralls",
+    "mocha": "nyc mocha test/test.js | coveralls",
     "karma": "karma start",
     "docs": "jsdoc2md --param-list-format list --property-list-format list --example-lang js src/alks.js > API.md"
   },
