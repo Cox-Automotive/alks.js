@@ -4,6 +4,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/Cox-Automotive/alks.js/badge.svg?branch=master)](https://coveralls.io/github/Cox-Automotive/alks.js?branch=master)
 [![Requirements Status](https://requires.io/github/Cox-Automotive/alks.js/requirements.svg?branch=master)](https://requires.io/github/Cox-Automotive/alks.js/requirements/?branch=master)
 ![File Size](http://img.badgesize.io/cox-automotive/alks.js/master/dist/alks.min.js?compression=gzip)
+[![npm version](https://badge.fury.io/js/alks.js.svg)](https://www.npmjs.com/package/alks.js)
 
 JavaScript client for the ALKS API, usable in both modern browsers and node.js
 
