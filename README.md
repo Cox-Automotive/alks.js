@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/Cox-Automotive/alks.js.svg?branch=master)](https://travis-ci.org/Cox-Automotive/alks.js)
 [![Coverage Status](https://coveralls.io/repos/github/Cox-Automotive/alks.js/badge.svg?branch=master)](https://coveralls.io/github/Cox-Automotive/alks.js?branch=master)
+[![Requirements Status](https://requires.io/github/Cox-Automotive/alks.js/requirements.svg?branch=master)](https://requires.io/github/Cox-Automotive/alks.js/requirements/?branch=master)
 
 JavaScript client for the ALKS API, usable in both modern browsers and node.js
 
