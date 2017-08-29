@@ -14,7 +14,7 @@
     "lint": "eslint src/*.js test/*.js",
     "test": "npm-run-all build lint mocha karma",
     "mocha": "nyc mocha test/test.js",
-    "coverage": "nyc report --reporter=text-lcov | coveralls",
+    "coverage": "nyc report --reporter=text-lcov | coveralls -v",
     "karma": "karma start",
     "docs": "jsdoc2md --param-list-format list --property-list-format list --example-lang js src/alks.js > API.md"
   },
