@@ -19,4 +19,4 @@ View the [API documentation](API.md)
 To update the API documentation from the source, run `npm run docs`
 
 ## Tests
-Run both node.js and browser tests with `npm test` (must have Firefox installed)
+Run both node.js and browser tests with `npm test` (must have Chrome installed)
