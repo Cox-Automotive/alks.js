@@ -13,7 +13,7 @@
     "build": "npm-run-all clean rollup minify",
     "lint": "eslint src/*.js test/*.js",
     "test": "npm-run-all build lint mocha karma",
-    "mocha": "nyc --reporter=text-summary mocha test/test.js",
+    "mocha": "nyc --reporter=test-lcov mocha test/test.js | coveralls",
     "karma": "karma start",
     "docs": "jsdoc2md --param-list-format list --property-list-format list --example-lang js src/alks.js > API.md"
   },
@@ -44,6 +44,7 @@
     "browserify": "^14.4.0",
     "chai": "^4.1.1",
     "chai-as-promised": "^7.1.1",
+    "coveralls": "^2.13.1",
     "eslint": "^4.5.0",
     "fetch-mock": "^5.12.2",
     "jsdoc-to-markdown": "^3.0.0",
