@@ -2,26 +2,30 @@ import buble from 'rollup-plugin-buble'
 import replace from 'rollup-plugin-replace'
 import cleanup from 'rollup-plugin-cleanup'
 
-export default [ 
+export default [
   {
-    entry: 'src/alks.js',
-    format: 'iife',
-    moduleName: 'alks',
-    dest: 'dist/alks.js',
+    input: 'src/alks.js',
+    output: {
+      file: 'dist/alks.js',
+      format: 'iife',
+      name: 'alks',
+      globals: {
+        alks: 'alks'
+      }
+    },
     plugins: [
       buble(),
       replace({'process.browser': true}),
       cleanup()
-    ],
-    globals: {
-      alks: 'alks'
-    }
-  }, 
+    ]
+  },
   {
-    entry: 'src/alks.js',
-    format: 'cjs',
-    moduleName: 'alks',
-    dest: 'lib/alks.node.js',
+    input: 'src/alks.js',
+    output: {
+      file: 'lib/alks.node.js',
+      format: 'cjs',
+      name: 'alks',
+    },
     plugins: [ 
       replace({'process.browser': false})
     ]
