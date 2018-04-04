@@ -41,9 +41,7 @@ ALKS JavaScript API
 <a name="alks+create"></a>
 
 ### alks.create(props) ⇒ [<code>alks</code>](#alks)
-Returns a new instance of alks with pre-defined properties (which don't need to be supplied to every method).
-
-Any of the properties required by other methods can be specified here.
+Returns a new instance of alks with pre-defined properties (which don't need to be supplied to every method).Any of the properties required by other methods can be specified here.
 
 **Kind**: instance method of [<code>alks</code>](#alks)  
 **Params**
@@ -52,19 +50,7 @@ Any of the properties required by other methods can be specified here.
 
 **Example**  
 ```js
-var myAlks = alks.create({
-  baseUrl: 'https://your.alks-host.com',
-  userid: 'johndoe',
-  password: 'pass123'
-})
-
-myAlks.getKeys({
-  account: 'anAccount',
-  role: 'PowerUser',
-  sessionTime: 2
-}).then((creds) => {
-  // creds.accessKey, creds.secretKey, creds.sessionToken
-})
+var myAlks = alks.create({  baseUrl: 'https://your.alks-host.com',  userid: 'johndoe',  password: 'pass123'})myAlks.getKeys({  account: 'anAccount',  role: 'PowerUser',  sessionTime: 2}).then((creds) => {  // creds.accessKey, creds.secretKey, creds.sessionToken})
 ```
 <a name="alks+getAccounts"></a>
 
@@ -81,13 +67,7 @@ Returns a Promise for an array of AWS accounts (and roles) accessible by the use
 
 **Example**  
 ```js
-alks.getAccounts({
-  baseUrl: 'https://your.alks-host.com',
-  userid: 'johndoe',
-  password: 'pass123'
-}).then((accounts) => {
-  // accounts[0].account, accounts[0].role, accounts[0].iamKeyActive
-})
+alks.getAccounts({  baseUrl: 'https://your.alks-host.com',  userid: 'johndoe',  password: 'pass123'}).then((accounts) => {  // accounts[0].account, accounts[0].role, accounts[0].iamKeyActive})
 ```
 <a name="alks+getKeys"></a>
 
@@ -107,16 +87,7 @@ Returns a Promise for AWS STS credentials from ALKS.
 
 **Example**  
 ```js
-alks.getKeys({
-  baseUrl: 'https://your.alks-host.com',
-  userid: 'johndoe',
-  password: 'pass123',
-  account: 'anAccount',
-  role: 'PowerUser',
-  sessionTime: 2
-}).then((creds) => {
-  // creds.accessKey, creds.secretKey, creds.sessionToken
-})
+alks.getKeys({  baseUrl: 'https://your.alks-host.com',  userid: 'johndoe',  password: 'pass123',  account: 'anAccount',  role: 'PowerUser',  sessionTime: 2}).then((creds) => {  // creds.accessKey, creds.secretKey, creds.sessionToken})
 ```
 <a name="alks+getIAMKeys"></a>
 
@@ -136,16 +107,7 @@ Returns a Promise for AWS STS credentials with IAM permissions from ALKS.
 
 **Example**  
 ```js
-alks.getIAMKeys({
-  baseUrl: 'https://your.alks-host.com',
-  userid: 'johndoe',
-  password: 'pass123',
-  account: 'anAccount',
-  role: 'IAMAdmin',
-  sessionTime: 1
-}).then((creds) => {
-  // creds.accessKey, creds.secretKey, creds.sessionToken
-})
+alks.getIAMKeys({  baseUrl: 'https://your.alks-host.com',  userid: 'johndoe',  password: 'pass123',  account: 'anAccount',  role: 'IAMAdmin',  sessionTime: 1}).then((creds) => {  // creds.accessKey, creds.secretKey, creds.sessionToken})
 ```
 <a name="alks+getAWSRoleTypes"></a>
 
@@ -162,13 +124,7 @@ Returns a Promise for an array of available AWS IAM role types
 
 **Example**  
 ```js
-alks.getAWSRoleTypes({
-  baseUrl: 'https://your.alks-host.com',
-  userid: 'johndoe',
-  password: 'pass123'
-}).then((roleTypes) {
-  // ['Amazon Elastic Transcoder', 'AWS OpsWorks', ... ]
-})
+alks.getAWSRoleTypes({  baseUrl: 'https://your.alks-host.com',  userid: 'johndoe',  password: 'pass123'}).then((roleTypes) {  // ['Amazon Elastic Transcoder', 'AWS OpsWorks', ... ]})
 ```
 <a name="alks+createRole"></a>
 
@@ -190,18 +146,7 @@ Returns a Promise for the results of creating a new custom AWS IAM account role
 
 **Example**  
 ```js
-alks.createRole({
-  baseUrl: 'https://your.alks-host.com',
-  userid: 'johndoe',
-  password: 'pass123',
-  account: 'anAccount',
-  role: 'IAMAdmin',
-  roleName: 'awsRoleName',
-  roleType: 'Amazon EC2',
-  includeDefaultPolicy: 1
-}).then((role) => {
-  // role.roleArn, role.denyArns, role.instanceProfileArn, role.addedRoleToInstanceProfile
-})
+alks.createRole({  baseUrl: 'https://your.alks-host.com',  userid: 'johndoe',  password: 'pass123',  account: 'anAccount',  role: 'IAMAdmin',  roleName: 'awsRoleName',  roleType: 'Amazon EC2',  includeDefaultPolicy: 1}).then((role) => {  // role.roleArn, role.denyArns, role.instanceProfileArn, role.addedRoleToInstanceProfile})
 ```
 <a name="alks+listAWSAccountRoles"></a>
 
@@ -220,15 +165,7 @@ Returns a Promise for an array of AWS custom AWS IAM account roles
 
 **Example**  
 ```js
-alks.listAWSAccountRoles({
-  baseUrl: 'https://your.alks-host.com',
-  userid: 'johndoe',
-  password: 'pass123',
-  account: 'anAccount',
-  role: 'IAMAdmin',
-}).then((roleNames) => {
-  // ['customRole1', 'customRole2', ...]
-}) 
+alks.listAWSAccountRoles({  baseUrl: 'https://your.alks-host.com',  userid: 'johndoe',  password: 'pass123',  account: 'anAccount',  role: 'IAMAdmin',}).then((roleNames) => {  // ['customRole1', 'customRole2', ...]}) 
 ```
 <a name="alks+getAccountRole"></a>
 
@@ -248,16 +185,7 @@ Returns a Promise for the Amazon Resource Name (ARN) of a custom AWS IAM account
 
 **Example**  
 ```js
-alks.getAccountRole({
-  baseUrl: 'https://your.alks-host.com',
-  userid: 'johndoe',
-  password: 'pass123',
-  account: 'anAccount',
-  role: 'IAMAdmin',
-  roleName: 'awsRoleName'
-}).then((roleARN) => {
-  // arn:aws:iam::123:role/acct-managed/awsRoleName
-})
+alks.getAccountRole({  baseUrl: 'https://your.alks-host.com',  userid: 'johndoe',  password: 'pass123',  account: 'anAccount',  role: 'IAMAdmin',  roleName: 'awsRoleName'}).then((roleARN) => {  // arn:aws:iam::123:role/acct-managed/awsRoleName})
 ```
 <a name="alks+deleteRole"></a>
 
@@ -277,16 +205,7 @@ Returns a Promise for a boolean "true" indicating the role was deleted
 
 **Example**  
 ```js
-alks.deleteRole({
-  baseUrl: 'https://your.alks-host.com',
-  userid: 'johndoe',
-  password: 'pass123',
-  account: 'anAccount',
-  role: 'IAMAdmin',
-  roleName: 'awsRoleName'
-}).then(() => {
-  // success!
-})
+alks.deleteRole({  baseUrl: 'https://your.alks-host.com',  userid: 'johndoe',  password: 'pass123',  account: 'anAccount',  role: 'IAMAdmin',  roleName: 'awsRoleName'}).then(() => {  // success!})
 ```
 <a name="account"></a>
 
