@@ -5,14 +5,16 @@ const fetch = process.browser ? window.fetch.bind(window) : require('node-fetch'
  * 
  */
 class alks {
-  constructor(instanceConfig) {
-    this.defaults = Object.assign({}, { _fetch: fetch }, instanceConfig)
+  constructor(props, existing = {}) {
+    this.defaults = Object.assign({}, existing, { _fetch: fetch }, props)
   }
 
   /**
    * Returns a new instance of alks with pre-defined properties (which don't need to be supplied to every method).
    * 
    * Any of the properties required by other methods can be specified here.
+   * 
+   * Properties present on the current object are carried through to the newly created one.
    * 
    * @param {object} props
    * @returns {alks}
@@ -32,7 +34,7 @@ class alks {
    * })
    */
   create(props) {
-    return(new alks(props))
+    return(new alks(props, this.defaults))
   }
 
   /**
@@ -271,7 +273,7 @@ class alks {
    * @param {String} props.password - The password of the user making the request
    * @param {String} props.account - The user's account associated with the custom role
    * @param {String} props.role - The user's role associated with the account
-   * @param {String} props.roleName - The name of the custom AWs IAM role
+   * @param {String} props.roleName - The name of the custom AWS IAM role
    * @returns {Promise<Boolean>}
    * @example
    * alks.deleteRole({
@@ -289,11 +291,67 @@ class alks {
     return(this._doFetch('deleteRole', props).then(() => true ))
   }
 
-  _doFetch(path, args = { }) {
+  /**
+   * Returns a Promise for the results of creating new IAM user and long-term access keys
+   * 
+   * @param {Object} props
+   * @param {String} props.baseUrl - The base URL of the ALKS service
+   * @param {String} props.userid - The ID of the user making the request
+   * @param {String} props.password - The password of the user making the request
+   * @param {String} props.account - The user's account associated with the custom role
+   * @param {String} props.role - The user's role associated with the account
+   * @param {String} props.iamUserName - The name of the IAM user to create
+   * @returns {Promise<AccessKeys>}
+   * @example
+   * alks.createAccessKeys({
+   *   baseUrl: 'https://your.alks-host.com',
+   *   userid: 'johndoe',
+   *   password: 'pass123',
+   *   account: 'anAccount',
+   *   role: 'IAMAdmin',
+   *   iamUserName: 'iamUserName'
+   * }).then((user) => {
+   *   // user.iamUserArn, user.accessKey, user.secretKey, user.addedIAMUserToGroup
+   * })
+   */
+  createAccessKeys(props) {
+    return(this._doFetch('accessKeys', props).then((results) =>
+      pick(results,['iamUserArn', 'accessKey', 'secretKey', 'addedIAMUserToGroup']))
+    )
+  }
+
+  /**
+   * Returns a Promise for a boolean "true" indicating the IAM user and long-term access keys were deleted
+   * 
+   * @param {Object} props
+   * @param {String} props.baseUrl - The base URL of the ALKS service
+   * @param {String} props.userid - The ID of the user making the request
+   * @param {String} props.password - The password of the user making the request
+   * @param {String} props.account - The user's account associated with the custom role
+   * @param {String} props.role - The user's role associated with the account
+   * @param {String} props.iamUserName - The name of the IAM user to delete
+   * @returns {Promise<Boolean>}
+   * @example
+   * alks.deleteIAMUser({
+   *   baseUrl: 'https://your.alks-host.com',
+   *   userid: 'johndoe',
+   *   password: 'pass123',
+   *   account: 'anAccount',
+   *   role: 'IAMAdmin',
+   *   iamUserName: 'iamUserName'
+   * }).then(() => {
+   *   // success!
+   * })
+   */
+  deleteIAMUser(props) {
+    return(this._doFetch('IAMUser', props, 'DELETE').then(() => true ))
+  }
+
+  _doFetch(path, args = { }, method = 'POST') {
     var opts = Object.assign({}, this.defaults, args)
 
     let responsePromise = opts._fetch(`${opts.baseUrl}/${path}/`, { 
-      method: 'POST',
+      method: method,
       headers: {
         'Content-Type': 'application/json'
       },

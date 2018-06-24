@@ -2,11 +2,12 @@ var alks = (function () {
   'use strict';
 
   var fetch = window.fetch.bind(window);
-  var alks = function alks(instanceConfig) {
-    this.defaults = Object.assign({}, { _fetch: fetch }, instanceConfig);
+  var alks = function alks(props, existing) {
+    if ( existing === void 0 ) existing = {};
+    this.defaults = Object.assign({}, existing, { _fetch: fetch }, props);
   };
   alks.prototype.create = function create (props) {
-    return(new alks(props))
+    return(new alks(props, this.defaults))
   };
   alks.prototype.getAccounts = function getAccounts (props) {
     return(this._doFetch('getAccounts', props).then(function (results) { return Object.keys(results.accountListRole).map(function (key) { return ({
@@ -49,11 +50,19 @@ var alks = (function () {
   alks.prototype.deleteRole = function deleteRole (props) {
     return(this._doFetch('deleteRole', props).then(function () { return true; } ))
   };
-  alks.prototype._doFetch = function _doFetch (path, args) {
+  alks.prototype.createAccessKeys = function createAccessKeys (props) {
+    return(this._doFetch('accessKeys', props).then(function (results) { return pick(results,['iamUserArn', 'accessKey', 'secretKey', 'addedIAMUserToGroup']); })
+    )
+  };
+  alks.prototype.deleteIAMUser = function deleteIAMUser (props) {
+    return(this._doFetch('IAMUser', props, 'DELETE').then(function () { return true; } ))
+  };
+  alks.prototype._doFetch = function _doFetch (path, args, method) {
       if ( args === void 0 ) args = { };
+      if ( method === void 0 ) method = 'POST';
     var opts = Object.assign({}, this.defaults, args);
     var responsePromise = opts._fetch(((opts.baseUrl) + "/" + path + "/"), {
-      method: 'POST',
+      method: method,
       headers: {
         'Content-Type': 'application/json'
       },

@@ -171,6 +171,43 @@ describe('alks.js', function() {
       _fetch
     })).to.eventually.be.true)
   })
+
+  it('createAccessKeys', () => {
+    let _fetch = fetchMock.sandbox().mock('https://your.alks-host.com/accessKeys/', {
+      body: { iamUserArn: 'anIAMUserArn', accessKey: 'foo', secretKey: 'bar', addedIAMUserToGroup: true },
+      status: 200
+    })
+    return(expect(alks.createAccessKeys({
+      baseUrl: 'https://your.alks-host.com',
+      userid: 'testuser',
+      password: 'testpass',
+      account: 'anAccount',
+      role: 'Admin',
+      iamUserName: 'awsUserName',
+      _fetch
+    })).to.eventually.deep.include({
+      iamUserArn: 'anIAMUserArn',
+      accessKey: 'foo',
+      secretKey: 'bar',
+      addedIAMUserToGroup: true
+    }))
+  })
+
+  it('deleteIAMUser', () => {
+    let _fetch = fetchMock.sandbox().mock('https://your.alks-host.com/IAMUser/', {
+      body: { statusMessage: 'Success' },
+      status: 200
+    }, { method: 'DELETE' })
+    return(expect(alks.deleteIAMUser({
+      baseUrl: 'https://your.alks-host.com',
+      userid: 'testuser',
+      password: 'testpass',
+      account: 'anAccount',
+      role: 'Admin',
+      riamUserName: 'awsUserName',
+      _fetch
+    })).to.eventually.be.true)
+  })
   
   it('create', () => {
     let _fetch = fetchMock.sandbox().mock('https://your.alks-host.com/getKeys/', {
@@ -210,6 +247,16 @@ describe('alks.js', function() {
     return(expect(myAlks.getAccounts())
       .to.eventually.deep.include({account: '1234 - foobar', role: 'role1', iamKeyActive: true })
     )
+  })
+
+  it('create leveraging past defaults', () => {
+    let alks1 = alks.create({
+      baseUrl: 'https://your.alks-host.com',
+      userid: 'testuser',
+      password: 'testpass'
+    })
+    let alks2 = alks1.create({foo: 'bar'})
+    return(expect(alks2.defaults).to.have.all.keys(['baseUrl', 'userid', 'password', 'foo', '_fetch']))
   })
   
   it('rejects on error with ALKS statusMessage', function() {
