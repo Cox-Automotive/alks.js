@@ -33,12 +33,14 @@ ALKS JavaScript API
     * [.getKeys(props)](#alks+getKeys) ⇒ [<code>Promise.&lt;credentials&gt;</code>](#credentials)
     * [.getIAMKeys(props)](#alks+getIAMKeys) ⇒ [<code>Promise.&lt;credentials&gt;</code>](#credentials)
     * [.getAWSRoleTypes(props)](#alks+getAWSRoleTypes) ⇒ <code>Promise.&lt;Array.&lt;String&gt;&gt;</code>
+    * [.getNonServiceAWSRoleTypes(props)](#alks+getNonServiceAWSRoleTypes) ⇒ <code>Promise.&lt;Array.&lt;String&gt;&gt;</code>
     * [.createRole(props)](#alks+createRole) ⇒ [<code>Promise.&lt;customRole&gt;</code>](#customRole)
+    * [.createNonServiceRole(props)](#alks+createNonServiceRole) ⇒ [<code>Promise.&lt;customRole&gt;</code>](#customRole)
     * [.listAWSAccountRoles(props)](#alks+listAWSAccountRoles) ⇒ <code>Promise.&lt;Array.&lt;String&gt;&gt;</code>
     * [.getAccountRole(props)](#alks+getAccountRole) ⇒ <code>Promise.&lt;String&gt;</code>
     * [.deleteRole(props)](#alks+deleteRole) ⇒ <code>Promise.&lt;Boolean&gt;</code>
-    * [.deleteIAMUser(props)](#alks+deleteIAMUser) ⇒ <code>Promise.&lt;Boolean&gt;</code>
     * [.createAccessKeys(props)](#alks+createAccessKeys) ⇒ <code>Promise.&lt;AccessKeys&gt;</code>
+    * [.deleteIAMUser(props)](#alks+deleteIAMUser) ⇒ <code>Promise.&lt;Boolean&gt;</code>
 
 <a name="alks+create"></a>
 
@@ -46,6 +48,8 @@ ALKS JavaScript API
 Returns a new instance of alks with pre-defined properties (which don't need to be supplied to every method).
 
 Any of the properties required by other methods can be specified here.
+
+Properties present on the current object are carried through to the newly created one.
 
 **Kind**: instance method of [<code>alks</code>](#alks)  
 **Params**
@@ -169,8 +173,31 @@ alks.getAWSRoleTypes({
   userid: 'johndoe',
   password: 'pass123'
 }).then((roleTypes) {
-  // ['Amazon Elastic Transcoder', 'AWS OpsWorks', ... ]
+  // ['AWS Lambda', 'Amazon EC2', ... ]
 })
+```
+<a name="alks+getNonServiceAWSRoleTypes"></a>
+
+### alks.getNonServiceAWSRoleTypes(props) ⇒ <code>Promise.&lt;Array.&lt;String&gt;&gt;</code>
+Returns a Promise for an array of available custom role types
+
+**Kind**: instance method of [<code>alks</code>](#alks)  
+**Params**
+
+- props <code>Object</code>
+    - .baseUrl <code>String</code> - The base URL of the ALKS service
+    - .userid <code>String</code> - The ID of the user making the request
+    - .password <code>String</code> - The password of the user making the request
+
+**Example**  
+```js
+alks.getNonServiceAWSRoleTypes({
+  baseUrl: 'https://your.alks-host.com',
+  userid: 'johndoe',
+  password: 'pass123',
+}).then((roleTypes) => {
+  // ['AWS Lambda', 'Amazon EC2', ...]
+}) 
 ```
 <a name="alks+createRole"></a>
 
@@ -201,6 +228,43 @@ alks.createRole({
   roleName: 'awsRoleName',
   roleType: 'Amazon EC2',
   includeDefaultPolicy: 1
+}).then((role) => {
+  // role.roleArn, role.denyArns, role.instanceProfileArn, role.addedRoleToInstanceProfile
+})
+```
+<a name="alks+createNonServiceRole"></a>
+
+### alks.createNonServiceRole(props) ⇒ [<code>Promise.&lt;customRole&gt;</code>](#customRole)
+Returns a Promise for the results of creating a new custom AWS IAM trust role
+
+**Kind**: instance method of [<code>alks</code>](#alks)  
+**Params**
+
+- props <code>Object</code>
+    - .baseUrl <code>String</code> - The base URL of the ALKS service
+    - .userid <code>String</code> - The ID of the user making the request
+    - .password <code>String</code> - The password of the user making the request
+    - .account <code>String</code> - The user's account associated with the custom role
+    - .role <code>String</code> - The user's role associated with the account
+    - .roleName <code>String</code> - The name of the custom AWS IAM role to create
+    - .roleType <code>String</code> - The type of AWS role to use when creating the new role
+    - .includeDefaultPolicy <code>Number</code> - Whether to include the default policy in the new role (1 = yes, 0 = no)
+    - .trustArn <code>String</code> - The Arn of the existing role to trust
+    - .trustType <code>String</code> - Whether the trust is 'Cross Account' or 'Inner Account'
+
+**Example**  
+```js
+alks.createNonServiceRole({
+  baseUrl: 'https://your.alks-host.com',
+  userid: 'johndoe',
+  password: 'pass123',
+  account: 'anAccount',
+  role: 'IAMAdmin',
+  roleName: 'awsRoleName',
+  roleType: 'Amazon EC2',
+  includeDefaultPolicy: 1,
+  trustArn: 'anExistingRoleArn',
+  trustType: 'Cross Account'
 }).then((role) => {
   // role.roleArn, role.denyArns, role.instanceProfileArn, role.addedRoleToInstanceProfile
 })
@@ -290,35 +354,6 @@ alks.deleteRole({
   // success!
 })
 ```
-<a name="alks+deleteIAMUser"></a>
-
-### alks.deleteIAMUser(props) ⇒ <code>Promise.&lt;Boolean&gt;</code>
-Returns a Promise for a boolean "true" indicating the IAM user and long-term access keys were deleted
-
-**Kind**: instance method of [<code>alks</code>](#alks)  
-**Params**
-
-- props <code>Object</code>
-    - .baseUrl <code>String</code> - The base URL of the ALKS service
-    - .userid <code>String</code> - The ID of the user making the request
-    - .password <code>String</code> - The password of the user making the request
-    - .account <code>String</code> - The user's account associated with the custom role
-    - .role <code>String</code> - The user's role associated with the account
-    - .iamUserName <code>String</code> - The name of the IAM user to delete
-
-**Example**  
-```js
-alks.deleteIAMUser({
-  baseUrl: 'https://your.alks-host.com',
-  userid: 'johndoe',
-  password: 'pass123',
-  account: 'anAccount',
-  role: 'IAMAdmin',
-  iamUserName: 'iamUserName'
-}).then(() => {
-  // success!
-})
-```
 <a name="alks+createAccessKeys"></a>
 
 ### alks.createAccessKeys(props) ⇒ <code>Promise.&lt;AccessKeys&gt;</code>
@@ -346,6 +381,35 @@ alks.createAccessKeys({
   iamUserName: 'iamUserName'
 }).then((user) => {
   // user.iamUserArn, user.accessKey, user.secretKey, user.addedIAMUserToGroup
+})
+```
+<a name="alks+deleteIAMUser"></a>
+
+### alks.deleteIAMUser(props) ⇒ <code>Promise.&lt;Boolean&gt;</code>
+Returns a Promise for a boolean "true" indicating the IAM user and long-term access keys were deleted
+
+**Kind**: instance method of [<code>alks</code>](#alks)  
+**Params**
+
+- props <code>Object</code>
+    - .baseUrl <code>String</code> - The base URL of the ALKS service
+    - .userid <code>String</code> - The ID of the user making the request
+    - .password <code>String</code> - The password of the user making the request
+    - .account <code>String</code> - The user's account associated with the custom role
+    - .role <code>String</code> - The user's role associated with the account
+    - .iamUserName <code>String</code> - The name of the IAM user to delete
+
+**Example**  
+```js
+alks.deleteIAMUser({
+  baseUrl: 'https://your.alks-host.com',
+  userid: 'johndoe',
+  password: 'pass123',
+  account: 'anAccount',
+  role: 'IAMAdmin',
+  iamUserName: 'iamUserName'
+}).then(() => {
+  // success!
 })
 ```
 <a name="account"></a>

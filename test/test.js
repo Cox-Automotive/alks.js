@@ -62,7 +62,7 @@ describe('alks.js', function() {
   
   it('getAWSRoleTypes', () => {
     let _fetch = fetchMock.sandbox().mock('https://your.alks-host.com/getAWSRoleTypes/', {
-      body: { roleTypes: '["Amazon Elastic Transcoder","AWS OpsWorks"]', statusMessage: 'Success'},
+      body: { roleTypes: '["AWS Lambda", "Amazon EC2"]', statusMessage: 'Success'},
       status: 200
     })
     return(expect(alks.getAWSRoleTypes({
@@ -70,7 +70,20 @@ describe('alks.js', function() {
       userid: 'testuser',
       password: 'testpass',
       _fetch
-    })).to.eventually.have.deep.members(['Amazon Elastic Transcoder', 'AWS OpsWorks']))
+    })).to.eventually.have.deep.members(['AWS Lambda', 'Amazon EC2']))
+  })
+
+  it('getNonServiceAWSRoleTypes', () => {
+    let _fetch = fetchMock.sandbox().mock('https://your.alks-host.com/getNonServiceAWSRoleTypes/', {
+      body: { roleTypes: '["AWS Lambda", "Amazon EC2"]', statusMessage: 'Success'},
+      status: 200
+    })
+    return(expect(alks.getNonServiceAWSRoleTypes({
+      baseUrl: 'https://your.alks-host.com',
+      userid: 'testuser',
+      password: 'testpass',
+      _fetch
+    })).to.eventually.have.deep.members(['AWS Lambda', 'Amazon EC2']))
   })
   
   it('getAccountRole', () => {
@@ -129,6 +142,37 @@ describe('alks.js', function() {
       roleName: 'awsRoleName',
       roleType: 'Amazon EC2',
       includeDefaultPolicy: 1,
+      _fetch
+    })).to.eventually.deep.include({ 
+      roleArn: 'aRoleArn', 
+      denyArns: ['denyArn1', 'denyArn2'], 
+      instanceProfileArn: 'anInstanceProfileArn',
+      addedRoleToInstanceProfile: true
+    }))
+  })
+
+  it('createNonServiceRole', () => {
+    let _fetch = fetchMock.sandbox().mock('https://your.alks-host.com/createNonServiceRole/', {
+      body: {
+        roleArn: 'aRoleArn',
+        denyArns: 'denyArn1,denyArn2',
+        instanceProfileArn: 'anInstanceProfileArn',
+        addedRoleToInstanceProfile: true,
+        statusMessage: 'Success'
+      },
+      status: 200
+    })
+    return(expect(alks.createNonServiceRole({
+      baseUrl: 'https://your.alks-host.com',
+      userid: 'testuser',
+      password: 'testpass',
+      account: 'anAccount',
+      role: 'Admin',
+      roleName: 'awsRoleName',
+      roleType: 'Amazon EC2',
+      includeDefaultPolicy: 1,
+      trustArn: 'anExistingRole',
+      trustType: 'Cross Account',
       _fetch
     })).to.eventually.deep.include({ 
       roleArn: 'aRoleArn', 

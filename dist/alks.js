@@ -29,8 +29,18 @@ var alks = (function () {
     return(this._doFetch('getAWSRoleTypes', props).then(function (results) { return JSON.parse(results.roleTypes); }
     ))
   };
+  alks.prototype.getNonServiceAWSRoleTypes = function getNonServiceAWSRoleTypes (props) {
+    return(this._doFetch('getNonServiceAWSRoleTypes', props).then(function (results) { return JSON.parse(results.roleTypes); }
+    ))
+  };
   alks.prototype.createRole = function createRole (props) {
     return(this._doFetch('createRole', props).then(function (results) {
+      results.denyArns = results.denyArns.split(',');
+      return(pick(results,['roleArn', 'denyArns','instanceProfileArn','addedRoleToInstanceProfile']))
+    }))
+  };
+  alks.prototype.createNonServiceRole = function createNonServiceRole (props) {
+    return(this._doFetch('createNonServiceRole', props).then(function (results) {
       results.denyArns = results.denyArns.split(',');
       return(pick(results,['roleArn', 'denyArns','instanceProfileArn','addedRoleToInstanceProfile']))
     }))
