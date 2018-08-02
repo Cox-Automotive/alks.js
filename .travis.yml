@@ -6,6 +6,8 @@ node_js:
 dist: trusty
 addons:
   chrome: stable
+before_deploy:
+  - npm install
 deploy:
   - provider: npm
     api_key: $NPM_TOKEN
