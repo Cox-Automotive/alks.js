@@ -7,11 +7,12 @@ dist: trusty
 addons:
   chrome: stable
 deploy:
-  - provider: npm
-    api_key: $NPM_TOKEN
-    on:
-      tags: true
-      repo: Cox-Automotive/alks.js
-    email: $NPM_EMAIL
-    skip_cleanup: true
+  provider: npm
+  api_key: $NPM_TOKEN
+  on:
+    tags: true
+    repo: Cox-Automotive/alks.js
+    node: '10'
+  email: $NPM_EMAIL
+  skip_cleanup: true
 
