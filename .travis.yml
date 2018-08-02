@@ -6,5 +6,11 @@ node_js:
 dist: trusty
 addons:
   chrome: stable
-after_success: npm run coverage
+deploy:
+  - provider: npm
+    api_key: $NPM_TOKEN
+    on:
+      tags: true
+      repo: Cox-Automotive/alks.js
+    email: $NPM_EMAIL
 
