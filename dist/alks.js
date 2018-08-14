@@ -95,7 +95,7 @@ var alks = (function () {
     })
   };
   var pick = function (obj, props) { return props.reduce(function (a, e) { return (a[e] = obj[e], a); }, {}); };
-  var alks$1 = new alks()
+  var alks$1 = new alks();
 
   return alks$1;
 
