@@ -60,8 +60,7 @@ Properties present on the current object are carried through to the newly create
 ```js
 var myAlks = alks.create({
   baseUrl: 'https://your.alks-host.com',
-  userid: 'johndoe',
-  password: 'pass123'
+  accessToken: 'abc123',
 })
 
 myAlks.getKeys({
@@ -82,15 +81,13 @@ Returns a Promise for an array of AWS accounts (and roles) accessible by the use
 
 - props <code>Object</code>
     - .baseUrl <code>String</code> - The base URL of the ALKS service
-    - .userid <code>String</code> - The ID of the user making the request
-    - .password <code>String</code> - The password of the user making the request
+    - .accessToken <code>String</code> - The OAuth2 access token used to authorize the request
 
 **Example**  
 ```js
 alks.getAccounts({
   baseUrl: 'https://your.alks-host.com',
-  userid: 'johndoe',
-  password: 'pass123'
+  accessToken: 'abc123',
 }).then((accounts) => {
   // accounts[0].account, accounts[0].role, accounts[0].iamKeyActive
 })
@@ -105,8 +102,7 @@ Returns a Promise for AWS STS credentials from ALKS.
 
 - props <code>Object</code>
     - .baseUrl <code>String</code> - The base URL of the ALKS service
-    - .userid <code>String</code> - The ID of the user making the request
-    - .password <code>String</code> - The password of the user making the request
+    - .accessToken <code>String</code> - The OAuth2 access token used to authorize the request
     - .account <code>String</code> - The AWS account to use when provisioning the credentials
     - .role <code>String</code> - The ALKS role to use when provisioning the credentials
     - .sessionTime <code>String</code> - The session length for the credentials
@@ -115,8 +111,7 @@ Returns a Promise for AWS STS credentials from ALKS.
 ```js
 alks.getKeys({
   baseUrl: 'https://your.alks-host.com',
-  userid: 'johndoe',
-  password: 'pass123',
+  accessToken: 'abc123',
   account: 'anAccount',
   role: 'PowerUser',
   sessionTime: 2
@@ -134,8 +129,7 @@ Returns a Promise for AWS STS credentials with IAM permissions from ALKS.
 
 - props <code>Object</code>
     - .baseUrl <code>String</code> - The base URL of the ALKS service
-    - .userid <code>String</code> - The ID of the user making the request
-    - .password <code>String</code> - The password of the user making the request
+    - .accessToken <code>String</code> - The OAuth2 access token used to authorize the request
     - .account <code>String</code> - The AWS account to use when provisioning the credentials
     - .role <code>String</code> - The ALKS role to use when provisioning the credentials
     - .sessionTime <code>Number</code> - The session length for the credentials
@@ -144,8 +138,7 @@ Returns a Promise for AWS STS credentials with IAM permissions from ALKS.
 ```js
 alks.getIAMKeys({
   baseUrl: 'https://your.alks-host.com',
-  userid: 'johndoe',
-  password: 'pass123',
+  accessToken: 'abc123',
   account: 'anAccount',
   role: 'IAMAdmin',
   sessionTime: 1
@@ -163,15 +156,13 @@ Returns a Promise for an array of available AWS IAM role types
 
 - props <code>Object</code>
     - .baseUrl <code>String</code> - The base URL of the ALKS service
-    - .userid <code>String</code> - The ID of the user making the request
-    - .password <code>String</code> - The password of the user making the request
+    - .accessToken <code>String</code> - The OAuth2 access token used to authorize the request
 
 **Example**  
 ```js
 alks.getAWSRoleTypes({
   baseUrl: 'https://your.alks-host.com',
-  userid: 'johndoe',
-  password: 'pass123'
+  accessToken: 'abc123',
 }).then((roleTypes) {
   // ['AWS Lambda', 'Amazon EC2', ... ]
 })
@@ -186,15 +177,13 @@ Returns a Promise for an array of available custom role types
 
 - props <code>Object</code>
     - .baseUrl <code>String</code> - The base URL of the ALKS service
-    - .userid <code>String</code> - The ID of the user making the request
-    - .password <code>String</code> - The password of the user making the request
+    - .accessToken <code>String</code> - The OAuth2 access token used to authorize the request
 
 **Example**  
 ```js
 alks.getNonServiceAWSRoleTypes({
   baseUrl: 'https://your.alks-host.com',
-  userid: 'johndoe',
-  password: 'pass123',
+  accessToken: 'abc123',
 }).then((roleTypes) => {
   // ['AWS Lambda', 'Amazon EC2', ...]
 }) 
@@ -209,8 +198,7 @@ Returns a Promise for the results of creating a new custom AWS IAM account role
 
 - props <code>Object</code>
     - .baseUrl <code>String</code> - The base URL of the ALKS service
-    - .userid <code>String</code> - The ID of the user making the request
-    - .password <code>String</code> - The password of the user making the request
+    - .accessToken <code>String</code> - The OAuth2 access token used to authorize the request
     - .account <code>String</code> - The user's account associated with the custom role
     - .role <code>String</code> - The user's role associated with the account
     - .roleName <code>String</code> - The name of the custom AWS IAM role to create
@@ -221,8 +209,7 @@ Returns a Promise for the results of creating a new custom AWS IAM account role
 ```js
 alks.createRole({
   baseUrl: 'https://your.alks-host.com',
-  userid: 'johndoe',
-  password: 'pass123',
+  accessToken: 'abc123',
   account: 'anAccount',
   role: 'IAMAdmin',
   roleName: 'awsRoleName',
@@ -242,8 +229,7 @@ Returns a Promise for the results of creating a new custom AWS IAM trust role
 
 - props <code>Object</code>
     - .baseUrl <code>String</code> - The base URL of the ALKS service
-    - .userid <code>String</code> - The ID of the user making the request
-    - .password <code>String</code> - The password of the user making the request
+    - .accessToken <code>String</code> - The OAuth2 access token used to authorize the request
     - .account <code>String</code> - The user's account associated with the custom role
     - .role <code>String</code> - The user's role associated with the account
     - .roleName <code>String</code> - The name of the custom AWS IAM role to create
@@ -256,8 +242,7 @@ Returns a Promise for the results of creating a new custom AWS IAM trust role
 ```js
 alks.createNonServiceRole({
   baseUrl: 'https://your.alks-host.com',
-  userid: 'johndoe',
-  password: 'pass123',
+  accessToken: 'abc123',
   account: 'anAccount',
   role: 'IAMAdmin',
   roleName: 'awsRoleName',
@@ -279,8 +264,7 @@ Returns a Promise for an array of AWS custom AWS IAM account roles
 
 - props <code>Object</code>
     - .baseUrl <code>String</code> - The base URL of the ALKS service
-    - .userid <code>String</code> - The ID of the user making the request
-    - .password <code>String</code> - The password of the user making the request
+    - .accessToken <code>String</code> - The OAuth2 access token used to authorize the request
     - .account <code>String</code> - The user's account associated with the custom role
     - .role <code>String</code> - The user's role associated with the account
 
@@ -288,8 +272,7 @@ Returns a Promise for an array of AWS custom AWS IAM account roles
 ```js
 alks.listAWSAccountRoles({
   baseUrl: 'https://your.alks-host.com',
-  userid: 'johndoe',
-  password: 'pass123',
+  accessToken: 'abc123',
   account: 'anAccount',
   role: 'IAMAdmin',
 }).then((roleNames) => {
@@ -306,8 +289,7 @@ Returns a Promise for the Amazon Resource Name (ARN) of a custom AWS IAM account
 
 - props <code>Object</code>
     - .baseUrl <code>String</code> - The base URL of the ALKS service
-    - .userid <code>String</code> - The ID of the user making the request
-    - .password <code>String</code> - The password of the user making the request
+    - .accessToken <code>String</code> - The OAuth2 access token used to authorize the request
     - .account <code>String</code> - The user's account associated with the custom role
     - .role <code>String</code> - The user's role associated with the account
     - .roleName <code>String</code> - The name of the custom AWs IAM role
@@ -316,8 +298,7 @@ Returns a Promise for the Amazon Resource Name (ARN) of a custom AWS IAM account
 ```js
 alks.getAccountRole({
   baseUrl: 'https://your.alks-host.com',
-  userid: 'johndoe',
-  password: 'pass123',
+  accessToken: 'abc123',
   account: 'anAccount',
   role: 'IAMAdmin',
   roleName: 'awsRoleName'
@@ -335,8 +316,7 @@ Returns a Promise for a boolean "true" indicating the role was deleted
 
 - props <code>Object</code>
     - .baseUrl <code>String</code> - The base URL of the ALKS service
-    - .userid <code>String</code> - The ID of the user making the request
-    - .password <code>String</code> - The password of the user making the request
+    - .accessToken <code>String</code> - The OAuth2 access token used to authorize the request
     - .account <code>String</code> - The user's account associated with the custom role
     - .role <code>String</code> - The user's role associated with the account
     - .roleName <code>String</code> - The name of the custom AWS IAM role
@@ -345,8 +325,7 @@ Returns a Promise for a boolean "true" indicating the role was deleted
 ```js
 alks.deleteRole({
   baseUrl: 'https://your.alks-host.com',
-  userid: 'johndoe',
-  password: 'pass123',
+  accessToken: 'abc123',
   account: 'anAccount',
   role: 'IAMAdmin',
   roleName: 'awsRoleName'
@@ -364,8 +343,7 @@ Returns a Promise for the results of creating new IAM user and long-term access 
 
 - props <code>Object</code>
     - .baseUrl <code>String</code> - The base URL of the ALKS service
-    - .userid <code>String</code> - The ID of the user making the request
-    - .password <code>String</code> - The password of the user making the request
+    - .accessToken <code>String</code> - The OAuth2 access token used to authorize the request
     - .account <code>String</code> - The user's account associated with the custom role
     - .role <code>String</code> - The user's role associated with the account
     - .iamUserName <code>String</code> - The name of the IAM user to create
@@ -374,8 +352,7 @@ Returns a Promise for the results of creating new IAM user and long-term access 
 ```js
 alks.createAccessKeys({
   baseUrl: 'https://your.alks-host.com',
-  userid: 'johndoe',
-  password: 'pass123',
+  accessToken: 'abc123',
   account: 'anAccount',
   role: 'IAMAdmin',
   iamUserName: 'iamUserName'
@@ -393,8 +370,7 @@ Returns a Promise for a boolean "true" indicating the IAM user and long-term acc
 
 - props <code>Object</code>
     - .baseUrl <code>String</code> - The base URL of the ALKS service
-    - .userid <code>String</code> - The ID of the user making the request
-    - .password <code>String</code> - The password of the user making the request
+    - .accessToken <code>String</code> - The OAuth2 access token used to authorize the request
     - .account <code>String</code> - The user's account associated with the custom role
     - .role <code>String</code> - The user's role associated with the account
     - .iamUserName <code>String</code> - The name of the IAM user to delete
@@ -403,8 +379,7 @@ Returns a Promise for a boolean "true" indicating the IAM user and long-term acc
 ```js
 alks.deleteIAMUser({
   baseUrl: 'https://your.alks-host.com',
-  userid: 'johndoe',
-  password: 'pass123',
+  accessToken: 'abc123',
   account: 'anAccount',
   role: 'IAMAdmin',
   iamUserName: 'iamUserName'

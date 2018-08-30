@@ -21,8 +21,7 @@ class alks {
    * @example
    * var myAlks = alks.create({
    *   baseUrl: 'https://your.alks-host.com',
-   *   userid: 'johndoe',
-   *   password: 'pass123'
+   *   accessToken: 'abc123',
    * })
    * 
    * myAlks.getKeys({
@@ -50,14 +49,12 @@ class alks {
    * 
    * @param {Object} props
    * @param {String} props.baseUrl - The base URL of the ALKS service
-   * @param {String} props.userid - The ID of the user making the request
-   * @param {String} props.password - The password of the user making the request
+   * @param {String} props.accessToken - The OAuth2 access token used to authorize the request
    * @returns {Promise<account[]>}
    * @example
    * alks.getAccounts({
    *   baseUrl: 'https://your.alks-host.com',
-   *   userid: 'johndoe',
-   *   password: 'pass123'
+   *   accessToken: 'abc123',
    * }).then((accounts) => {
    *   // accounts[0].account, accounts[0].role, accounts[0].iamKeyActive
    * })
@@ -85,8 +82,7 @@ class alks {
    * 
    * @param {Object} props
    * @param {String} props.baseUrl - The base URL of the ALKS service
-   * @param {String} props.userid - The ID of the user making the request
-   * @param {String} props.password - The password of the user making the request
+   * @param {String} props.accessToken - The OAuth2 access token used to authorize the request
    * @param {String} props.account - The AWS account to use when provisioning the credentials
    * @param {String} props.role - The ALKS role to use when provisioning the credentials
    * @param {String} props.sessionTime - The session length for the credentials
@@ -94,8 +90,7 @@ class alks {
    * @example
    * alks.getKeys({
    *   baseUrl: 'https://your.alks-host.com',
-   *   userid: 'johndoe',
-   *   password: 'pass123',
+   *   accessToken: 'abc123',
    *   account: 'anAccount',
    *   role: 'PowerUser',
    *   sessionTime: 2
@@ -114,8 +109,7 @@ class alks {
    * 
    * @param {Object} props
    * @param {String} props.baseUrl - The base URL of the ALKS service
-   * @param {String} props.userid - The ID of the user making the request
-   * @param {String} props.password - The password of the user making the request
+   * @param {String} props.accessToken - The OAuth2 access token used to authorize the request
    * @param {String} props.account - The AWS account to use when provisioning the credentials
    * @param {String} props.role - The ALKS role to use when provisioning the credentials
    * @param {Number} props.sessionTime - The session length for the credentials
@@ -123,8 +117,7 @@ class alks {
    * @example
    * alks.getIAMKeys({
    *   baseUrl: 'https://your.alks-host.com',
-   *   userid: 'johndoe',
-   *   password: 'pass123',
+   *   accessToken: 'abc123',
    *   account: 'anAccount',
    *   role: 'IAMAdmin',
    *   sessionTime: 1
@@ -143,14 +136,12 @@ class alks {
    * 
    * @param {Object} props
    * @param {String} props.baseUrl - The base URL of the ALKS service
-   * @param {String} props.userid - The ID of the user making the request
-   * @param {String} props.password - The password of the user making the request
+   * @param {String} props.accessToken - The OAuth2 access token used to authorize the request
    * @returns {Promise<String[]>}
    * @example
    * alks.getAWSRoleTypes({
    *   baseUrl: 'https://your.alks-host.com',
-   *   userid: 'johndoe',
-   *   password: 'pass123'
+   *   accessToken: 'abc123',
    * }).then((roleTypes) {
    *   // ['AWS Lambda', 'Amazon EC2', ... ]
    * })
@@ -166,14 +157,12 @@ class alks {
    * 
    * @param {Object} props
    * @param {String} props.baseUrl - The base URL of the ALKS service
-   * @param {String} props.userid - The ID of the user making the request
-   * @param {String} props.password - The password of the user making the request
+   * @param {String} props.accessToken - The OAuth2 access token used to authorize the request
    * @returns {Promise<String[]>}
    * @example
    * alks.getNonServiceAWSRoleTypes({
    *   baseUrl: 'https://your.alks-host.com',
-   *   userid: 'johndoe',
-   *   password: 'pass123',
+   *   accessToken: 'abc123',
    * }).then((roleTypes) => {
    *   // ['AWS Lambda', 'Amazon EC2', ...]
    * }) 
@@ -198,8 +187,7 @@ class alks {
    * 
    * @param {Object} props
    * @param {String} props.baseUrl - The base URL of the ALKS service
-   * @param {String} props.userid - The ID of the user making the request
-   * @param {String} props.password - The password of the user making the request
+   * @param {String} props.accessToken - The OAuth2 access token used to authorize the request
    * @param {String} props.account - The user's account associated with the custom role
    * @param {String} props.role - The user's role associated with the account
    * @param {String} props.roleName - The name of the custom AWS IAM role to create
@@ -209,8 +197,7 @@ class alks {
    * @example
    * alks.createRole({
    *   baseUrl: 'https://your.alks-host.com',
-   *   userid: 'johndoe',
-   *   password: 'pass123',
+   *   accessToken: 'abc123',
    *   account: 'anAccount',
    *   role: 'IAMAdmin',
    *   roleName: 'awsRoleName',
@@ -232,8 +219,7 @@ class alks {
    * 
    * @param {Object} props
    * @param {String} props.baseUrl - The base URL of the ALKS service
-   * @param {String} props.userid - The ID of the user making the request
-   * @param {String} props.password - The password of the user making the request
+   * @param {String} props.accessToken - The OAuth2 access token used to authorize the request
    * @param {String} props.account - The user's account associated with the custom role
    * @param {String} props.role - The user's role associated with the account
    * @param {String} props.roleName - The name of the custom AWS IAM role to create
@@ -245,8 +231,7 @@ class alks {
    * @example
    * alks.createNonServiceRole({
    *   baseUrl: 'https://your.alks-host.com',
-   *   userid: 'johndoe',
-   *   password: 'pass123',
+   *   accessToken: 'abc123',
    *   account: 'anAccount',
    *   role: 'IAMAdmin',
    *   roleName: 'awsRoleName',
@@ -270,16 +255,14 @@ class alks {
    * 
    * @param {Object} props
    * @param {String} props.baseUrl - The base URL of the ALKS service
-   * @param {String} props.userid - The ID of the user making the request
-   * @param {String} props.password - The password of the user making the request
+   * @param {String} props.accessToken - The OAuth2 access token used to authorize the request
    * @param {String} props.account - The user's account associated with the custom role
    * @param {String} props.role - The user's role associated with the account
    * @returns {Promise<String[]>}
    * @example
    * alks.listAWSAccountRoles({
    *   baseUrl: 'https://your.alks-host.com',
-   *   userid: 'johndoe',
-   *   password: 'pass123',
+   *   accessToken: 'abc123',
    *   account: 'anAccount',
    *   role: 'IAMAdmin',
    * }).then((roleNames) => {
@@ -298,8 +281,7 @@ class alks {
    * 
    * @param {Object} props
    * @param {String} props.baseUrl - The base URL of the ALKS service
-   * @param {String} props.userid - The ID of the user making the request
-   * @param {String} props.password - The password of the user making the request
+   * @param {String} props.accessToken - The OAuth2 access token used to authorize the request
    * @param {String} props.account - The user's account associated with the custom role
    * @param {String} props.role - The user's role associated with the account
    * @param {String} props.roleName - The name of the custom AWs IAM role
@@ -307,8 +289,7 @@ class alks {
    * @example
    * alks.getAccountRole({
    *   baseUrl: 'https://your.alks-host.com',
-   *   userid: 'johndoe',
-   *   password: 'pass123',
+   *   accessToken: 'abc123',
    *   account: 'anAccount',
    *   role: 'IAMAdmin',
    *   roleName: 'awsRoleName'
@@ -330,8 +311,7 @@ class alks {
    * 
    * @param {Object} props
    * @param {String} props.baseUrl - The base URL of the ALKS service
-   * @param {String} props.userid - The ID of the user making the request
-   * @param {String} props.password - The password of the user making the request
+   * @param {String} props.accessToken - The OAuth2 access token used to authorize the request
    * @param {String} props.account - The user's account associated with the custom role
    * @param {String} props.role - The user's role associated with the account
    * @param {String} props.roleName - The name of the custom AWS IAM role
@@ -339,8 +319,7 @@ class alks {
    * @example
    * alks.deleteRole({
    *   baseUrl: 'https://your.alks-host.com',
-   *   userid: 'johndoe',
-   *   password: 'pass123',
+   *   accessToken: 'abc123',
    *   account: 'anAccount',
    *   role: 'IAMAdmin',
    *   roleName: 'awsRoleName'
@@ -357,8 +336,7 @@ class alks {
    * 
    * @param {Object} props
    * @param {String} props.baseUrl - The base URL of the ALKS service
-   * @param {String} props.userid - The ID of the user making the request
-   * @param {String} props.password - The password of the user making the request
+   * @param {String} props.accessToken - The OAuth2 access token used to authorize the request
    * @param {String} props.account - The user's account associated with the custom role
    * @param {String} props.role - The user's role associated with the account
    * @param {String} props.iamUserName - The name of the IAM user to create
@@ -366,8 +344,7 @@ class alks {
    * @example
    * alks.createAccessKeys({
    *   baseUrl: 'https://your.alks-host.com',
-   *   userid: 'johndoe',
-   *   password: 'pass123',
+   *   accessToken: 'abc123',
    *   account: 'anAccount',
    *   role: 'IAMAdmin',
    *   iamUserName: 'iamUserName'
@@ -386,8 +363,7 @@ class alks {
    * 
    * @param {Object} props
    * @param {String} props.baseUrl - The base URL of the ALKS service
-   * @param {String} props.userid - The ID of the user making the request
-   * @param {String} props.password - The password of the user making the request
+   * @param {String} props.accessToken - The OAuth2 access token used to authorize the request
    * @param {String} props.account - The user's account associated with the custom role
    * @param {String} props.role - The user's role associated with the account
    * @param {String} props.iamUserName - The name of the IAM user to delete
@@ -395,8 +371,7 @@ class alks {
    * @example
    * alks.deleteIAMUser({
    *   baseUrl: 'https://your.alks-host.com',
-   *   userid: 'johndoe',
-   *   password: 'pass123',
+   *   accessToken: 'abc123',
    *   account: 'anAccount',
    *   role: 'IAMAdmin',
    *   iamUserName: 'iamUserName'
@@ -409,14 +384,23 @@ class alks {
   }
 
   _doFetch(path, args = { }, method = 'POST') {
-    var opts = Object.assign({}, this.defaults, args)
+    let opts = Object.assign({}, this.defaults, args)
 
-    let responsePromise = opts._fetch(`${opts.baseUrl}/${path}/`, { 
-      method: method,
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(opts)
+    let headers = {
+      'Content-Type': 'application/json'
+    }
+
+    if (opts.accessToken) {
+      headers['Authorize'] = `Bearer ${opts.accessToken}`
+      delete opts.accessToken
+    }
+
+    if (opts.userid || opts.password) {
+      console.error('The userid and password properties are deprecated and should be replaced with an access token')
+    }
+
+    var responsePromise = opts._fetch(`${opts.baseUrl}/${path}/`, { 
+      method, headers, body: JSON.stringify(opts)
     })
     
     // Add catch here to swallow the JSON parsing error (it'll get picked up below)

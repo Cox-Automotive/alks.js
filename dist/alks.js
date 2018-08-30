@@ -71,12 +71,18 @@ var alks = (function () {
       if ( args === void 0 ) args = { };
       if ( method === void 0 ) method = 'POST';
     var opts = Object.assign({}, this.defaults, args);
+    var headers = {
+      'Content-Type': 'application/json'
+    };
+    if (opts.accessToken) {
+      headers['Authorize'] = "Bearer " + (opts.accessToken);
+      delete opts.accessToken;
+    }
+    if (opts.userid || opts.password) {
+      console.error('The userid and password properties are deprecated and should be replaced with an access token');
+    }
     var responsePromise = opts._fetch(((opts.baseUrl) + "/" + path + "/"), {
-      method: method,
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(opts)
+      method: method, headers: headers, body: JSON.stringify(opts)
     });
     var jsonPromise = responsePromise.then(function (r) { return r.json(); }).catch(function () {});
     return Promise.all([responsePromise, jsonPromise]).then(function (ref) {

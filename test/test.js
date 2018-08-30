@@ -22,8 +22,7 @@ describe('alks.js', function() {
     })
     return(expect(alks.getAccounts({
       baseUrl: 'https://your.alks-host.com',
-      userid: 'testuser',
-      password: 'testpass',
+      accessToken: 'abc123',
       _fetch
     })).to.eventually.deep.include({account: '1234 - foobar', role: 'role1', iamKeyActive: true }))
   })
@@ -38,8 +37,7 @@ describe('alks.js', function() {
       account: 'anAccount',
       role: 'PowerUser',
       sessionTime: 2,
-      userid: 'testuser',
-      password: 'testpass',
+      accessToken: 'abc123',
       _fetch
     })).to.eventually.have.keys('accessKey', 'secretKey', 'sessionToken'))
   })
@@ -54,8 +52,7 @@ describe('alks.js', function() {
       account: 'anAccount',
       role: 'IAMAdmin',
       sessionTime: 1,
-      userid: 'testuser',
-      password: 'testpass',
+      accessToken: 'abc123',
       _fetch
     })).to.eventually.have.keys('accessKey', 'secretKey', 'sessionToken'))
   })
@@ -67,8 +64,7 @@ describe('alks.js', function() {
     })
     return(expect(alks.getAWSRoleTypes({
       baseUrl: 'https://your.alks-host.com',
-      userid: 'testuser',
-      password: 'testpass',
+      accessToken: 'abc123',
       _fetch
     })).to.eventually.have.deep.members(['AWS Lambda', 'Amazon EC2']))
   })
@@ -80,8 +76,7 @@ describe('alks.js', function() {
     })
     return(expect(alks.getNonServiceAWSRoleTypes({
       baseUrl: 'https://your.alks-host.com',
-      userid: 'testuser',
-      password: 'testpass',
+      accessToken: 'abc123',
       _fetch
     })).to.eventually.have.deep.members(['AWS Lambda', 'Amazon EC2']))
   })
@@ -97,8 +92,7 @@ describe('alks.js', function() {
     })
     return(expect(alks.getAccountRole({
       baseUrl: 'https://your.alks-host.com',
-      userid: 'testuser',
-      password: 'testpass',
+      accessToken: 'abc123',
       account: 'anAccount',
       role: 'Admin',
       roleName: 'awsRoleName',
@@ -113,8 +107,7 @@ describe('alks.js', function() {
     })
     return(expect(alks.getAccountRole({
       baseUrl: 'https://your.alks-host.com',
-      userid: 'testuser',
-      password: 'testpass',
+      accessToken: 'abc123',
       account: 'anAccount',
       role: 'Admin',
       roleName: 'awsRoleName',
@@ -135,8 +128,7 @@ describe('alks.js', function() {
     })
     return(expect(alks.createRole({
       baseUrl: 'https://your.alks-host.com',
-      userid: 'testuser',
-      password: 'testpass',
+      accessToken: 'abc123',
       account: 'anAccount',
       role: 'Admin',
       roleName: 'awsRoleName',
@@ -164,8 +156,7 @@ describe('alks.js', function() {
     })
     return(expect(alks.createNonServiceRole({
       baseUrl: 'https://your.alks-host.com',
-      userid: 'testuser',
-      password: 'testpass',
+      accessToken: 'abc123',
       account: 'anAccount',
       role: 'Admin',
       roleName: 'awsRoleName',
@@ -192,8 +183,7 @@ describe('alks.js', function() {
     })
     return(expect(alks.listAWSAccountRoles({
       baseUrl: 'https://your.alks-host.com',
-      userid: 'testuser',
-      password: 'testpass',
+      accessToken: 'abc123',
       account: 'anAccount',
       role: 'Admin',
       _fetch
@@ -207,8 +197,7 @@ describe('alks.js', function() {
     })
     return(expect(alks.deleteRole({
       baseUrl: 'https://your.alks-host.com',
-      userid: 'testuser',
-      password: 'testpass',
+      accessToken: 'abc123',
       account: 'anAccount',
       role: 'Admin',
       roleName: 'awsRoleName',
@@ -223,8 +212,7 @@ describe('alks.js', function() {
     })
     return(expect(alks.createAccessKeys({
       baseUrl: 'https://your.alks-host.com',
-      userid: 'testuser',
-      password: 'testpass',
+      accessToken: 'abc123',
       account: 'anAccount',
       role: 'Admin',
       iamUserName: 'awsUserName',
@@ -244,8 +232,7 @@ describe('alks.js', function() {
     }, { method: 'DELETE' })
     return(expect(alks.deleteIAMUser({
       baseUrl: 'https://your.alks-host.com',
-      userid: 'testuser',
-      password: 'testpass',
+      accessToken: 'abc123',
       account: 'anAccount',
       role: 'Admin',
       riamUserName: 'awsUserName',
@@ -260,8 +247,7 @@ describe('alks.js', function() {
     })
     let myAlks = alks.create({
       baseUrl: 'https://your.alks-host.com',
-      userid: 'testuser',
-      password: 'testpass',
+      accessToken: 'abc123',
       _fetch
     })
     return(expect(myAlks.getKeys({
@@ -284,8 +270,7 @@ describe('alks.js', function() {
     })
     let myAlks = alks.create({
       baseUrl: 'https://your.alks-host.com',
-      userid: 'testuser',
-      password: 'testpass',
+      accessToken: 'abc123',
       _fetch
     })
     return(expect(myAlks.getAccounts())
@@ -296,11 +281,10 @@ describe('alks.js', function() {
   it('create leveraging past defaults', () => {
     let alks1 = alks.create({
       baseUrl: 'https://your.alks-host.com',
-      userid: 'testuser',
-      password: 'testpass'
+      accessToken: 'abc123',
     })
     let alks2 = alks1.create({foo: 'bar'})
-    return(expect(alks2.defaults).to.have.all.keys(['baseUrl', 'userid', 'password', 'foo', '_fetch']))
+    return(expect(alks2.defaults).to.have.all.keys(['baseUrl', 'accessToken', 'foo', '_fetch']))
   })
   
   it('rejects on error with ALKS statusMessage', function() {
@@ -313,8 +297,7 @@ describe('alks.js', function() {
       account: 'anAccount',
       role: 'PowerUser',
       sessionTime: 2,
-      userid: 'testuser',
-      password: 'wrongpass',
+      accessToken: 'wrongToken',
       _fetch
     })).to.be.rejectedWith('this is the statusMessage'))
   })
@@ -329,8 +312,7 @@ describe('alks.js', function() {
       account: 'anAccount',
       role: 'PowerUser',
       sessionTime: 2,
-      userid: 'testuser',
-      password: 'wrongpass',
+      accessToken: 'wrongToken',
       _fetch
     })).to.be.rejectedWith('this is an error'))
   })
@@ -342,9 +324,29 @@ describe('alks.js', function() {
       account: 'anAccount',
       role: 'PowerUser',
       sessionTime: 2,
+      accessToken: 'abc123',
+      _fetch
+    })).to.be.rejectedWith('Server Error'))
+  })
+
+  it('warns of userid/password deprecation', function(done) {
+    let warningMessage = ''
+    console.error = msg => warningMessage = msg
+    let _fetch = fetchMock.sandbox().mock('https://your.alks-host.com/getKeys/', {
+      body: { accessKey: 'foo', secretKey: 'bar', sessionToken: 'baz', statusMessage: 'Success'},
+      status: 200
+    })
+    alks.getKeys({
+      baseUrl: 'https://your.alks-host.com',
+      account: 'anAccount',
+      role: 'PowerUser',
+      sessionTime: 2,
       userid: 'testuser',
       password: 'testpass',
       _fetch
-    })).to.be.rejectedWith('Server Error'))
+    }).then(() => {
+      expect(warningMessage).to.include('deprecated')
+      done()
+    })
   })
 })
