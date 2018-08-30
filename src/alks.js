@@ -391,7 +391,7 @@ class alks {
     }
 
     if (opts.accessToken) {
-      headers['Authorize'] = `Bearer ${opts.accessToken}`
+      headers['Authorization'] = `Bearer ${opts.accessToken}`
       delete opts.accessToken
     }
 

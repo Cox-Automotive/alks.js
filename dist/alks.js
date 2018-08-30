@@ -75,7 +75,7 @@ var alks = (function () {
       'Content-Type': 'application/json'
     };
     if (opts.accessToken) {
-      headers['Authorize'] = "Bearer " + (opts.accessToken);
+      headers['Authorization'] = "Bearer " + (opts.accessToken);
       delete opts.accessToken;
     }
     if (opts.userid || opts.password) {
