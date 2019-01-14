@@ -408,13 +408,7 @@ class alks {
 
     return Promise.all([responsePromise, jsonPromise]).then(([response, json]) => {
       if (!response.ok) {
-        if (json && json.statusMessage && json.statusMessage !== 'Success') {
-          throw new Error(json.statusMessage)
-        } else if (json && json.errors && json.errors.length) {
-          throw new Error(json.errors[0])
-        } else {
-          throw new Error(response.statusText)
-        }
+        throw new AlksError(response, json)
       }
       return(json)
     })
@@ -422,5 +416,12 @@ class alks {
 }
 
 const pick = (obj, props) => props.reduce((a, e) => (a[e] = obj[e], a), {})
+
+const AlksError = (response, json) => ({
+  name: 'AlksError',
+  message: response.statusText,
+  status: response.status,
+  ...json
+})
 
 export default new alks()

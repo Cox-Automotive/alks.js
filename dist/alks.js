@@ -89,18 +89,16 @@ var alks = (function () {
         var response = ref[0];
         var json = ref[1];
       if (!response.ok) {
-        if (json && json.statusMessage && json.statusMessage !== 'Success') {
-          throw new Error(json.statusMessage)
-        } else if (json && json.errors && json.errors.length) {
-          throw new Error(json.errors[0])
-        } else {
-          throw new Error(response.statusText)
-        }
+        throw new AlksError(response, json)
       }
       return(json)
     })
   };
   var pick = function (obj, props) { return props.reduce(function (a, e) { return (a[e] = obj[e], a); }, {}); };
+  var AlksError = function (response, json) { return (Object.assign({}, {name: 'AlksError',
+    message: response.statusText,
+    status: response.status},
+    json)); };
   var alks$1 = new alks();
 
   return alks$1;

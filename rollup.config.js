@@ -14,7 +14,9 @@ export default [
       }
     },
     plugins: [
-      buble(),
+      buble({
+        objectAssign: 'Object.assign'
+      }),
       replace({'process.browser': true}),
       cleanup()
     ]

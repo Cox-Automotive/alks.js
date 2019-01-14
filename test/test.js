@@ -299,7 +299,11 @@ describe('alks.js', function() {
       sessionTime: 2,
       accessToken: 'wrongToken',
       _fetch
-    })).to.be.rejectedWith('this is the statusMessage'))
+    })).to.be.rejectedWith({
+      name: 'AlksError',
+      status: 401,
+      statusMessage: 'this is the statusMessage'
+    }))
   })
 
   it('rejects on error with errors array', function() {
@@ -314,7 +318,11 @@ describe('alks.js', function() {
       sessionTime: 2,
       accessToken: 'wrongToken',
       _fetch
-    })).to.be.rejectedWith('this is an error'))
+    })).to.be.rejectedWith({
+      name: 'AlksError',
+      status: 401,
+      errors: ['this is an error']
+    }))
   })
   
   it('handles a server error', function() {
@@ -326,7 +334,11 @@ describe('alks.js', function() {
       sessionTime: 2,
       accessToken: 'abc123',
       _fetch
-    })).to.be.rejectedWith('Server Error'))
+    })).to.be.rejectedWith({
+      name: 'AlksError',
+      message: 'Server Error',
+      status: 500
+    }))
   })
 
   it('warns of userid/password deprecation', function(done) {
