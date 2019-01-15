@@ -95,10 +95,17 @@ var alks = (function () {
     })
   };
   var pick = function (obj, props) { return props.reduce(function (a, e) { return (a[e] = obj[e], a); }, {}); };
-  var AlksError = function (response, json) { return (Object.assign({}, {name: 'AlksError',
-    message: response.statusText,
-    status: response.status},
-    json)); };
+  var AlksError = (function (Error) {
+    function AlksError(response, json) {
+      Error.call(this, response.statusText);
+      this.status = response.status;
+      Object.assign(this, json);
+    }
+    if ( Error ) AlksError.__proto__ = Error;
+    AlksError.prototype = Object.create( Error && Error.prototype );
+    AlksError.prototype.constructor = AlksError;
+    return AlksError;
+  }(Error));
   var alks$1 = new alks();
 
   return alks$1;

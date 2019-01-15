@@ -417,11 +417,12 @@ class alks {
 
 const pick = (obj, props) => props.reduce((a, e) => (a[e] = obj[e], a), {})
 
-const AlksError = (response, json) => ({
-  name: 'AlksError',
-  message: response.statusText,
-  status: response.status,
-  ...json
-})
+class AlksError extends Error {
+  constructor(response, json) {
+    super(response.statusText)
+    this.status = response.status
+    Object.assign(this, json)
+  }
+}
 
 export default new alks()
