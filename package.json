@@ -3,6 +3,7 @@
   "version": "1.0.1",
   "description": "JavaScript client for the ALKS API, usable in both modern browsers and node.js",
   "main": "lib/alks.node.js",
+  "browser": "dist/alks.min.js",
   "scripts": {
     "rmdirs": "rimraf lib dist",
     "mkdirs": "mkdirp lib dist",
