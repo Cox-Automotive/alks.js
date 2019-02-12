@@ -1,8 +1,10 @@
+import buffer_polyfill from 'buffer/'
+const Buffer = process.browser ? buffer_polyfill.Buffer : Buffer
 const fetch = process.browser ? window.fetch.bind(window) : require('node-fetch')
 
 /**
  * ALKS JavaScript API
- * 
+ *
  */
 class alks {
   constructor(props, existing = {}) {
@@ -10,12 +12,27 @@ class alks {
   }
 
   /**
+   * Encodes a string to base 64
+   *
+   * @param {String} str - the string to encode
+   * @param {String} [encoding] - the encoding of the string to convert (default is utf-8)
+   * @private
+   * @returns {String} the base64 encoded string
+   * @example
+   * var input = 'password'
+   * alks.base64Encode(input)
+   */
+  _base64Encode(str = '', encoding = 'utf-8') {
+    return Buffer.from(str, encoding).toString('base64')
+  }
+
+  /**
    * Returns a new instance of alks with pre-defined properties (which don't need to be supplied to every method).
-   * 
+   *
    * Any of the properties required by other methods can be specified here.
-   * 
+   *
    * Properties present on the current object are carried through to the newly created one.
-   * 
+   *
    * @param {object} props
    * @returns {alks}
    * @example
@@ -23,7 +40,7 @@ class alks {
    *   baseUrl: 'https://your.alks-host.com',
    *   accessToken: 'abc123',
    * })
-   * 
+   *
    * myAlks.getKeys({
    *   account: 'anAccount',
    *   role: 'PowerUser',
@@ -46,7 +63,7 @@ class alks {
 
   /**
    * Returns a Promise for an array of AWS accounts (and roles) accessible by the user
-   * 
+   *
    * @param {Object} props
    * @param {String} props.baseUrl - The base URL of the ALKS service
    * @param {String} props.accessToken - The OAuth2 access token used to authorize the request
@@ -61,9 +78,9 @@ class alks {
    */
   getAccounts(props) {
     return(this._doFetch('getAccounts', props).then(results =>
-      Object.keys(results.accountListRole).map((key) => ({ 
-        account: key, 
-        role: results.accountListRole[key][0].role, 
+      Object.keys(results.accountListRole).map((key) => ({
+        account: key,
+        role: results.accountListRole[key][0].role,
         iamKeyActive: results.accountListRole[key][0].iamKeyActive
       }))
     ))
@@ -79,7 +96,7 @@ class alks {
 
   /**
    * Returns a Promise for AWS STS credentials from ALKS.
-   * 
+   *
    * @param {Object} props
    * @param {String} props.baseUrl - The base URL of the ALKS service
    * @param {String} props.accessToken - The OAuth2 access token used to authorize the request
@@ -106,7 +123,7 @@ class alks {
 
   /**
    * Returns a Promise for AWS STS credentials with IAM permissions from ALKS.
-   * 
+   *
    * @param {Object} props
    * @param {String} props.baseUrl - The base URL of the ALKS service
    * @param {String} props.accessToken - The OAuth2 access token used to authorize the request
@@ -133,7 +150,7 @@ class alks {
 
   /**
    * Returns a Promise for an array of available AWS IAM role types
-   * 
+   *
    * @param {Object} props
    * @param {String} props.baseUrl - The base URL of the ALKS service
    * @param {String} props.accessToken - The OAuth2 access token used to authorize the request
@@ -147,14 +164,14 @@ class alks {
    * })
    */
   getAWSRoleTypes(props) {
-    return(this._doFetch('getAWSRoleTypes', props).then(results => 
+    return(this._doFetch('getAWSRoleTypes', props).then(results =>
       JSON.parse(results.roleTypes)
     ))
   }
 
   /**
    * Returns a Promise for an array of available custom role types
-   * 
+   *
    * @param {Object} props
    * @param {String} props.baseUrl - The base URL of the ALKS service
    * @param {String} props.accessToken - The OAuth2 access token used to authorize the request
@@ -165,7 +182,7 @@ class alks {
    *   accessToken: 'abc123',
    * }).then((roleTypes) => {
    *   // ['AWS Lambda', 'Amazon EC2', ...]
-   * }) 
+   * })
    */
   getNonServiceAWSRoleTypes(props) {
     return(this._doFetch('getNonServiceAWSRoleTypes', props).then(results =>
@@ -184,7 +201,7 @@ class alks {
 
   /**
    * Returns a Promise for the results of creating a new custom AWS IAM account role
-   * 
+   *
    * @param {Object} props
    * @param {String} props.baseUrl - The base URL of the ALKS service
    * @param {String} props.accessToken - The OAuth2 access token used to authorize the request
@@ -216,7 +233,7 @@ class alks {
 
   /**
    * Returns a Promise for the results of creating a new custom AWS IAM trust role
-   * 
+   *
    * @param {Object} props
    * @param {String} props.baseUrl - The base URL of the ALKS service
    * @param {String} props.accessToken - The OAuth2 access token used to authorize the request
@@ -252,7 +269,7 @@ class alks {
 
   /**
    * Returns a Promise for an array of AWS custom AWS IAM account roles
-   * 
+   *
    * @param {Object} props
    * @param {String} props.baseUrl - The base URL of the ALKS service
    * @param {String} props.accessToken - The OAuth2 access token used to authorize the request
@@ -267,7 +284,7 @@ class alks {
    *   role: 'IAMAdmin',
    * }).then((roleNames) => {
    *   // ['customRole1', 'customRole2', ...]
-   * }) 
+   * })
    */
 
   listAWSAccountRoles(props) {
@@ -278,14 +295,14 @@ class alks {
 
   /**
    * Returns a Promise for the Amazon Resource Name (ARN) of a custom AWS IAM account role
-   * 
+   *
    * @param {Object} props
    * @param {String} props.baseUrl - The base URL of the ALKS service
    * @param {String} props.accessToken - The OAuth2 access token used to authorize the request
    * @param {String} props.account - The user's account associated with the custom role
    * @param {String} props.role - The user's role associated with the account
    * @param {String} props.roleName - The name of the custom AWs IAM role
-   * @returns {Promise<String>} 
+   * @returns {Promise<String>}
    * @example
    * alks.getAccountRole({
    *   baseUrl: 'https://your.alks-host.com',
@@ -308,7 +325,7 @@ class alks {
 
   /**
    * Returns a Promise for a boolean "true" indicating the role was deleted
-   * 
+   *
    * @param {Object} props
    * @param {String} props.baseUrl - The base URL of the ALKS service
    * @param {String} props.accessToken - The OAuth2 access token used to authorize the request
@@ -333,7 +350,7 @@ class alks {
 
   /**
    * Returns a Promise for the results of creating new IAM user and long-term access keys
-   * 
+   *
    * @param {Object} props
    * @param {String} props.baseUrl - The base URL of the ALKS service
    * @param {String} props.accessToken - The OAuth2 access token used to authorize the request
@@ -360,7 +377,7 @@ class alks {
 
   /**
    * Returns a Promise for a boolean "true" indicating the IAM user and long-term access keys were deleted
-   * 
+   *
    * @param {Object} props
    * @param {String} props.baseUrl - The base URL of the ALKS service
    * @param {String} props.accessToken - The OAuth2 access token used to authorize the request
@@ -399,10 +416,10 @@ class alks {
       console.error('The userid and password properties are deprecated and should be replaced with an access token')
     }
 
-    var responsePromise = opts._fetch(`${opts.baseUrl}/${path}/`, { 
+    var responsePromise = opts._fetch(`${opts.baseUrl}/${path}/`, {
       method, headers, body: JSON.stringify(opts)
     })
-    
+
     // Add catch here to swallow the JSON parsing error (it'll get picked up below)
     let jsonPromise = responsePromise.then(r => r.json()).catch(() => {})
 
