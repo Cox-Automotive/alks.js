@@ -414,6 +414,10 @@ class alks {
 
     if (opts.userid || opts.password) {
       console.error('The userid and password properties are deprecated and should be replaced with an access token')
+      const credentials = this._base64Encode(`${opts.userid}:${opts.password}`)
+      headers['Authorization'] = `Bearer ${credentials}`
+      delete opts.userid
+      delete opts.password
     }
 
     var responsePromise = opts._fetch(`${opts.baseUrl}/${path}/`, {
