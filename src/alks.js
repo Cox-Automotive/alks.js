@@ -411,6 +411,22 @@ class alks {
     return(this._doFetch('IAMUser', props, 'DELETE').then(() => true ))
   }
 
+  /**
+   * Returns the version of the ALKS Rest API
+   *
+   * @param {Object} props - An object containing the following properties
+   * @returns {Promise<Object>}
+   * @example
+   * alks.version({
+   *   ...
+   * }).then((data) => {
+   *   // data.version
+   * })
+   */
+  version(props) {
+    return this._doFetch('version', props).then((results) => pick(results, ['version']))
+  }
+
   _doFetch(path, args = { }, method = 'POST') {
     let opts = Object.assign({}, this.defaults, args)
 
