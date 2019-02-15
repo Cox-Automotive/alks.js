@@ -98,7 +98,6 @@ class alks {
   /**
    * Returns a Promise for AWS STS credentials from ALKS.
    *
-
    * @param {Object} props - An object containing the following properties
    * @param {string} props.baseUrl - The base URL of the ALKS service
    * @param {string} props.accessToken - The OAuth2 access token used to authorize the request
@@ -126,7 +125,6 @@ class alks {
   /**
    * Returns a Promise for AWS STS credentials with IAM permissions from ALKS.
    *
-
    * @param {Object} props - An object containing the following properties
    * @param {string} props.baseUrl - The base URL of the ALKS service
    * @param {string} props.accessToken - The OAuth2 access token used to authorize the request
@@ -175,7 +173,6 @@ class alks {
   /**
    * Returns a Promise for an array of available custom role types
    *
-
    * @param {Object} props - An object containing the following properties
    * @param {string} props.baseUrl - The base URL of the ALKS service
    * @param {string} props.accessToken - The OAuth2 access token used to authorize the request
@@ -206,7 +203,6 @@ class alks {
   /**
    * Returns a Promise for the results of creating a new custom AWS IAM account role
    *
-
    * @param {Object} props - An object containing the following properties
    * @param {string} props.baseUrl - The base URL of the ALKS service
    * @param {string} props.accessToken - The OAuth2 access token used to authorize the request
@@ -239,7 +235,6 @@ class alks {
   /**
    * Returns a Promise for the results of creating a new custom AWS IAM trust role
    *
-
    * @param {Object} props - An object containing the following properties
    * @param {string} props.baseUrl - The base URL of the ALKS service
    * @param {string} props.accessToken - The OAuth2 access token used to authorize the request
@@ -302,7 +297,6 @@ class alks {
   /**
    * Returns a Promise for the Amazon Resource Name (ARN) of a custom AWS IAM account role
    *
-
    * @param {Object} props - An object containing the following properties
    * @param {string} props.baseUrl - The base URL of the ALKS service
    * @param {string} props.accessToken - The OAuth2 access token used to authorize the request
@@ -333,7 +327,6 @@ class alks {
   /**
    * Returns a Promise for a boolean "true" indicating the role was deleted
    *
-
    * @param {Object} props - An object containing the following properties
    * @param {string} props.baseUrl - The base URL of the ALKS service
    * @param {string} props.accessToken - The OAuth2 access token used to authorize the request
@@ -369,7 +362,6 @@ class alks {
   /**
    * Returns a Promise for the results of creating new IAM user and long-term access keys
    *
-
    * @param {Object} props - An object containing the following properties
    * @param {string} props.baseUrl - The base URL of the ALKS service
    * @param {string} props.accessToken - The OAuth2 access token used to authorize the request
@@ -397,7 +389,6 @@ class alks {
   /**
    * Returns a Promise for a boolean "true" indicating the IAM user and long-term access keys were deleted
    *
-
    * @param {Object} props - An object containing the following properties
    * @param {string} props.baseUrl - The base URL of the ALKS service
    * @param {string} props.accessToken - The OAuth2 access token used to authorize the request
