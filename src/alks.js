@@ -484,6 +484,36 @@ class alks {
     )
   }
 
+  /**
+   * Revokes a refresh or access token
+   *
+   * @param {Object} props - An object containing the following properties
+   * @param {string} [props.token] - the access or refresh token to revoke (Required if tokenId not specified)
+   * @param {string} [props.tokenId] - the ID of the refresh token to revoke (Required if token not specified)
+   * @returns {boolean}
+   * @example
+   * alks.revoke({
+   *   token: '...',
+   *   ...
+   * }).then((success) => {
+   *   // success == true
+   * })
+   *
+   * // or
+   *
+   * alks.revoke({
+   *   tokenId: '...',
+   *   ...
+   * }).then((success) => {
+   *   // success == true
+   * })
+   */
+  revoke(props) {
+    return this._doFetch('revoke', props).then((results) =>
+      results.statusMessage == 'Success'
+    )
+  }
+
   _doFetch(path, args = { }, method = 'POST') {
     let opts = Object.assign({}, this.defaults, args)
 
