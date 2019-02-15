@@ -447,6 +447,25 @@ class alks {
       pick(results, ['account', 'role', 'iamKeyActive', 'maxKeyDuration']))
   }
 
+  /**
+   * Exchanges a refresh token for an access token
+   *
+   * @param {Object} props - An object containing the following properties
+   * @param {string} props.refreshToken - the refresh token to exchange
+   * @returns {Promise<Object>}
+   * @example
+   * alks.getAccessToken({
+   *   ...
+   * }).then((data) => {
+   *   // data.accessToken, data.expiresIn
+   * })
+   */
+  getAccessToken(props) {
+    return this._doFetch('accessToken', props).then((results) =>
+      pick(results, ['accessToken', 'expiresIn'])
+    )
+  }
+
   _doFetch(path, args = { }, method = 'POST') {
     let opts = Object.assign({}, this.defaults, args)
 
