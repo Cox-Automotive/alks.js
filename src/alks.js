@@ -466,6 +466,24 @@ class alks {
     )
   }
 
+  /**
+   * Returns a list of a user's refresh tokens (Does not return the full token)
+   *
+   * @param {Object} props - An object containing the following properties
+   * @returns {Array<Object>}
+   * @example
+   * alks.getRefreshTokens({
+   *   ...
+   * }).then((tokens) => {
+   *   // token[i].clientId, token[i].id, token[i].userId, token[i].value
+   * })
+   */
+  getRefreshTokens(props) {
+    return this._doFetch('refreshTokens', props, 'GET').then((results) =>
+      results.refreshTokens.map((token) => pick(token, ['clientId', 'id', 'userId', 'value']))
+    )
+  }
+
   _doFetch(path, args = { }, method = 'POST') {
     let opts = Object.assign({}, this.defaults, args)
 
