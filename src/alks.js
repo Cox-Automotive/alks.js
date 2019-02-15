@@ -1,6 +1,7 @@
 import buffer_polyfill from 'buffer/'
 const Buffer = process.browser ? buffer_polyfill.Buffer : Buffer
 const fetch = process.browser ? window.fetch.bind(window) : require('node-fetch')
+const packageJson = require('../package.json')
 
 /**
  * ALKS JavaScript API
@@ -423,7 +424,8 @@ class alks {
     let opts = Object.assign({}, this.defaults, args)
 
     let headers = {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'User-Agent': `AlksJS/${packageJson.version}`,
     }
 
     if (opts.accessToken) {
