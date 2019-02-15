@@ -427,6 +427,26 @@ class alks {
     return this._doFetch('version', props).then((results) => pick(results, ['version']))
   }
 
+  /**
+   * Returns information about one of the roles used to generate keys
+   *
+   * @param {Object} props - An object containing the following properties
+   * @param {string} props.account - The user's account associated with the custom role
+   * @param {string} props.role - The user's role associated with the account
+   * @returns {Promise<Object>}
+   * @example
+   * alks.getLoginRole({
+   *   ...
+   * }).then((loginRole) => {
+   *   // loginRole.account, loginRole.role, loginRole.iamKeyActive, loginRole.maxKeyDuration
+   * })
+   */
+  getLoginRole(props) {
+    const {account, role} = props
+    return this._doFetch(`loginRoles/id/${account}/${role}`, null).then((results) =>
+      pick(results, ['account', 'role', 'iamKeyActive', 'maxKeyDuration']))
+  }
+
   _doFetch(path, args = { }, method = 'POST') {
     let opts = Object.assign({}, this.defaults, args)
 
