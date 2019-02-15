@@ -1,7 +1,7 @@
+import * as packageJson from '../package.json'
 import buffer_polyfill from 'buffer/'
 const Buffer = process.browser ? buffer_polyfill.Buffer : Buffer
 const fetch = process.browser ? window.fetch.bind(window) : require('node-fetch')
-const packageJson = require('../package.json')
 
 /**
  * ALKS JavaScript API

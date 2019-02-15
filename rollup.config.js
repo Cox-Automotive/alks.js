@@ -3,8 +3,7 @@ import replace from 'rollup-plugin-replace'
 import cleanup from 'rollup-plugin-cleanup'
 import resolve from 'rollup-plugin-node-resolve'
 import commonjs from 'rollup-plugin-commonjs'
-// import builtins from 'rollup-plugin-node-builtins'
-// import globals from 'rollup-plugin-node-globals'
+import json from 'rollup-plugin-json'
 
 export default [
   {
@@ -19,15 +18,13 @@ export default [
       }
     },
     plugins: [
+      json(),
       buble({
         objectAssign: 'Object.assign'
       }),
       replace({'process.browser': true}),
-      // builtins(),
-      // globals(),
       resolve(),
       commonjs(),
-      buble(),
       cleanup()
     ]
   },
@@ -39,6 +36,7 @@ export default [
       name: 'alks',
     },
     plugins: [
+      json(),
       replace({'process.browser': false}),
       resolve(),
       commonjs(),
