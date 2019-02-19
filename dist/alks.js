@@ -1682,9 +1682,9 @@ var alks = (function () {
     return this._doFetch('version', props, 'GET').then(function (results) { return pick(results, ['version']); })
   };
   alks.prototype.getLoginRole = function getLoginRole (props) {
-    var account = props.account;
+    var accountId = props.accountId;
       var role = props.role;
-    return this._doFetch(("loginRoles/id/" + account + "/" + role), null).then(function (results) { return pick(results, ['account', 'role', 'iamKeyActive', 'maxKeyDuration']); })
+    return this._doFetch(("loginRoles/id/" + accountId + "/" + role), null).then(function (results) { return pick(results, ['account', 'role', 'iamKeyActive', 'maxKeyDuration']); })
   };
   alks.prototype.getAccessToken = function getAccessToken (props) {
     return this._doFetch('accessToken', props).then(function (results) { return pick(results, ['accessToken', 'expiresIn']); }

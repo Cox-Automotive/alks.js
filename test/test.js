@@ -470,4 +470,164 @@ describe('alks.js', function() {
       expect(alks2.defaults).to.have.all.keys(['baseUrl', 'accessToken', 'foo', '_fetch'])
     })
   })
+
+  describe('version', () => {
+
+    it(`should return ALKS's version`, async () => {
+
+      const _fetch = fetchMock.sandbox().mock('https://your.alks-host.com/version/', {
+        body: {
+          version: '1.2.3.4'
+        },
+        status: 200
+      })
+
+      const myAlks = alks.create({
+        baseUrl: 'https://your.alks-host.com',
+        accessToken: 'abc123',
+        _fetch
+      })
+
+      const result = await myAlks.version()
+
+      expect(result).to.include({
+        version: '1.2.3.4'
+      })
+    })
+  })
+
+  describe('getLoginRole', () => {
+
+    it('should return information about a login role', async () => {
+      const baseUrl = 'https://your.alks-host.com'
+      const accountId = '012345678910'
+      const role = 'Admin'
+      const account = `${accountId}/ALKS${role}`
+      const iamKeyActive = true
+      const maxKeyDuration = 12
+
+      const _fetch = fetchMock.sandbox().mock(`${baseUrl}/loginRoles/id/${accountId}/${role}/`, {
+        body: {
+          account,
+          role,
+          iamKeyActive,
+          maxKeyDuration
+        },
+        status: 200
+      })
+
+      const myAlks = await alks.create({
+        baseUrl,
+        accessToken: 'abc123',
+        _fetch
+      })
+
+      const result = await myAlks.getLoginRole({
+        accountId,
+        role
+      })
+
+      expect(result).to.include({
+        account,
+        role,
+        iamKeyActive,
+        maxKeyDuration
+      })
+    })
+  })
+
+  describe('getAccessToken', () => {
+
+    it('should return an access token', async () => {
+      const baseUrl = 'https://your.alks-host.com'
+      const accessToken = 'abcde12345'
+      const expiresIn = 3600
+
+      const _fetch = fetchMock.sandbox().mock(`${baseUrl}/accessToken/`, {
+        body: {
+          accessToken,
+          expiresIn
+        },
+        status: 200
+      })
+
+      const myAlks = alks.create({
+        baseUrl,
+        accessToken: 'abc123',
+        _fetch
+      })
+
+      const result = await myAlks.getAccessToken()
+
+      expect(result).to.include({
+        accessToken,
+        expiresIn
+      })
+    })
+  })
+
+  describe('getRefreshTokens', () => {
+
+    it('should return a list of objects containing info on my refresh tokens', async () => {
+      const baseUrl = 'https://your.alks-host.com'
+      const refreshTokens = [
+        {
+          clientId: 'abcd',
+          id: '01234',
+          userId: 'joebob123',
+          value: 'abcdefg'
+        },
+        {
+          clientId: 'efgh',
+          id: '56789',
+          userId: 'bobjoe456',
+          value: 'hijklmno'
+        }
+      ]
+
+      const _fetch = fetchMock.sandbox().mock(`${baseUrl}/refreshTokens/`, {
+        body: {
+          refreshTokens
+        },
+        status: 200
+      })
+
+      const myAlks = await alks.create({
+        baseUrl,
+        accessToken: 'abc123',
+        _fetch
+      })
+
+      const result = await myAlks.getRefreshTokens()
+
+      console.log(JSON.stringify(result))
+
+      expect(result).to.deep.equal(refreshTokens)
+    })
+  })
+
+  describe('revoke', () => {
+
+    it('should true on success', async () => {
+      const baseUrl = 'https://your.alks-host.com'
+      const tokenId = '01234'
+
+      const _fetch = fetchMock.sandbox().mock(`${baseUrl}/revoke/`, {
+        body: {
+          statusMessage: 'Success'
+        },
+        status: 200
+      })
+
+      const myAlks = await alks.create({
+        baseUrl,
+        accessToken: 'abc123',
+        _fetch
+      })
+
+      const result = await myAlks.revoke({tokenId})
+
+      expect(result).to.be.true
+    })
+  })
 })
