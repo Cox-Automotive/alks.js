@@ -1,6 +1,6 @@
 import * as packageJson from '../package.json'
 import buffer_polyfill from 'buffer/'
-const Buffer = process.browser ? buffer_polyfill.Buffer : Buffer
+const Buffer = process.browser ? buffer_polyfill.Buffer : require('buffer').Buffer
 const fetch = process.browser ? window.fetch.bind(window) : require('node-fetch')
 
 /**
@@ -424,7 +424,7 @@ class alks {
    * })
    */
   version(props) {
-    return this._doFetch('version', props).then((results) => pick(results, ['version']))
+    return this._doFetch('version', props, 'GET').then((results) => pick(results, ['version']))
   }
 
   /**
@@ -536,7 +536,7 @@ class alks {
     }
 
     var responsePromise = opts._fetch(`${opts.baseUrl}/${path}/`, {
-      method, headers, body: JSON.stringify(opts)
+      method, headers, body: method == 'GET' ? undefined : JSON.stringify(opts)
     })
 
     // Add catch here to swallow the JSON parsing error (it'll get picked up below)

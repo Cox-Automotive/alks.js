@@ -3,14 +3,13 @@
   "version": "1.0.1",
   "description": "JavaScript client for the ALKS API, usable in both modern browsers and node.js",
   "main": "lib/alks.node.js",
-  "browser": "dist/alks.min.js",
   "scripts": {
     "rmdirs": "rimraf lib dist",
     "mkdirs": "mkdirp lib dist",
     "clean": "npm run rmdirs && npm run mkdirs",
     "rollup": "rollup -c rollup.config.js",
     "minify": "uglifyjs -mc < dist/alks.js > dist/alks.min.js",
-    "prepublish": "npm run build & npm run docs",
+    "prepublish": "npm run build && npm run docs",
     "build": "npm run clean && npm run rollup && npm run minify",
     "lint": "eslint src/*.js test/*.js",
     "test": "npm run build && npm run lint && npm run mocha && npm run karma",
@@ -37,7 +36,7 @@
   },
   "license": "MIT",
   "engines": {
-    "node": ">=6.0.0"
+    "node": ">=8.0.0"
   },
   "dependencies": {
     "buffer": "^5.2.1",
@@ -70,6 +69,7 @@
     "rollup-plugin-node-globals": "^1.4.0",
     "rollup-plugin-node-resolve": "^4.0.0",
     "rollup-plugin-replace": "^2.0.0",
+    "sinon": "^7.2.4",
     "uglify-js": "^3.4.7",
     "watchify": "^3.11.0"
   }
