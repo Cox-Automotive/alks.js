@@ -29,11 +29,13 @@ describe('alks.js', function() {
         _fetch
       })
 
-      expect(result.to.deep.include({
+      console.log(result)
+
+      expect(result).to.deep.include({
         account: '1234 - foobar',
         role: 'role1',
         iamKeyActive: true
-      }))
+      })
     })
   })
 
@@ -43,6 +45,10 @@ describe('alks.js', function() {
 
     beforeEach(() => {
       consoleErrorSpy = sinon.spy(console, 'error')
+    })
+
+    afterEach(() => {
+      consoleErrorSpy.restore()
     })
 
     it('should return an access key, secret key, and session token', async () => {
@@ -69,7 +75,7 @@ describe('alks.js', function() {
         status: 401
       })
 
-      const result = await alks.getKeys({
+      const result = alks.getKeys({
         baseUrl: 'https://your.alks-host.com',
         account: 'anAccount',
         role: 'PowerUser',
@@ -91,7 +97,7 @@ describe('alks.js', function() {
         status: 401
       })
 
-      const result = await alks.getKeys({
+      const result = alks.getKeys({
         baseUrl: 'https://your.alks-host.com',
         account: 'anAccount',
         role: 'PowerUser',
@@ -110,7 +116,7 @@ describe('alks.js', function() {
     it('handles a server error', async () => {
       const _fetch = fetchMock.sandbox().mock('https://your.alks-host.com/getKeys/', { status: 500 })
 
-      const result = await alks.getKeys({
+      const result = alks.getKeys({
         baseUrl: 'https://your.alks-host.com',
         account: 'anAccount',
         role: 'PowerUser',
@@ -233,7 +239,7 @@ describe('alks.js', function() {
         status: 200
       })
 
-      const result = await alks.getAccountRole({
+      const result = alks.getAccountRole({
         baseUrl: 'https://your.alks-host.com',
         accessToken: 'abc123',
         account: 'anAccount',

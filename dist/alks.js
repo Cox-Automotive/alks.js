@@ -1678,6 +1678,26 @@ var alks = (function () {
   alks.prototype.deleteIAMUser = function deleteIAMUser (props) {
     return(this._doFetch('IAMUser', props, 'DELETE').then(function () { return true; } ))
   };
+  alks.prototype.version = function version$$1 (props) {
+    return this._doFetch('version', props, 'GET').then(function (results) { return pick(results, ['version']); })
+  };
+  alks.prototype.getLoginRole = function getLoginRole (props) {
+    var account = props.account;
+      var role = props.role;
+    return this._doFetch(("loginRoles/id/" + account + "/" + role), null).then(function (results) { return pick(results, ['account', 'role', 'iamKeyActive', 'maxKeyDuration']); })
+  };
+  alks.prototype.getAccessToken = function getAccessToken (props) {
+    return this._doFetch('accessToken', props).then(function (results) { return pick(results, ['accessToken', 'expiresIn']); }
+    )
+  };
+  alks.prototype.getRefreshTokens = function getRefreshTokens (props) {
+    return this._doFetch('refreshTokens', props, 'GET').then(function (results) { return results.refreshTokens.map(function (token) { return pick(token, ['clientId', 'id', 'userId', 'value']); }); }
+    )
+  };
+  alks.prototype.revoke = function revoke (props) {
+    return this._doFetch('revoke', props).then(function (results) { return results.statusMessage == 'Success'; }
+    )
+  };
   alks.prototype._doFetch = function _doFetch (path, args, method) {
       if ( args === void 0 ) args = { };
       if ( method === void 0 ) method = 'POST';
@@ -1698,7 +1718,7 @@ var alks = (function () {
       delete opts.password;
     }
     var responsePromise = opts._fetch(((opts.baseUrl) + "/" + path + "/"), {
-      method: method, headers: headers, body: JSON.stringify(opts)
+      method: method, headers: headers, body: method == 'GET' ? undefined : JSON.stringify(opts)
     });
     var jsonPromise = responsePromise.then(function (r) { return r.json(); }).catch(function () {});
     return Promise.all([responsePromise, jsonPromise]).then(function (ref) {
