@@ -39,7 +39,6 @@
     "node": ">=8.0.0"
   },
   "dependencies": {
-    "buffer": "^5.2.1",
     "node-fetch": "^2.2.0"
   },
   "devDependencies": {

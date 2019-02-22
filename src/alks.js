@@ -1,6 +1,5 @@
 import * as packageJson from '../package.json'
-import buffer_polyfill from 'buffer/'
-const Buffer = process.browser ? buffer_polyfill.Buffer : require('buffer').Buffer
+const Buffer = process.browser ? undefined : require('buffer').Buffer
 const fetch = process.browser ? window.fetch.bind(window) : require('node-fetch')
 
 /**
@@ -16,15 +15,18 @@ class alks {
    * Encodes a string to base 64
    *
    * @param {string} str - the string to encode
-   * @param {string} [encoding] - the encoding of the string to convert (default is utf-8)
    * @private
    * @returns {string} the base64 encoded string
    * @example
    * var input = 'password'
    * alks.base64Encode(input)
    */
-  _base64Encode(str = '', encoding = 'utf-8') {
-    return Buffer.from(str, encoding).toString('base64')
+  _base64Encode(str = '') {
+    if (process.browser) {
+      return btoa(str)
+    } else {
+      return Buffer.from(str).toString('base64')
+    }
   }
 
   /**
@@ -530,7 +532,7 @@ class alks {
     if (opts.userid || opts.password) {
       console.error('The userid and password properties are deprecated and should be replaced with an access token')
       const credentials = this._base64Encode(`${opts.userid}:${opts.password}`)
-      headers['Authorization'] = `Bearer ${credentials}`
+      headers['Authorization'] = `Basic ${credentials}`
       delete opts.userid
       delete opts.password
     }
