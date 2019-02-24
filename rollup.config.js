@@ -1,39 +1,44 @@
 import buble from 'rollup-plugin-buble'
 import replace from 'rollup-plugin-replace'
-import cleanup from 'rollup-plugin-cleanup'
 import json from 'rollup-plugin-json'
+import pkg from './package.json'
 
 export default [
   {
     input: 'src/alks.js',
     output: {
-      file: 'dist/alks.js',
-      format: 'iife',
-      name: 'alks',
-      globals: {
-        alks: 'alks',
-        buffer: 'buffer',
-      }
+      file: pkg.browser,
+      format: 'umd',
+      name: 'alks'
     },
     plugins: [
       json(),
       buble({
         objectAssign: 'Object.assign'
       }),
-      replace({'process.browser': true}),
-      cleanup()
+      replace({'process.browser': true})
     ]
   },
   {
     input: 'src/alks.js',
     output: {
-      file: 'lib/alks.node.js',
-      format: 'cjs',
-      name: 'alks',
+      file: pkg.main,
+      format: 'cjs'
     },
     plugins: [
       json(),
       replace({'process.browser': false})
+    ]
+  },
+  {
+    input: 'src/alks.js',
+    output: {
+      file: pkg.module,
+      format: 'es'
+    },
+    plugins: [
+      json(),
+      replace({'process.browser': true})
     ]
   }
 ]

@@ -1,18 +1,22 @@
-'use strict';
+(function (global, factory) {
+  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
+  typeof define === 'function' && define.amd ? define(factory) :
+  (global = global || self, global.alks = factory());
+}(this, function () { 'use strict';
 
-var version = "1.0.1";
+  var version = "1.1.0";
 
-const Buffer = require('buffer').Buffer;
-const fetch = require('node-fetch');
+  var fetch = window.fetch.bind(window);
 
-/**
- * ALKS JavaScript API
- *
- */
-class alks {
-  constructor(props, existing = {}) {
+  /**
+   * ALKS JavaScript API
+   *
+   */
+  var alks = function alks(props, existing) {
+    if ( existing === void 0 ) existing = {};
+
     this.defaults = Object.assign({}, existing, { _fetch: fetch }, props);
-  }
+  };
 
   /**
    * Encodes a string to base 64
@@ -24,11 +28,13 @@ class alks {
    * var input = 'password'
    * alks.base64Encode(input)
    */
-  _base64Encode(str = '') {
+  alks.prototype._base64Encode = function _base64Encode (str) {
+      if ( str === void 0 ) str = '';
+
     {
-      return Buffer.from(str).toString('base64')
+      return btoa(str)
     }
-  }
+  };
 
   /**
    * Returns a new instance of alks with pre-defined properties (which don't need to be supplied to every method).
@@ -41,21 +47,21 @@ class alks {
    * @returns {alks}
    * @example
    * var myAlks = alks.create({
-   *   baseUrl: 'https://your.alks-host.com',
-   *   accessToken: 'abc123',
+   * baseUrl: 'https://your.alks-host.com',
+   * accessToken: 'abc123',
    * })
    *
    * myAlks.getKeys({
-   *   account: 'anAccount',
-   *   role: 'PowerUser',
-   *   sessionTime: 2
+   * account: 'anAccount',
+   * role: 'PowerUser',
+   * sessionTime: 2
    * }).then((creds) => {
-   *   // creds.accessKey, creds.secretKey, creds.sessionToken
+   * // creds.accessKey, creds.secretKey, creds.sessionToken
    * })
    */
-  create(props) {
+  alks.prototype.create = function create (props) {
     return(new alks(props, this.defaults))
-  }
+  };
 
   /**
    * AWS Account
@@ -74,21 +80,20 @@ class alks {
    * @returns {Promise<account[]>}
    * @example
    * alks.getAccounts({
-   *   baseUrl: 'https://your.alks-host.com',
-   *   accessToken: 'abc123',
+   * baseUrl: 'https://your.alks-host.com',
+   * accessToken: 'abc123',
    * }).then((accounts) => {
-   *   // accounts[0].account, accounts[0].role, accounts[0].iamKeyActive
+   * // accounts[0].account, accounts[0].role, accounts[0].iamKeyActive
    * })
    */
-  getAccounts(props) {
-    return(this._doFetch('getAccounts', props).then(results =>
-      Object.keys(results.accountListRole).map((key) => ({
+  alks.prototype.getAccounts = function getAccounts (props) {
+    return(this._doFetch('getAccounts', props).then(function (results) { return Object.keys(results.accountListRole).map(function (key) { return ({
         account: key,
         role: results.accountListRole[key][0].role,
         iamKeyActive: results.accountListRole[key][0].iamKeyActive
-      }))
+      }); }); }
     ))
-  }
+  };
 
   /**
    * AWS STS Credentials
@@ -110,20 +115,19 @@ class alks {
    * @returns {Promise<credentials>}
    * @example
    * alks.getKeys({
-   *   baseUrl: 'https://your.alks-host.com',
-   *   accessToken: 'abc123',
-   *   account: 'anAccount',
-   *   role: 'PowerUser',
-   *   sessionTime: 2
+   * baseUrl: 'https://your.alks-host.com',
+   * accessToken: 'abc123',
+   * account: 'anAccount',
+   * role: 'PowerUser',
+   * sessionTime: 2
    * }).then((creds) => {
-   *   // creds.accessKey, creds.secretKey, creds.sessionToken
+   * // creds.accessKey, creds.secretKey, creds.sessionToken
    * })
    */
-  getKeys(props) {
-    return(this._doFetch('getKeys', props).then(results =>
-      pick(results, ['accessKey', 'secretKey', 'sessionToken'])
+  alks.prototype.getKeys = function getKeys (props) {
+    return(this._doFetch('getKeys', props).then(function (results) { return pick(results, ['accessKey', 'secretKey', 'sessionToken']); }
     ))
-  }
+  };
 
   /**
    * Returns a Promise for AWS STS credentials with IAM permissions from ALKS.
@@ -137,20 +141,19 @@ class alks {
    * @returns {Promise<credentials>}
    * @example
    * alks.getIAMKeys({
-   *   baseUrl: 'https://your.alks-host.com',
-   *   accessToken: 'abc123',
-   *   account: 'anAccount',
-   *   role: 'IAMAdmin',
-   *   sessionTime: 1
+   * baseUrl: 'https://your.alks-host.com',
+   * accessToken: 'abc123',
+   * account: 'anAccount',
+   * role: 'IAMAdmin',
+   * sessionTime: 1
    * }).then((creds) => {
-   *   // creds.accessKey, creds.secretKey, creds.sessionToken
+   * // creds.accessKey, creds.secretKey, creds.sessionToken
    * })
    */
-  getIAMKeys(props) {
-    return(this._doFetch('getIAMKeys', props).then(results =>
-      pick(results, ['accessKey', 'secretKey', 'sessionToken'])
+  alks.prototype.getIAMKeys = function getIAMKeys (props) {
+    return(this._doFetch('getIAMKeys', props).then(function (results) { return pick(results, ['accessKey', 'secretKey', 'sessionToken']); }
     ))
-  }
+  };
 
   /**
    * Returns a Promise for an array of available AWS IAM role types
@@ -161,17 +164,16 @@ class alks {
    * @returns {Promise<Array<string>>}
    * @example
    * alks.getAWSRoleTypes({
-   *   baseUrl: 'https://your.alks-host.com',
-   *   accessToken: 'abc123',
+   * baseUrl: 'https://your.alks-host.com',
+   * accessToken: 'abc123',
    * }).then((roleTypes) {
-   *   // ['AWS Lambda', 'Amazon EC2', ... ]
+   * // ['AWS Lambda', 'Amazon EC2', ... ]
    * })
    */
-  getAWSRoleTypes(props) {
-    return(this._doFetch('getAWSRoleTypes', props).then(results =>
-      JSON.parse(results.roleTypes)
+  alks.prototype.getAWSRoleTypes = function getAWSRoleTypes (props) {
+    return(this._doFetch('getAWSRoleTypes', props).then(function (results) { return JSON.parse(results.roleTypes); }
     ))
-  }
+  };
 
   /**
    * Returns a Promise for an array of available custom role types
@@ -182,17 +184,16 @@ class alks {
    * @returns {Promise<Array<string>>}
    * @example
    * alks.getNonServiceAWSRoleTypes({
-   *   baseUrl: 'https://your.alks-host.com',
-   *   accessToken: 'abc123',
+   * baseUrl: 'https://your.alks-host.com',
+   * accessToken: 'abc123',
    * }).then((roleTypes) => {
-   *   // ['AWS Lambda', 'Amazon EC2', ...]
+   * // ['AWS Lambda', 'Amazon EC2', ...]
    * })
    */
-  getNonServiceAWSRoleTypes(props) {
-    return(this._doFetch('getNonServiceAWSRoleTypes', props).then(results =>
-      JSON.parse(results.roleTypes)
+  alks.prototype.getNonServiceAWSRoleTypes = function getNonServiceAWSRoleTypes (props) {
+    return(this._doFetch('getNonServiceAWSRoleTypes', props).then(function (results) { return JSON.parse(results.roleTypes); }
     ))
-  }
+  };
 
   /**
   * Custom AWS IAM account role
@@ -217,23 +218,23 @@ class alks {
    * @returns {Promise<customRole>}
    * @example
    * alks.createRole({
-   *   baseUrl: 'https://your.alks-host.com',
-   *   accessToken: 'abc123',
-   *   account: 'anAccount',
-   *   role: 'IAMAdmin',
-   *   roleName: 'awsRoleName',
-   *   roleType: 'Amazon EC2',
-   *   includeDefaultPolicy: 1
+   * baseUrl: 'https://your.alks-host.com',
+   * accessToken: 'abc123',
+   * account: 'anAccount',
+   * role: 'IAMAdmin',
+   * roleName: 'awsRoleName',
+   * roleType: 'Amazon EC2',
+   * includeDefaultPolicy: 1
    * }).then((role) => {
-   *   // role.roleArn, role.denyArns, role.instanceProfileArn, role.addedRoleToInstanceProfile
+   * // role.roleArn, role.denyArns, role.instanceProfileArn, role.addedRoleToInstanceProfile
    * })
    */
-  createRole(props) {
-    return(this._doFetch('createRole', props).then((results) => {
+  alks.prototype.createRole = function createRole (props) {
+    return(this._doFetch('createRole', props).then(function (results) {
       results.denyArns = results.denyArns.split(',');
       return(pick(results,['roleArn', 'denyArns','instanceProfileArn','addedRoleToInstanceProfile']))
     }))
-  }
+  };
 
   /**
    * Returns a Promise for the results of creating a new custom AWS IAM trust role
@@ -251,25 +252,25 @@ class alks {
    * @returns {Promise<customRole>}
    * @example
    * alks.createNonServiceRole({
-   *   baseUrl: 'https://your.alks-host.com',
-   *   accessToken: 'abc123',
-   *   account: 'anAccount',
-   *   role: 'IAMAdmin',
-   *   roleName: 'awsRoleName',
-   *   roleType: 'Amazon EC2',
-   *   includeDefaultPolicy: 1,
-   *   trustArn: 'anExistingRoleArn',
-   *   trustType: 'Cross Account'
+   * baseUrl: 'https://your.alks-host.com',
+   * accessToken: 'abc123',
+   * account: 'anAccount',
+   * role: 'IAMAdmin',
+   * roleName: 'awsRoleName',
+   * roleType: 'Amazon EC2',
+   * includeDefaultPolicy: 1,
+   * trustArn: 'anExistingRoleArn',
+   * trustType: 'Cross Account'
    * }).then((role) => {
-   *   // role.roleArn, role.denyArns, role.instanceProfileArn, role.addedRoleToInstanceProfile
+   * // role.roleArn, role.denyArns, role.instanceProfileArn, role.addedRoleToInstanceProfile
    * })
    */
-  createNonServiceRole(props) {
-    return(this._doFetch('createNonServiceRole', props).then((results) => {
+  alks.prototype.createNonServiceRole = function createNonServiceRole (props) {
+    return(this._doFetch('createNonServiceRole', props).then(function (results) {
       results.denyArns = results.denyArns.split(',');
       return(pick(results,['roleArn', 'denyArns','instanceProfileArn','addedRoleToInstanceProfile']))
     }))
-  }
+  };
 
   /**
    * Returns a Promise for an array of AWS custom AWS IAM account roles
@@ -282,20 +283,19 @@ class alks {
    * @returns {Promise<String[]>}
    * @example
    * alks.listAWSAccountRoles({
-   *   baseUrl: 'https://your.alks-host.com',
-   *   accessToken: 'abc123',
-   *   account: 'anAccount',
-   *   role: 'IAMAdmin',
+   * baseUrl: 'https://your.alks-host.com',
+   * accessToken: 'abc123',
+   * account: 'anAccount',
+   * role: 'IAMAdmin',
    * }).then((roleNames) => {
-   *   // ['customRole1', 'customRole2', ...]
+   * // ['customRole1', 'customRole2', ...]
    * })
    */
 
-  listAWSAccountRoles(props) {
-    return(this._doFetch('listAWSAccountRoles', props).then(results =>
-      JSON.parse(results.jsonAWSRoleList).map(r => r.split('/').slice(-1)[0])
+  alks.prototype.listAWSAccountRoles = function listAWSAccountRoles (props) {
+    return(this._doFetch('listAWSAccountRoles', props).then(function (results) { return JSON.parse(results.jsonAWSRoleList).map(function (r) { return r.split('/').slice(-1)[0]; }); }
     ))
-  }
+  };
 
   /**
    * Returns a Promise for the Amazon Resource Name (ARN) of a custom AWS IAM account role
@@ -309,23 +309,23 @@ class alks {
    * @returns {Promise<string>}
    * @example
    * alks.getAccountRole({
-   *   baseUrl: 'https://your.alks-host.com',
-   *   accessToken: 'abc123',
-   *   account: 'anAccount',
-   *   role: 'IAMAdmin',
-   *   roleName: 'awsRoleName'
+   * baseUrl: 'https://your.alks-host.com',
+   * accessToken: 'abc123',
+   * account: 'anAccount',
+   * role: 'IAMAdmin',
+   * roleName: 'awsRoleName'
    * }).then((roleARN) => {
-   *   // arn:aws:iam::123:role/acct-managed/awsRoleName
+   * // arn:aws:iam::123:role/acct-managed/awsRoleName
    * })
    */
-  getAccountRole(props) {
-    return(this._doFetch('getAccountRole', props).then((results) => {
+  alks.prototype.getAccountRole = function getAccountRole (props) {
+    return(this._doFetch('getAccountRole', props).then(function (results) {
       if (!results.roleExists) {
-        throw new Error(`Role ${props.roleName} does not exist in this account`)
+        throw new Error(("Role " + (props.roleName) + " does not exist in this account"))
       }
       return(results.roleARN)
     }))
-  }
+  };
 
   /**
    * Returns a Promise for a boolean "true" indicating the role was deleted
@@ -339,27 +339,27 @@ class alks {
    * @returns {Promise<boolean>}
    * @example
    * alks.deleteRole({
-   *   baseUrl: 'https://your.alks-host.com',
-   *   accessToken: 'abc123',
-   *   account: 'anAccount',
-   *   role: 'IAMAdmin',
-   *   roleName: 'awsRoleName'
+   * baseUrl: 'https://your.alks-host.com',
+   * accessToken: 'abc123',
+   * account: 'anAccount',
+   * role: 'IAMAdmin',
+   * roleName: 'awsRoleName'
    * }).then(() => {
-   *   // success!
+   * // success!
    * })
    */
-  deleteRole(props) {
-    return(this._doFetch('deleteRole', props).then(() => true ))
-  }
+  alks.prototype.deleteRole = function deleteRole (props) {
+    return(this._doFetch('deleteRole', props).then(function () { return true; } ))
+  };
 
   /**
-   *  Response containing access keys.
+   *Response containing access keys.
    *
-   *  @typedef {Object} AccessKeys
-   *  @property {string} iamUserArn - the arn of the IAM user owning the long term access keys
-   *  @property {string} accessKey - the long term access key
-   *  @property {string} secretKey - the secret key for the long term access key
-   *  @property {boolean} addedIAMUserToGroup - whether the user was successfuly added to the deny policy group
+   *@typedef {Object} AccessKeys
+   *@property {string} iamUserArn - the arn of the IAM user owning the long term access keys
+   *@property {string} accessKey - the long term access key
+   *@property {string} secretKey - the secret key for the long term access key
+   *@property {boolean} addedIAMUserToGroup - whether the user was successfuly added to the deny policy group
    */
 
   /**
@@ -374,20 +374,19 @@ class alks {
    * @returns {Promise<AccessKeys>}
    * @example
    * alks.createAccessKeys({
-   *   baseUrl: 'https://your.alks-host.com',
-   *   accessToken: 'abc123',
-   *   account: 'anAccount',
-   *   role: 'IAMAdmin',
-   *   iamUserName: 'iamUserName'
+   * baseUrl: 'https://your.alks-host.com',
+   * accessToken: 'abc123',
+   * account: 'anAccount',
+   * role: 'IAMAdmin',
+   * iamUserName: 'iamUserName'
    * }).then((user) => {
-   *   // user.iamUserArn, user.accessKey, user.secretKey, user.addedIAMUserToGroup
+   * // user.iamUserArn, user.accessKey, user.secretKey, user.addedIAMUserToGroup
    * })
    */
-  createAccessKeys(props) {
-    return(this._doFetch('accessKeys', props).then((results) =>
-      pick(results,['iamUserArn', 'accessKey', 'secretKey', 'addedIAMUserToGroup']))
+  alks.prototype.createAccessKeys = function createAccessKeys (props) {
+    return(this._doFetch('accessKeys', props).then(function (results) { return pick(results,['iamUserArn', 'accessKey', 'secretKey', 'addedIAMUserToGroup']); })
     )
-  }
+  };
 
   /**
    * Returns a Promise for a boolean "true" indicating the IAM user and long-term access keys were deleted
@@ -401,18 +400,18 @@ class alks {
    * @returns {Promise<boolean>}
    * @example
    * alks.deleteIAMUser({
-   *   baseUrl: 'https://your.alks-host.com',
-   *   accessToken: 'abc123',
-   *   account: 'anAccount',
-   *   role: 'IAMAdmin',
-   *   iamUserName: 'iamUserName'
+   * baseUrl: 'https://your.alks-host.com',
+   * accessToken: 'abc123',
+   * account: 'anAccount',
+   * role: 'IAMAdmin',
+   * iamUserName: 'iamUserName'
    * }).then(() => {
-   *   // success!
+   * // success!
    * })
    */
-  deleteIAMUser(props) {
-    return(this._doFetch('IAMUser', props, 'DELETE').then(() => true ))
-  }
+  alks.prototype.deleteIAMUser = function deleteIAMUser (props) {
+    return(this._doFetch('IAMUser', props, 'DELETE').then(function () { return true; } ))
+  };
 
   /**
    * Returns the version of the ALKS Rest API
@@ -421,14 +420,14 @@ class alks {
    * @returns {Promise<Object>}
    * @example
    * alks.version({
-   *   ...
+   * ...
    * }).then((data) => {
-   *   // data.version
+   * // data.version
    * })
    */
-  version(props) {
-    return this._doFetch('version', props, 'GET').then((results) => pick(results, ['version']))
-  }
+  alks.prototype.version = function version (props) {
+    return this._doFetch('version', props, 'GET').then(function (results) { return pick(results, ['version']); })
+  };
 
   /**
    * Returns information about one of the roles used to generate keys
@@ -439,16 +438,16 @@ class alks {
    * @returns {Promise<Object>}
    * @example
    * alks.getLoginRole({
-   *   ...
+   * ...
    * }).then((loginRole) => {
-   *   // loginRole.account, loginRole.role, loginRole.iamKeyActive, loginRole.maxKeyDuration
+   * // loginRole.account, loginRole.role, loginRole.iamKeyActive, loginRole.maxKeyDuration
    * })
    */
-  getLoginRole(props) {
-    const {accountId, role} = props;
-    return this._doFetch(`loginRoles/id/${accountId}/${role}`, null).then((results) =>
-      pick(results, ['account', 'role', 'iamKeyActive', 'maxKeyDuration']))
-  }
+  alks.prototype.getLoginRole = function getLoginRole (props) {
+    var accountId = props.accountId;
+      var role = props.role;
+    return this._doFetch(("loginRoles/id/" + accountId + "/" + role), null).then(function (results) { return pick(results, ['account', 'role', 'iamKeyActive', 'maxKeyDuration']); })
+  };
 
   /**
    * Exchanges a refresh token for an access token
@@ -458,16 +457,15 @@ class alks {
    * @returns {Promise<Object>}
    * @example
    * alks.getAccessToken({
-   *   ...
+   * ...
    * }).then((data) => {
-   *   // data.accessToken, data.expiresIn
+   * // data.accessToken, data.expiresIn
    * })
    */
-  getAccessToken(props) {
-    return this._doFetch('accessToken', props).then((results) =>
-      pick(results, ['accessToken', 'expiresIn'])
+  alks.prototype.getAccessToken = function getAccessToken (props) {
+    return this._doFetch('accessToken', props).then(function (results) { return pick(results, ['accessToken', 'expiresIn']); }
     )
-  }
+  };
 
   /**
    * Returns a list of a user's refresh tokens (Does not return the full token)
@@ -476,16 +474,15 @@ class alks {
    * @returns {Array<Object>}
    * @example
    * alks.getRefreshTokens({
-   *   ...
+   * ...
    * }).then((tokens) => {
-   *   // token[i].clientId, token[i].id, token[i].userId, token[i].value
+   * // token[i].clientId, token[i].id, token[i].userId, token[i].value
    * })
    */
-  getRefreshTokens(props) {
-    return this._doFetch('refreshTokens', props, 'GET').then((results) =>
-      results.refreshTokens.map((token) => pick(token, ['clientId', 'id', 'userId', 'value']))
+  alks.prototype.getRefreshTokens = function getRefreshTokens (props) {
+    return this._doFetch('refreshTokens', props, 'GET').then(function (results) { return results.refreshTokens.map(function (token) { return pick(token, ['clientId', 'id', 'userId', 'value']); }); }
     )
-  }
+  };
 
   /**
    * Revokes a refresh or access token
@@ -496,74 +493,86 @@ class alks {
    * @returns {boolean}
    * @example
    * alks.revoke({
-   *   token: '...',
-   *   ...
+   * token: '...',
+   * ...
    * }).then((success) => {
-   *   // success == true
+   * // success == true
    * })
    *
    * // or
    *
    * alks.revoke({
-   *   tokenId: '...',
-   *   ...
+   * tokenId: '...',
+   * ...
    * }).then((success) => {
-   *   // success == true
+   * // success == true
    * })
    */
-  revoke(props) {
-    return this._doFetch('revoke', props).then((results) =>
-      results.statusMessage == 'Success'
+  alks.prototype.revoke = function revoke (props) {
+    return this._doFetch('revoke', props).then(function (results) { return results.statusMessage == 'Success'; }
     )
-  }
+  };
 
-  _doFetch(path, args = { }, method = 'POST') {
-    let opts = Object.assign({}, this.defaults, args);
+  alks.prototype._doFetch = function _doFetch (path, args, method) {
+      if ( args === void 0 ) args = { };
+      if ( method === void 0 ) method = 'POST';
 
-    let headers = {
+    var opts = Object.assign({}, this.defaults, args);
+
+    var headers = {
       'Content-Type': 'application/json',
-      'User-Agent': `AlksJS/${version}`,
+      'User-Agent': ("AlksJS/" + (version)),
     };
 
     if (opts.accessToken) {
-      headers['Authorization'] = `Bearer ${opts.accessToken}`;
+      headers['Authorization'] = "Bearer " + (opts.accessToken);
       delete opts.accessToken;
     }
 
     if (opts.userid || opts.password) {
       console.error('The userid and password properties are deprecated and should be replaced with an access token');
-      const credentials = this._base64Encode(`${opts.userid}:${opts.password}`);
-      headers['Authorization'] = `Basic ${credentials}`;
+      var credentials = this._base64Encode(((opts.userid) + ":" + (opts.password)));
+      headers['Authorization'] = "Basic " + credentials;
       delete opts.userid;
       delete opts.password;
     }
 
-    var responsePromise = opts._fetch(`${opts.baseUrl}/${path}/`, {
-      method, headers, body: method == 'GET' ? undefined : JSON.stringify(opts)
+    var responsePromise = opts._fetch(((opts.baseUrl) + "/" + path + "/"), {
+      method: method, headers: headers, body: method == 'GET' ? undefined : JSON.stringify(opts)
     });
 
     // Add catch here to swallow the JSON parsing error (it'll get picked up below)
-    let jsonPromise = responsePromise.then(r => r.json()).catch(() => {});
+    var jsonPromise = responsePromise.then(function (r) { return r.json(); }).catch(function () {});
 
-    return Promise.all([responsePromise, jsonPromise]).then(([response, json]) => {
+    return Promise.all([responsePromise, jsonPromise]).then(function (ref) {
+        var response = ref[0];
+        var json = ref[1];
+
       if (!response.ok) {
         throw new AlksError(response, json)
       }
       return(json)
     })
-  }
-}
+  };
 
-const pick = (obj, props) => props.reduce((a, e) => (a[e] = obj[e], a), {});
+  var pick = function (obj, props) { return props.reduce(function (a, e) { return (a[e] = obj[e], a); }, {}); };
 
-class AlksError extends Error {
-  constructor(response, json) {
-    super(response.statusText);
-    this.status = response.status;
-    Object.assign(this, json);
-  }
-}
+  var AlksError = /*@__PURE__*/(function (Error) {
+    function AlksError(response, json) {
+      Error.call(this, response.statusText);
+      this.status = response.status;
+      Object.assign(this, json);
+    }
 
-var alks$1 = new alks();
+    if ( Error ) AlksError.__proto__ = Error;
+    AlksError.prototype = Object.create( Error && Error.prototype );
+    AlksError.prototype.constructor = AlksError;
 
-module.exports = alks$1;
+    return AlksError;
+  }(Error));
+
+  var alks$1 = new alks();
+
+  return alks$1;
+
+}));
