@@ -441,7 +441,7 @@ describe('alks.js', function() {
         status: 200
       })
 
-      const myAlks = await alks.create({
+      const myAlks = alks.create({
         baseUrl: 'https://your.alks-host.com',
         accessToken: 'abc123',
         _fetch
@@ -468,7 +468,7 @@ describe('alks.js', function() {
         status: 200
       })
 
-      const myAlks = await alks.create({
+      const myAlks = alks.create({
         baseUrl: 'https://your.alks-host.com',
         accessToken: 'abc123',
         _fetch
@@ -480,7 +480,7 @@ describe('alks.js', function() {
     })
 
     it('should return a copy with defaults from the passed-in alks object', async () => {
-      const alks1 = await alks.create({
+      const alks1 = alks.create({
         baseUrl: 'https://your.alks-host.com',
         accessToken: 'abc123',
       })
@@ -536,7 +536,7 @@ describe('alks.js', function() {
         status: 200
       })
 
-      const myAlks = await alks.create({
+      const myAlks = alks.create({
         baseUrl,
         accessToken: 'abc123',
         _fetch
@@ -612,7 +612,7 @@ describe('alks.js', function() {
         status: 200
       })
 
-      const myAlks = await alks.create({
+      const myAlks = alks.create({
         baseUrl,
         accessToken: 'abc123',
         _fetch
@@ -637,7 +637,7 @@ describe('alks.js', function() {
         status: 200
       })
 
-      const myAlks = await alks.create({
+      const myAlks = alks.create({
         baseUrl,
         accessToken: 'abc123',
         _fetch
