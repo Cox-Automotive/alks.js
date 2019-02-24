@@ -1,8 +1,6 @@
 import buble from 'rollup-plugin-buble'
 import replace from 'rollup-plugin-replace'
 import cleanup from 'rollup-plugin-cleanup'
-import resolve from 'rollup-plugin-node-resolve'
-import commonjs from 'rollup-plugin-commonjs'
 import json from 'rollup-plugin-json'
 
 export default [
@@ -23,8 +21,6 @@ export default [
         objectAssign: 'Object.assign'
       }),
       replace({'process.browser': true}),
-      resolve(),
-      commonjs(),
       cleanup()
     ]
   },
@@ -37,9 +33,7 @@ export default [
     },
     plugins: [
       json(),
-      replace({'process.browser': false}),
-      resolve(),
-      commonjs(),
+      replace({'process.browser': false})
     ]
   }
 ]
