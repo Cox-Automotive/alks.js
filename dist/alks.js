@@ -75,7 +75,7 @@ var alks = (function () {
   alks.prototype.deleteIAMUser = function deleteIAMUser (props) {
     return(this._doFetch('IAMUser', props, 'DELETE').then(function () { return true; } ))
   };
-  alks.prototype.version = function version$$1 (props) {
+  alks.prototype.version = function version (props) {
     return this._doFetch('version', props, 'GET').then(function (results) { return pick(results, ['version']); })
   };
   alks.prototype.getLoginRole = function getLoginRole (props) {
