@@ -44,6 +44,11 @@ ALKS JavaScript API
     * [.deleteRole(props)](#alks+deleteRole) ⇒ <code>Promise.&lt;boolean&gt;</code>
     * [.createAccessKeys(props)](#alks+createAccessKeys) ⇒ [<code>Promise.&lt;AccessKeys&gt;</code>](#AccessKeys)
     * [.deleteIAMUser(props)](#alks+deleteIAMUser) ⇒ <code>Promise.&lt;boolean&gt;</code>
+    * [.version(props)](#alks+version) ⇒ <code>Promise.&lt;Object&gt;</code>
+    * [.getLoginRole(props)](#alks+getLoginRole) ⇒ <code>Promise.&lt;Object&gt;</code>
+    * [.getAccessToken(props)](#alks+getAccessToken) ⇒ <code>Promise.&lt;Object&gt;</code>
+    * [.getRefreshTokens(props)](#alks+getRefreshTokens) ⇒ <code>Array.&lt;Object&gt;</code>
+    * [.revoke(props)](#alks+revoke) ⇒ <code>boolean</code>
 
 <a name="alks+create"></a>
 
@@ -388,6 +393,111 @@ alks.deleteIAMUser({
   iamUserName: 'iamUserName'
 }).then(() => {
   // success!
+})
+```
+<a name="alks+version"></a>
+
+### alks.version(props) ⇒ <code>Promise.&lt;Object&gt;</code>
+Returns the version of the ALKS Rest API
+
+**Kind**: instance method of [<code>alks</code>](#alks)  
+**Params**
+
+- props <code>Object</code> - An object containing the following properties
+
+**Example**  
+```js
+alks.version({
+  ...
+}).then((data) => {
+  // data.version
+})
+```
+<a name="alks+getLoginRole"></a>
+
+### alks.getLoginRole(props) ⇒ <code>Promise.&lt;Object&gt;</code>
+Returns information about one of the roles used to generate keys
+
+**Kind**: instance method of [<code>alks</code>](#alks)  
+**Params**
+
+- props <code>Object</code> - An object containing the following properties
+    - .accountId <code>string</code> - The 12-digit account ID associated with the custom role
+    - .role <code>string</code> - The user's role associated with the account
+
+**Example**  
+```js
+alks.getLoginRole({
+  ...
+}).then((loginRole) => {
+  // loginRole.account, loginRole.role, loginRole.iamKeyActive, loginRole.maxKeyDuration
+})
+```
+<a name="alks+getAccessToken"></a>
+
+### alks.getAccessToken(props) ⇒ <code>Promise.&lt;Object&gt;</code>
+Exchanges a refresh token for an access token
+
+**Kind**: instance method of [<code>alks</code>](#alks)  
+**Params**
+
+- props <code>Object</code> - An object containing the following properties
+    - .refreshToken <code>string</code> - the refresh token to exchange
+
+**Example**  
+```js
+alks.getAccessToken({
+  ...
+}).then((data) => {
+  // data.accessToken, data.expiresIn
+})
+```
+<a name="alks+getRefreshTokens"></a>
+
+### alks.getRefreshTokens(props) ⇒ <code>Array.&lt;Object&gt;</code>
+Returns a list of a user's refresh tokens (Does not return the full token)
+
+**Kind**: instance method of [<code>alks</code>](#alks)  
+**Params**
+
+- props <code>Object</code> - An object containing the following properties
+
+**Example**  
+```js
+alks.getRefreshTokens({
+  ...
+}).then((tokens) => {
+  // token[i].clientId, token[i].id, token[i].userId, token[i].value
+})
+```
+<a name="alks+revoke"></a>
+
+### alks.revoke(props) ⇒ <code>boolean</code>
+Revokes a refresh or access token
+
+**Kind**: instance method of [<code>alks</code>](#alks)  
+**Params**
+
+- props <code>Object</code> - An object containing the following properties
+    - [.token] <code>string</code> - the access or refresh token to revoke (Required if tokenId not specified)
+    - [.tokenId] <code>string</code> - the ID of the refresh token to revoke (Required if token not specified)
+
+**Example**  
+```js
+alks.revoke({
+  token: '...',
+  ...
+}).then((success) => {
+  // success == true
+})
+
+// or
+
+alks.revoke({
+  tokenId: '...',
+  ...
+}).then((success) => {
+  // success == true
 })
 ```
 <a name="account"></a>
