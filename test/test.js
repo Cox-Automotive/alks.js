@@ -29,8 +29,6 @@ describe('alks.js', function() {
         _fetch
       })
 
-      console.log(result)
-
       expect(result).to.deep.include({
         account: '1234 - foobar',
         role: 'role1',
@@ -621,8 +619,6 @@ describe('alks.js', function() {
       })
 
       const result = await myAlks.getRefreshTokens()
-
-      console.log(JSON.stringify(result))
 
       expect(result).to.deep.equal(refreshTokens)
     })
