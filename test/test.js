@@ -4,6 +4,7 @@ chai.use(chaiAsPromised)
 const expect = chai.expect
 const sinon = require('sinon')
 const fetchMock = require('fetch-mock')
+const libraryVersion = require('../package.json').version
 
 var alks = require('../')
 
@@ -68,7 +69,7 @@ describe('alks.js', function() {
     })
 
     it('should send basic credentials via the Authorization header', async () => {
-      const username = 'joebob123'
+      const userid = 'joebob123'
       const password = 'letmein'
       const base64Credentials = 'am9lYm9iMTIzOmxldG1laW4=' // Base64(username:password)
       const _fetch = fetchMock.sandbox().mock('https://your.alks-host.com/getKeys/', {
@@ -81,12 +82,30 @@ describe('alks.js', function() {
         account: 'anAccount',
         role: 'PowerUser',
         sessionTime: 2,
-        userid: username,
-        password: password,
+        userid,
+        password,
         _fetch
       })
 
       expect(_fetch.lastCall()[1].headers.Authorization).to.equal(`Basic ${base64Credentials}`)
+    })
+
+    it('should send the library version via the User-Agent header', async () => {
+      const _fetch = fetchMock.sandbox().mock('https://your.alks-host.com/getKeys/', {
+        body: { accessKey: 'foo', secretKey: 'bar', sessionToken: 'baz', statusMessage: 'Success'},
+        status: 200
+      })
+
+      await alks.getKeys({
+        baseUrl: 'https://your.alks-host.com',
+        account: 'anAccount',
+        role: 'PowerUser',
+        sessionTime: 2,
+        _fetch
+      })
+
+      expect(_fetch.lastCall()[1].headers['User-Agent']).to.contain(libraryVersion)
+
     })
 
     it('rejects on error with ALKS statusMessage', async () => {
@@ -626,7 +645,7 @@ describe('alks.js', function() {
 
   describe('revoke', () => {
 
-    it('should true on success', async () => {
+    it('should return true on success', async () => {
       const baseUrl = 'https://your.alks-host.com'
       const tokenId = '01234'
 
