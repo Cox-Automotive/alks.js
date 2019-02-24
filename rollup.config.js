@@ -1,6 +1,7 @@
 import buble from 'rollup-plugin-buble'
 import replace from 'rollup-plugin-replace'
 import cleanup from 'rollup-plugin-cleanup'
+import json from 'rollup-plugin-json'
 
 export default [
   {
@@ -10,10 +11,12 @@ export default [
       format: 'iife',
       name: 'alks',
       globals: {
-        alks: 'alks'
+        alks: 'alks',
+        buffer: 'buffer',
       }
     },
     plugins: [
+      json(),
       buble({
         objectAssign: 'Object.assign'
       }),
@@ -28,7 +31,8 @@ export default [
       format: 'cjs',
       name: 'alks',
     },
-    plugins: [ 
+    plugins: [
+      json(),
       replace({'process.browser': false})
     ]
   }
