@@ -1,10 +1,18 @@
 var alks = (function () {
   'use strict';
 
+  var version = "1.0.1";
+
   var fetch = window.fetch.bind(window);
   var alks = function alks(props, existing) {
     if ( existing === void 0 ) existing = {};
     this.defaults = Object.assign({}, existing, { _fetch: fetch }, props);
+  };
+  alks.prototype._base64Encode = function _base64Encode (str) {
+      if ( str === void 0 ) str = '';
+    {
+      return btoa(str)
+    }
   };
   alks.prototype.create = function create (props) {
     return(new alks(props, this.defaults))
@@ -67,12 +75,33 @@ var alks = (function () {
   alks.prototype.deleteIAMUser = function deleteIAMUser (props) {
     return(this._doFetch('IAMUser', props, 'DELETE').then(function () { return true; } ))
   };
+  alks.prototype.version = function version$$1 (props) {
+    return this._doFetch('version', props, 'GET').then(function (results) { return pick(results, ['version']); })
+  };
+  alks.prototype.getLoginRole = function getLoginRole (props) {
+    var accountId = props.accountId;
+      var role = props.role;
+    return this._doFetch(("loginRoles/id/" + accountId + "/" + role), null).then(function (results) { return pick(results, ['account', 'role', 'iamKeyActive', 'maxKeyDuration']); })
+  };
+  alks.prototype.getAccessToken = function getAccessToken (props) {
+    return this._doFetch('accessToken', props).then(function (results) { return pick(results, ['accessToken', 'expiresIn']); }
+    )
+  };
+  alks.prototype.getRefreshTokens = function getRefreshTokens (props) {
+    return this._doFetch('refreshTokens', props, 'GET').then(function (results) { return results.refreshTokens.map(function (token) { return pick(token, ['clientId', 'id', 'userId', 'value']); }); }
+    )
+  };
+  alks.prototype.revoke = function revoke (props) {
+    return this._doFetch('revoke', props).then(function (results) { return results.statusMessage == 'Success'; }
+    )
+  };
   alks.prototype._doFetch = function _doFetch (path, args, method) {
       if ( args === void 0 ) args = { };
       if ( method === void 0 ) method = 'POST';
     var opts = Object.assign({}, this.defaults, args);
     var headers = {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'User-Agent': ("AlksJS/" + (version)),
     };
     if (opts.accessToken) {
       headers['Authorization'] = "Bearer " + (opts.accessToken);
@@ -80,9 +109,13 @@ var alks = (function () {
     }
     if (opts.userid || opts.password) {
       console.error('The userid and password properties are deprecated and should be replaced with an access token');
+      var credentials = this._base64Encode(((opts.userid) + ":" + (opts.password)));
+      headers['Authorization'] = "Basic " + credentials;
+      delete opts.userid;
+      delete opts.password;
     }
     var responsePromise = opts._fetch(((opts.baseUrl) + "/" + path + "/"), {
-      method: method, headers: headers, body: JSON.stringify(opts)
+      method: method, headers: headers, body: method == 'GET' ? undefined : JSON.stringify(opts)
     });
     var jsonPromise = responsePromise.then(function (r) { return r.json(); }).catch(function () {});
     return Promise.all([responsePromise, jsonPromise]).then(function (ref) {
