@@ -42,7 +42,7 @@ describe('alks.js', function() {
     let consoleErrorSpy
 
     beforeEach(() => {
-      consoleErrorSpy = sinon.spy(console, 'error')
+      consoleErrorSpy = sinon.stub(console, 'error')
     })
 
     afterEach(() => {
