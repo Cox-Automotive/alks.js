@@ -50,9 +50,9 @@ describe('alks.js', function() {
       consoleErrorSpy.restore()
     })
 
-    it('should return an access key, secret key, and session token', async () => {
+    it('should return an access key, secret key, session token and console URL', async () => {
       const _fetch = fetchMock.sandbox().mock('https://your.alks-host.com/getKeys/', {
-        body: { accessKey: 'foo', secretKey: 'bar', sessionToken: 'baz', statusMessage: 'Success'},
+        body: { accessKey: 'foo', secretKey: 'bar', sessionToken: 'baz', consoleURL: 'https://foo.com', statusMessage: 'Success'},
         status: 200
       })
 
@@ -65,7 +65,7 @@ describe('alks.js', function() {
         _fetch
       })
 
-      expect(result).to.have.keys('accessKey', 'secretKey', 'sessionToken')
+      expect(result).to.have.keys('accessKey', 'secretKey', 'sessionToken', 'consoleURL')
     })
 
     it('should send basic credentials via the Authorization header', async () => {
@@ -193,9 +193,9 @@ describe('alks.js', function() {
 
   describe('getIAMKeys', () => {
 
-    it('getIAMKeys', async () => {
+    it('should return an access key, secret key, session token and console URL', async () => {
       const _fetch = fetchMock.sandbox().mock('https://your.alks-host.com/getIAMKeys/', {
-        body: { accessKey: 'foo', secretKey: 'bar', sessionToken: 'baz', statusMessage: 'Success' },
+        body: { accessKey: 'foo', secretKey: 'bar', sessionToken: 'baz', consoleURL: 'https://foo.com', statusMessage: 'Success' },
         status: 200
       })
 
@@ -208,7 +208,7 @@ describe('alks.js', function() {
         _fetch
       })
 
-      expect(result).to.have.keys('accessKey', 'secretKey', 'sessionToken')
+      expect(result).to.have.keys('accessKey', 'secretKey', 'sessionToken', 'consoleURL')
     })
   })
 

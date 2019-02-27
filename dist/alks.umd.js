@@ -4,7 +4,7 @@
   (global = global || self, global.alks = factory());
 }(this, function () { 'use strict';
 
-  var version = "1.1.0";
+  var version = "1.2.0";
 
   var fetch = window.fetch.bind(window);
 
@@ -121,11 +121,11 @@
    * role: 'PowerUser',
    * sessionTime: 2
    * }).then((creds) => {
-   * // creds.accessKey, creds.secretKey, creds.sessionToken
+   * // creds.accessKey, creds.secretKey, creds.sessionToken, creds.consoleURL
    * })
    */
   alks.prototype.getKeys = function getKeys (props) {
-    return(this._doFetch('getKeys', props).then(function (results) { return pick(results, ['accessKey', 'secretKey', 'sessionToken']); }
+    return(this._doFetch('getKeys', props).then(function (results) { return pick(results, ['accessKey', 'secretKey', 'sessionToken', 'consoleURL']); }
     ))
   };
 
@@ -147,11 +147,11 @@
    * role: 'IAMAdmin',
    * sessionTime: 1
    * }).then((creds) => {
-   * // creds.accessKey, creds.secretKey, creds.sessionToken
+   * // creds.accessKey, creds.secretKey, creds.sessionToken, creds.consoleURL
    * })
    */
   alks.prototype.getIAMKeys = function getIAMKeys (props) {
-    return(this._doFetch('getIAMKeys', props).then(function (results) { return pick(results, ['accessKey', 'secretKey', 'sessionToken']); }
+    return(this._doFetch('getIAMKeys', props).then(function (results) { return pick(results, ['accessKey', 'secretKey', 'sessionToken', 'consoleURL']); }
     ))
   };
 

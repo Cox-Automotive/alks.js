@@ -1,6 +1,6 @@
 {
   "name": "alks.js",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "JavaScript client for the ALKS API, usable in both modern browsers and node.js",
   "main": "dist/alks.cjs.js",
   "unpkg": "dist/alks.min.js",

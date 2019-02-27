@@ -1,4 +1,4 @@
-var version = "1.1.0";
+var version = "1.2.0";
 
 const fetch = window.fetch.bind(window);
 
@@ -113,12 +113,12 @@ class alks {
    *   role: 'PowerUser',
    *   sessionTime: 2
    * }).then((creds) => {
-   *   // creds.accessKey, creds.secretKey, creds.sessionToken
+   *   // creds.accessKey, creds.secretKey, creds.sessionToken, creds.consoleURL
    * })
    */
   getKeys(props) {
     return(this._doFetch('getKeys', props).then(results =>
-      pick(results, ['accessKey', 'secretKey', 'sessionToken'])
+      pick(results, ['accessKey', 'secretKey', 'sessionToken', 'consoleURL'])
     ))
   }
 
@@ -140,12 +140,12 @@ class alks {
    *   role: 'IAMAdmin',
    *   sessionTime: 1
    * }).then((creds) => {
-   *   // creds.accessKey, creds.secretKey, creds.sessionToken
+   *   // creds.accessKey, creds.secretKey, creds.sessionToken, creds.consoleURL
    * })
    */
   getIAMKeys(props) {
     return(this._doFetch('getIAMKeys', props).then(results =>
-      pick(results, ['accessKey', 'secretKey', 'sessionToken'])
+      pick(results, ['accessKey', 'secretKey', 'sessionToken', 'consoleURL'])
     ))
   }
 
