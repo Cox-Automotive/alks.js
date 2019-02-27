@@ -124,7 +124,7 @@ alks.getKeys({
   role: 'PowerUser',
   sessionTime: 2
 }).then((creds) => {
-  // creds.accessKey, creds.secretKey, creds.sessionToken
+  // creds.accessKey, creds.secretKey, creds.sessionToken, creds.consoleURL
 })
 ```
 <a name="alks+getIAMKeys"></a>
@@ -151,7 +151,7 @@ alks.getIAMKeys({
   role: 'IAMAdmin',
   sessionTime: 1
 }).then((creds) => {
-  // creds.accessKey, creds.secretKey, creds.sessionToken
+  // creds.accessKey, creds.secretKey, creds.sessionToken, creds.consoleURL
 })
 ```
 <a name="alks+getAWSRoleTypes"></a>
