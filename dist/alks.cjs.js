@@ -60,10 +60,10 @@ class alks {
   /**
    * AWS Account
    * @typedef {Object} account
-   * @property {String} account - The name of the account
-   * @property {String} role - The user's role in this account
-   * @property {Boolean} iamKeyActive - Whether credentials with IAM permissions can be provisioned from this account
-   * @property {Number} maxKeyDuration - The maximum key duration for this account
+   * @property {string} account - The name of the account
+   * @property {string} role - The user's role in this account
+   * @property {boolean} iamKeyActive - Whether credentials with IAM permissions can be provisioned from this account
+   * @property {number} maxKeyDuration - The maximum key duration for this account
    */
 
   /**
@@ -95,9 +95,9 @@ class alks {
   /**
    * AWS STS Credentials
    * @typedef {Object} credentials
-   * @property {String} accessKey - AWS access key
-   * @property {String} secretKey - AWS secret key
-   * @property {String} sessionToken - AWS STS session token
+   * @property {string} accessKey - AWS access key
+   * @property {string} secretKey - AWS secret key
+   * @property {string} sessionToken - AWS STS session token
    */
 
   /**
@@ -199,10 +199,10 @@ class alks {
   /**
   * Custom AWS IAM account role
   * @typedef {Object} customRole
-  * @property {String} roleArn - The Amazon Resource Name (ARN) associated with the new role
-  * @property {String} denyArns - The ARNs for the deny policies associated with this role
-  * @property {String} instanceProfileArn - The Instance Profile ARN associated with this role
-  * @property {Boolean} addedRoleToInstanceProfile - Whether this role was added to an Instance Profile
+  * @property {string} roleArn - The Amazon Resource Name (ARN) associated with the new role
+  * @property {string} denyArns - The ARNs for the deny policies associated with this role
+  * @property {string} instanceProfileArn - The Instance Profile ARN associated with this role
+  * @property {boolean} addedRoleToInstanceProfile - Whether this role was added to an Instance Profile
   */
 
   /**
@@ -277,11 +277,11 @@ class alks {
    * Returns a Promise for an array of AWS custom AWS IAM account roles
    *
    * @param {Object} props - An object containing the following properties
-   * @param {String} props.baseUrl - The base URL of the ALKS service
-   * @param {String} props.accessToken - The OAuth2 access token used to authorize the request
-   * @param {String} props.account - The user's account associated with the custom role
-   * @param {String} props.role - The user's role associated with the account
-   * @returns {Promise<String[]>}
+   * @param {string} props.baseUrl - The base URL of the ALKS service
+   * @param {string} props.accessToken - The OAuth2 access token used to authorize the request
+   * @param {string} props.account - The user's account associated with the custom role
+   * @param {string} props.role - The user's role associated with the account
+   * @returns {Promise<string[]>}
    * @example
    * alks.listAWSAccountRoles({
    *   baseUrl: 'https://your.alks-host.com',

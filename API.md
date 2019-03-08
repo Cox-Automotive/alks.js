@@ -39,7 +39,7 @@ ALKS JavaScript API
     * [.getNonServiceAWSRoleTypes(props)](#alks+getNonServiceAWSRoleTypes) ⇒ <code>Promise.&lt;Array.&lt;string&gt;&gt;</code>
     * [.createRole(props)](#alks+createRole) ⇒ [<code>Promise.&lt;customRole&gt;</code>](#customRole)
     * [.createNonServiceRole(props)](#alks+createNonServiceRole) ⇒ [<code>Promise.&lt;customRole&gt;</code>](#customRole)
-    * [.listAWSAccountRoles(props)](#alks+listAWSAccountRoles) ⇒ <code>Promise.&lt;Array.&lt;String&gt;&gt;</code>
+    * [.listAWSAccountRoles(props)](#alks+listAWSAccountRoles) ⇒ <code>Promise.&lt;Array.&lt;string&gt;&gt;</code>
     * [.getAccountRole(props)](#alks+getAccountRole) ⇒ <code>Promise.&lt;string&gt;</code>
     * [.deleteRole(props)](#alks+deleteRole) ⇒ <code>Promise.&lt;boolean&gt;</code>
     * [.createAccessKeys(props)](#alks+createAccessKeys) ⇒ [<code>Promise.&lt;AccessKeys&gt;</code>](#AccessKeys)
@@ -264,17 +264,17 @@ alks.createNonServiceRole({
 ```
 <a name="alks+listAWSAccountRoles"></a>
 
-### alks.listAWSAccountRoles(props) ⇒ <code>Promise.&lt;Array.&lt;String&gt;&gt;</code>
+### alks.listAWSAccountRoles(props) ⇒ <code>Promise.&lt;Array.&lt;string&gt;&gt;</code>
 Returns a Promise for an array of AWS custom AWS IAM account roles
 
 **Kind**: instance method of [<code>alks</code>](#alks)  
 **Params**
 
 - props <code>Object</code> - An object containing the following properties
-    - .baseUrl <code>String</code> - The base URL of the ALKS service
-    - .accessToken <code>String</code> - The OAuth2 access token used to authorize the request
-    - .account <code>String</code> - The user's account associated with the custom role
-    - .role <code>String</code> - The user's role associated with the account
+    - .baseUrl <code>string</code> - The base URL of the ALKS service
+    - .accessToken <code>string</code> - The OAuth2 access token used to authorize the request
+    - .account <code>string</code> - The user's account associated with the custom role
+    - .role <code>string</code> - The user's role associated with the account
 
 **Example**  
 ```js
@@ -509,10 +509,10 @@ AWS Account
 **Kind**: global typedef  
 **Properties**
 
-- account <code>String</code> - The name of the account  
-- role <code>String</code> - The user's role in this account  
-- iamKeyActive <code>Boolean</code> - Whether credentials with IAM permissions can be provisioned from this account  
-- maxKeyDuration <code>Number</code> - The maximum key duration for this account  
+- account <code>string</code> - The name of the account  
+- role <code>string</code> - The user's role in this account  
+- iamKeyActive <code>boolean</code> - Whether credentials with IAM permissions can be provisioned from this account  
+- maxKeyDuration <code>number</code> - The maximum key duration for this account  
 
 <a name="credentials"></a>
 
@@ -522,9 +522,9 @@ AWS STS Credentials
 **Kind**: global typedef  
 **Properties**
 
-- accessKey <code>String</code> - AWS access key  
-- secretKey <code>String</code> - AWS secret key  
-- sessionToken <code>String</code> - AWS STS session token  
+- accessKey <code>string</code> - AWS access key  
+- secretKey <code>string</code> - AWS secret key  
+- sessionToken <code>string</code> - AWS STS session token  
 
 <a name="customRole"></a>
 
@@ -534,10 +534,10 @@ Custom AWS IAM account role
 **Kind**: global typedef  
 **Properties**
 
-- roleArn <code>String</code> - The Amazon Resource Name (ARN) associated with the new role  
-- denyArns <code>String</code> - The ARNs for the deny policies associated with this role  
-- instanceProfileArn <code>String</code> - The Instance Profile ARN associated with this role  
-- addedRoleToInstanceProfile <code>Boolean</code> - Whether this role was added to an Instance Profile  
+- roleArn <code>string</code> - The Amazon Resource Name (ARN) associated with the new role  
+- denyArns <code>string</code> - The ARNs for the deny policies associated with this role  
+- instanceProfileArn <code>string</code> - The Instance Profile ARN associated with this role  
+- addedRoleToInstanceProfile <code>boolean</code> - Whether this role was added to an Instance Profile  
 
 <a name="AccessKeys"></a>
 
