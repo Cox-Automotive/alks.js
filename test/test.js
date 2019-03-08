@@ -17,8 +17,8 @@ describe('alks.js', function() {
         body: {
           statusMessage: 'Success',
           accountListRole: {
-            '1234 - foobar': [{ account: '1234', role: 'role1', iamKeyActive: true }],
-            '2345 - foobar': [{ account: '2345', role: 'role2', iamKeyActive: false }],
+            '1234 - foobar': [{ account: '1234', role: 'role1', iamKeyActive: true, maxKeyDuration: 2 }],
+            '2345 - foobar': [{ account: '2345', role: 'role2', iamKeyActive: false, maxKeyDuration: 36 }],
           }
         },
         status: 200
@@ -33,7 +33,8 @@ describe('alks.js', function() {
       expect(result).to.deep.include({
         account: '1234 - foobar',
         role: 'role1',
-        iamKeyActive: true
+        iamKeyActive: true,
+        maxKeyDuration: 2
       })
     })
   })
@@ -480,8 +481,8 @@ describe('alks.js', function() {
         body: {
           statusMessage: 'Success',
           accountListRole: {
-            '1234 - foobar': [{ account: '1234', role: 'role1', iamKeyActive: true }],
-            '2345 - foobar': [{ account: '2345', role: 'role2', iamKeyActive: false }],
+            '1234 - foobar': [{ account: '1234', role: 'role1', iamKeyActive: true, maxKeyDuration: 2 }],
+            '2345 - foobar': [{ account: '2345', role: 'role2', iamKeyActive: false, maxKeyDuration: 36 }],
           }
         },
         status: 200
@@ -494,8 +495,8 @@ describe('alks.js', function() {
       })
 
       const accounts = await myAlks.getAccounts()
-
-      expect(accounts).to.deep.include({account: '1234 - foobar', role: 'role1', iamKeyActive: true })
+      console.log(accounts)
+      expect(accounts).to.deep.include({account: '2345 - foobar', role: 'role2', iamKeyActive: false, maxKeyDuration: 36  })
     })
 
     it('should return a copy with defaults from the passed-in alks object', async () => {

@@ -97,7 +97,7 @@ alks.getAccounts({
   baseUrl: 'https://your.alks-host.com',
   accessToken: 'abc123',
 }).then((accounts) => {
-  // accounts[0].account, accounts[0].role, accounts[0].iamKeyActive
+  // accounts[0].account, accounts[0].role, accounts[0].iamKeyActive, accounts[0].maxKeyDuration
 })
 ```
 <a name="alks+getKeys"></a>
@@ -424,6 +424,7 @@ Returns information about one of the roles used to generate keys
 - props <code>Object</code> - An object containing the following properties
     - .accountId <code>string</code> - The 12-digit account ID associated with the custom role
     - .role <code>string</code> - The user's role associated with the account
+    - .maxKeyDuration <code>number</code> - The maximum key duration for this account
 
 **Example**  
 ```js
@@ -511,6 +512,7 @@ AWS Account
 - account <code>String</code> - The name of the account  
 - role <code>String</code> - The user's role in this account  
 - iamKeyActive <code>Boolean</code> - Whether credentials with IAM permissions can be provisioned from this account  
+- maxKeyDuration <code>Number</code> - The maximum key duration for this account  
 
 <a name="credentials"></a>
 

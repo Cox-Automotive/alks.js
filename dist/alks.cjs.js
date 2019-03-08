@@ -1,6 +1,6 @@
 'use strict';
 
-var version = "1.2.0";
+var version = "1.3.0";
 
 const Buffer = require('buffer').Buffer;
 const fetch = require('node-fetch');
@@ -63,6 +63,7 @@ class alks {
    * @property {String} account - The name of the account
    * @property {String} role - The user's role in this account
    * @property {Boolean} iamKeyActive - Whether credentials with IAM permissions can be provisioned from this account
+   * @property {Number} maxKeyDuration - The maximum key duration for this account
    */
 
   /**
@@ -77,7 +78,7 @@ class alks {
    *   baseUrl: 'https://your.alks-host.com',
    *   accessToken: 'abc123',
    * }).then((accounts) => {
-   *   // accounts[0].account, accounts[0].role, accounts[0].iamKeyActive
+   *   // accounts[0].account, accounts[0].role, accounts[0].iamKeyActive, accounts[0].maxKeyDuration
    * })
    */
   getAccounts(props) {
@@ -85,7 +86,8 @@ class alks {
       Object.keys(results.accountListRole).map((key) => ({
         account: key,
         role: results.accountListRole[key][0].role,
-        iamKeyActive: results.accountListRole[key][0].iamKeyActive
+        iamKeyActive: results.accountListRole[key][0].iamKeyActive,
+        maxKeyDuration: results.accountListRole[key][0].maxKeyDuration
       }))
     ))
   }
@@ -436,6 +438,7 @@ class alks {
    * @param {Object} props - An object containing the following properties
    * @param {string} props.accountId - The 12-digit account ID associated with the custom role
    * @param {string} props.role - The user's role associated with the account
+   * @param {number} props.maxKeyDuration - The maximum key duration for this account
    * @returns {Promise<Object>}
    * @example
    * alks.getLoginRole({
