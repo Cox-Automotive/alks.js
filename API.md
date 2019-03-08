@@ -300,7 +300,7 @@ Returns a Promise for the Amazon Resource Name (ARN) of a custom AWS IAM account
     - .accessToken <code>string</code> - The OAuth2 access token used to authorize the request
     - .account <code>string</code> - The user's account associated with the custom role
     - .role <code>string</code> - The user's role associated with the account
-    - .roleName <code>string</code> - The name of the custom AWs IAM role
+    - .roleName <code>string</code> - The name of the custom AWS IAM role
 
 **Example**  
 ```js

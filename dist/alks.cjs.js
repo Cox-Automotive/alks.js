@@ -307,7 +307,7 @@ class alks {
    * @param {string} props.accessToken - The OAuth2 access token used to authorize the request
    * @param {string} props.account - The user's account associated with the custom role
    * @param {string} props.role - The user's role associated with the account
-   * @param {string} props.roleName - The name of the custom AWs IAM role
+   * @param {string} props.roleName - The name of the custom AWS IAM role
    * @returns {Promise<string>}
    * @example
    * alks.getAccountRole({
