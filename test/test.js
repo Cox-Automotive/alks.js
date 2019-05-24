@@ -213,6 +213,66 @@ describe('alks.js', function() {
     })
   })
 
+  describe('getAllAWSRoleTypes', () => {
+
+    it('should return a list of role types', async () => {
+      const roleTypes = [
+        {
+          roleTypeName: 'AWS Lambda',
+          defaultArns: ['0'],
+          trustRelationship: {
+            Version: '2012-10-17',
+            Statement: [
+              {
+                Action: 'sts:AssumeRole',
+                Effect: 'Allow',
+                Principal: {
+                  Service: 'lambda'
+                }
+              }
+            ]
+          }
+        },
+        {
+          roleTypeName: 'AWS Config',
+          defaultArns: ['arn:aws:iam::aws:policy/service-role/AWSConfigRole'],
+          trustRelationship: {
+            Version: '2012-10-17',
+            Statement: [
+              {
+                Action: 'sts:AssumeRole',
+                Effect:'Allow',
+                Principal: {
+                  Service: 'config'
+                },
+                Sid: ''
+              }
+            ]
+          }
+        },
+      ]
+
+      const _fetch = fetchMock.sandbox().mock('https://your.alks-host.com/allAwsRoleTypes/', {
+        body: { 
+          statusMessage: 'Success',
+          requestId: 'reqId',
+          roleTypes: roleTypes
+        },
+        status: 200
+      })
+
+      const result = await alks.getAllAWSRoleTypes({
+        baseUrl: 'https://your.alks-host.com',
+        accessToken: 'abc123',
+        _fetch
+      })
+
+      console.log(result)
+
+      expect(result).to.have.deep.members(roleTypes)
+    })
+  })
+
   describe('getAWSRoleTypes', () => {
 
     it('should return a list of role types', async () => {
