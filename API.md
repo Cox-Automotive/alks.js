@@ -15,6 +15,9 @@
 <dt><a href="#credentials">credentials</a> : <code>Object</code></dt>
 <dd><p>AWS STS Credentials</p>
 </dd>
+<dt><a href="#awsRoleType">awsRoleType</a> : <code>Object</code></dt>
+<dd><p>AWS IAM role type</p>
+</dd>
 <dt><a href="#customRole">customRole</a> : <code>Object</code></dt>
 <dd><p>Custom AWS IAM account role</p>
 </dd>
@@ -32,22 +35,23 @@ ALKS JavaScript API
 
 * [alks](#alks)
     * [.create(props)](#alks+create) ⇒ [<code>alks</code>](#alks)
-    * [.getAccounts(props)](#alks+getAccounts) ⇒ <code>Promise.&lt;Array.&lt;account&gt;&gt;</code>
-    * [.getKeys(props)](#alks+getKeys) ⇒ [<code>Promise.&lt;credentials&gt;</code>](#credentials)
-    * [.getIAMKeys(props)](#alks+getIAMKeys) ⇒ [<code>Promise.&lt;credentials&gt;</code>](#credentials)
-    * [.getAWSRoleTypes(props)](#alks+getAWSRoleTypes) ⇒ <code>Promise.&lt;Array.&lt;string&gt;&gt;</code>
-    * [.getNonServiceAWSRoleTypes(props)](#alks+getNonServiceAWSRoleTypes) ⇒ <code>Promise.&lt;Array.&lt;string&gt;&gt;</code>
-    * [.createRole(props)](#alks+createRole) ⇒ [<code>Promise.&lt;customRole&gt;</code>](#customRole)
-    * [.createNonServiceRole(props)](#alks+createNonServiceRole) ⇒ [<code>Promise.&lt;customRole&gt;</code>](#customRole)
-    * [.listAWSAccountRoles(props)](#alks+listAWSAccountRoles) ⇒ <code>Promise.&lt;Array.&lt;string&gt;&gt;</code>
-    * [.getAccountRole(props)](#alks+getAccountRole) ⇒ <code>Promise.&lt;string&gt;</code>
-    * [.deleteRole(props)](#alks+deleteRole) ⇒ <code>Promise.&lt;boolean&gt;</code>
-    * [.createAccessKeys(props)](#alks+createAccessKeys) ⇒ [<code>Promise.&lt;AccessKeys&gt;</code>](#AccessKeys)
-    * [.deleteIAMUser(props)](#alks+deleteIAMUser) ⇒ <code>Promise.&lt;boolean&gt;</code>
-    * [.version(props)](#alks+version) ⇒ <code>Promise.&lt;Object&gt;</code>
-    * [.getLoginRole(props)](#alks+getLoginRole) ⇒ <code>Promise.&lt;Object&gt;</code>
-    * [.getAccessToken(props)](#alks+getAccessToken) ⇒ <code>Promise.&lt;Object&gt;</code>
-    * [.getRefreshTokens(props)](#alks+getRefreshTokens) ⇒ <code>Array.&lt;Object&gt;</code>
+    * [.getAccounts(props)](#alks+getAccounts) ⇒ <code>[ &#x27;Promise&#x27; ].&lt;Array.&lt;account&gt;&gt;</code>
+    * [.getKeys(props)](#alks+getKeys) ⇒ [<code>[ &#x27;Promise&#x27; ].&lt;credentials&gt;</code>](#credentials)
+    * [.getIAMKeys(props)](#alks+getIAMKeys) ⇒ [<code>[ &#x27;Promise&#x27; ].&lt;credentials&gt;</code>](#credentials)
+    * [.getAllAWSRoleTypes(props)](#alks+getAllAWSRoleTypes) ⇒ <code>[ &#x27;Promise&#x27; ].&lt;Array.&lt;awsRoleType&gt;&gt;</code>
+    * ~~[.getAWSRoleTypes(props)](#alks+getAWSRoleTypes) ⇒ <code>[ &#x27;Promise&#x27; ].&lt;Array.&lt;string&gt;&gt;</code>~~
+    * ~~[.getNonServiceAWSRoleTypes(props)](#alks+getNonServiceAWSRoleTypes) ⇒ <code>[ &#x27;Promise&#x27; ].&lt;Array.&lt;string&gt;&gt;</code>~~
+    * [.createRole(props)](#alks+createRole) ⇒ [<code>[ &#x27;Promise&#x27; ].&lt;customRole&gt;</code>](#customRole)
+    * [.createNonServiceRole(props)](#alks+createNonServiceRole) ⇒ [<code>[ &#x27;Promise&#x27; ].&lt;customRole&gt;</code>](#customRole)
+    * [.listAWSAccountRoles(props)](#alks+listAWSAccountRoles) ⇒ <code>[ &#x27;Promise&#x27; ].&lt;Array.&lt;string&gt;&gt;</code>
+    * [.getAccountRole(props)](#alks+getAccountRole) ⇒ <code>[ &#x27;Promise&#x27; ].&lt;string&gt;</code>
+    * [.deleteRole(props)](#alks+deleteRole) ⇒ <code>[ &#x27;Promise&#x27; ].&lt;boolean&gt;</code>
+    * [.createAccessKeys(props)](#alks+createAccessKeys) ⇒ [<code>[ &#x27;Promise&#x27; ].&lt;AccessKeys&gt;</code>](#AccessKeys)
+    * [.deleteIAMUser(props)](#alks+deleteIAMUser) ⇒ <code>[ &#x27;Promise&#x27; ].&lt;boolean&gt;</code>
+    * [.version(props)](#alks+version) ⇒ <code>[ &#x27;Promise&#x27; ].&lt;Object&gt;</code>
+    * [.getLoginRole(props)](#alks+getLoginRole) ⇒ <code>[ &#x27;Promise&#x27; ].&lt;Object&gt;</code>
+    * [.getAccessToken(props)](#alks+getAccessToken) ⇒ <code>[ &#x27;Promise&#x27; ].&lt;Object&gt;</code>
+    * [.getRefreshTokens(props)](#alks+getRefreshTokens) ⇒ <code>[ &#x27;Array&#x27; ].&lt;Object&gt;</code>
     * [.revoke(props)](#alks+revoke) ⇒ <code>boolean</code>
 
 <a name="alks+create"></a>
@@ -81,7 +85,7 @@ myAlks.getKeys({
 ```
 <a name="alks+getAccounts"></a>
 
-### alks.getAccounts(props) ⇒ <code>Promise.&lt;Array.&lt;account&gt;&gt;</code>
+### alks.getAccounts(props) ⇒ <code>[ &#x27;Promise&#x27; ].&lt;Array.&lt;account&gt;&gt;</code>
 Returns a Promise for an array of AWS accounts (and roles) accessible by the user
 
 **Kind**: instance method of [<code>alks</code>](#alks)  
@@ -102,7 +106,7 @@ alks.getAccounts({
 ```
 <a name="alks+getKeys"></a>
 
-### alks.getKeys(props) ⇒ [<code>Promise.&lt;credentials&gt;</code>](#credentials)
+### alks.getKeys(props) ⇒ [<code>[ &#x27;Promise&#x27; ].&lt;credentials&gt;</code>](#credentials)
 Returns a Promise for AWS STS credentials from ALKS.
 
 **Kind**: instance method of [<code>alks</code>](#alks)  
@@ -129,7 +133,7 @@ alks.getKeys({
 ```
 <a name="alks+getIAMKeys"></a>
 
-### alks.getIAMKeys(props) ⇒ [<code>Promise.&lt;credentials&gt;</code>](#credentials)
+### alks.getIAMKeys(props) ⇒ [<code>[ &#x27;Promise&#x27; ].&lt;credentials&gt;</code>](#credentials)
 Returns a Promise for AWS STS credentials with IAM permissions from ALKS.
 
 **Kind**: instance method of [<code>alks</code>](#alks)  
@@ -154,9 +158,32 @@ alks.getIAMKeys({
   // creds.accessKey, creds.secretKey, creds.sessionToken, creds.consoleURL
 })
 ```
+<a name="alks+getAllAWSRoleTypes"></a>
+
+### alks.getAllAWSRoleTypes(props) ⇒ <code>[ &#x27;Promise&#x27; ].&lt;Array.&lt;awsRoleType&gt;&gt;</code>
+Returns a Promise for an array of all available role types (AWS IAM role types, custom role types) and their details
+
+**Kind**: instance method of [<code>alks</code>](#alks)  
+**Params**
+
+- props <code>Object</code> - An object containing the following properties
+    - .baseUrl <code>string</code> - The base URL of the ALKS service
+    - .accessToken <code>string</code> - The OAuth2 access token used to authorize the request
+
+**Example**  
+```js
+alks.getAllAWSRoleTypes({
+  baseUrl: 'https://your.alks-host.com',
+  accessToken: 'abc123',
+}).then((roleTypes) {
+  // roleTypes[i].roleTypeName, roleTypes[i].defaultArns, roleTypes[i].trustRelationship
+})
+```
 <a name="alks+getAWSRoleTypes"></a>
 
-### alks.getAWSRoleTypes(props) ⇒ <code>Promise.&lt;Array.&lt;string&gt;&gt;</code>
+### ~~alks.getAWSRoleTypes(props) ⇒ <code>[ &#x27;Promise&#x27; ].&lt;Array.&lt;string&gt;&gt;</code>~~
+***Deprecated***
+
 Returns a Promise for an array of available AWS IAM role types
 
 **Kind**: instance method of [<code>alks</code>](#alks)  
@@ -177,7 +204,9 @@ alks.getAWSRoleTypes({
 ```
 <a name="alks+getNonServiceAWSRoleTypes"></a>
 
-### alks.getNonServiceAWSRoleTypes(props) ⇒ <code>Promise.&lt;Array.&lt;string&gt;&gt;</code>
+### ~~alks.getNonServiceAWSRoleTypes(props) ⇒ <code>[ &#x27;Promise&#x27; ].&lt;Array.&lt;string&gt;&gt;</code>~~
+***Deprecated***
+
 Returns a Promise for an array of available custom role types
 
 **Kind**: instance method of [<code>alks</code>](#alks)  
@@ -198,7 +227,7 @@ alks.getNonServiceAWSRoleTypes({
 ```
 <a name="alks+createRole"></a>
 
-### alks.createRole(props) ⇒ [<code>Promise.&lt;customRole&gt;</code>](#customRole)
+### alks.createRole(props) ⇒ [<code>[ &#x27;Promise&#x27; ].&lt;customRole&gt;</code>](#customRole)
 Returns a Promise for the results of creating a new custom AWS IAM account role
 
 **Kind**: instance method of [<code>alks</code>](#alks)  
@@ -229,7 +258,7 @@ alks.createRole({
 ```
 <a name="alks+createNonServiceRole"></a>
 
-### alks.createNonServiceRole(props) ⇒ [<code>Promise.&lt;customRole&gt;</code>](#customRole)
+### alks.createNonServiceRole(props) ⇒ [<code>[ &#x27;Promise&#x27; ].&lt;customRole&gt;</code>](#customRole)
 Returns a Promise for the results of creating a new custom AWS IAM trust role
 
 **Kind**: instance method of [<code>alks</code>](#alks)  
@@ -264,7 +293,7 @@ alks.createNonServiceRole({
 ```
 <a name="alks+listAWSAccountRoles"></a>
 
-### alks.listAWSAccountRoles(props) ⇒ <code>Promise.&lt;Array.&lt;string&gt;&gt;</code>
+### alks.listAWSAccountRoles(props) ⇒ <code>[ &#x27;Promise&#x27; ].&lt;Array.&lt;string&gt;&gt;</code>
 Returns a Promise for an array of AWS custom AWS IAM account roles
 
 **Kind**: instance method of [<code>alks</code>](#alks)  
@@ -289,7 +318,7 @@ alks.listAWSAccountRoles({
 ```
 <a name="alks+getAccountRole"></a>
 
-### alks.getAccountRole(props) ⇒ <code>Promise.&lt;string&gt;</code>
+### alks.getAccountRole(props) ⇒ <code>[ &#x27;Promise&#x27; ].&lt;string&gt;</code>
 Returns a Promise for the Amazon Resource Name (ARN) of a custom AWS IAM account role
 
 **Kind**: instance method of [<code>alks</code>](#alks)  
@@ -316,7 +345,7 @@ alks.getAccountRole({
 ```
 <a name="alks+deleteRole"></a>
 
-### alks.deleteRole(props) ⇒ <code>Promise.&lt;boolean&gt;</code>
+### alks.deleteRole(props) ⇒ <code>[ &#x27;Promise&#x27; ].&lt;boolean&gt;</code>
 Returns a Promise for a boolean "true" indicating the role was deleted
 
 **Kind**: instance method of [<code>alks</code>](#alks)  
@@ -343,7 +372,7 @@ alks.deleteRole({
 ```
 <a name="alks+createAccessKeys"></a>
 
-### alks.createAccessKeys(props) ⇒ [<code>Promise.&lt;AccessKeys&gt;</code>](#AccessKeys)
+### alks.createAccessKeys(props) ⇒ [<code>[ &#x27;Promise&#x27; ].&lt;AccessKeys&gt;</code>](#AccessKeys)
 Returns a Promise for the results of creating new IAM user and long-term access keys
 
 **Kind**: instance method of [<code>alks</code>](#alks)  
@@ -370,7 +399,7 @@ alks.createAccessKeys({
 ```
 <a name="alks+deleteIAMUser"></a>
 
-### alks.deleteIAMUser(props) ⇒ <code>Promise.&lt;boolean&gt;</code>
+### alks.deleteIAMUser(props) ⇒ <code>[ &#x27;Promise&#x27; ].&lt;boolean&gt;</code>
 Returns a Promise for a boolean "true" indicating the IAM user and long-term access keys were deleted
 
 **Kind**: instance method of [<code>alks</code>](#alks)  
@@ -397,7 +426,7 @@ alks.deleteIAMUser({
 ```
 <a name="alks+version"></a>
 
-### alks.version(props) ⇒ <code>Promise.&lt;Object&gt;</code>
+### alks.version(props) ⇒ <code>[ &#x27;Promise&#x27; ].&lt;Object&gt;</code>
 Returns the version of the ALKS Rest API
 
 **Kind**: instance method of [<code>alks</code>](#alks)  
@@ -415,7 +444,7 @@ alks.version({
 ```
 <a name="alks+getLoginRole"></a>
 
-### alks.getLoginRole(props) ⇒ <code>Promise.&lt;Object&gt;</code>
+### alks.getLoginRole(props) ⇒ <code>[ &#x27;Promise&#x27; ].&lt;Object&gt;</code>
 Returns information about one of the roles used to generate keys
 
 **Kind**: instance method of [<code>alks</code>](#alks)  
@@ -436,7 +465,7 @@ alks.getLoginRole({
 ```
 <a name="alks+getAccessToken"></a>
 
-### alks.getAccessToken(props) ⇒ <code>Promise.&lt;Object&gt;</code>
+### alks.getAccessToken(props) ⇒ <code>[ &#x27;Promise&#x27; ].&lt;Object&gt;</code>
 Exchanges a refresh token for an access token
 
 **Kind**: instance method of [<code>alks</code>](#alks)  
@@ -455,7 +484,7 @@ alks.getAccessToken({
 ```
 <a name="alks+getRefreshTokens"></a>
 
-### alks.getRefreshTokens(props) ⇒ <code>Array.&lt;Object&gt;</code>
+### alks.getRefreshTokens(props) ⇒ <code>[ &#x27;Array&#x27; ].&lt;Object&gt;</code>
 Returns a list of a user's refresh tokens (Does not return the full token)
 
 **Kind**: instance method of [<code>alks</code>](#alks)  
@@ -525,6 +554,18 @@ AWS STS Credentials
 - accessKey <code>string</code> - AWS access key  
 - secretKey <code>string</code> - AWS secret key  
 - sessionToken <code>string</code> - AWS STS session token  
+
+<a name="awsRoleType"></a>
+
+## awsRoleType : <code>Object</code>
+AWS IAM role type
+
+**Kind**: global typedef  
+**Properties**
+
+- roleTypeName <code>string</code> - The AWS IAM role type name  
+- defaultArns <code>[ &#x27;Array&#x27; ].&lt;string&gt;</code> - The default ARNs (default policies) associated with this role  
+- trustRelationship <code>Object</code> - The AWS trust relationship document associated with this role  
 
 <a name="customRole"></a>
 
