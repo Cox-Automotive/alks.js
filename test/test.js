@@ -267,8 +267,6 @@ describe('alks.js', function() {
         _fetch
       })
 
-      console.log(result)
-
       expect(result).to.have.deep.members(roleTypes)
     })
   })
@@ -555,7 +553,6 @@ describe('alks.js', function() {
       })
 
       const accounts = await myAlks.getAccounts()
-      console.log(accounts)
       expect(accounts).to.deep.include({account: '2345 - foobar', role: 'role2', iamKeyActive: false, maxKeyDuration: 36  })
     })
 
