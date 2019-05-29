@@ -21,6 +21,9 @@
 <dt><a href="#customRole">customRole</a> : <code>Object</code></dt>
 <dd><p>Custom AWS IAM account role</p>
 </dd>
+<dt><a href="#awsAccountRole">awsAccountRole</a> : <code>Object</code></dt>
+<dd><p>AWS account role type</p>
+</dd>
 <dt><a href="#AccessKeys">AccessKeys</a> : <code>Object</code></dt>
 <dd><p>Response containing access keys.</p>
 </dd>
@@ -43,7 +46,8 @@ ALKS JavaScript API
     * ~~[.getNonServiceAWSRoleTypes(props)](#alks+getNonServiceAWSRoleTypes) ⇒ <code>Promise.&lt;Array.&lt;string&gt;&gt;</code>~~
     * [.createRole(props)](#alks+createRole) ⇒ [<code>Promise.&lt;customRole&gt;</code>](#customRole)
     * [.createNonServiceRole(props)](#alks+createNonServiceRole) ⇒ [<code>Promise.&lt;customRole&gt;</code>](#customRole)
-    * [.listAWSAccountRoles(props)](#alks+listAWSAccountRoles) ⇒ <code>Promise.&lt;Array.&lt;string&gt;&gt;</code>
+    * [.awsAccountRoles(props)](#alks+awsAccountRoles) ⇒ <code>Promise.&lt;Array.&lt;awsAccountRole&gt;&gt;</code>
+    * ~~[.listAWSAccountRoles(props)](#alks+listAWSAccountRoles) ⇒ <code>Promise.&lt;Array.&lt;string&gt;&gt;</code>~~
     * [.getAccountRole(props)](#alks+getAccountRole) ⇒ <code>Promise.&lt;string&gt;</code>
     * [.deleteRole(props)](#alks+deleteRole) ⇒ <code>Promise.&lt;boolean&gt;</code>
     * [.createAccessKeys(props)](#alks+createAccessKeys) ⇒ [<code>Promise.&lt;AccessKeys&gt;</code>](#AccessKeys)
@@ -291,9 +295,34 @@ alks.createNonServiceRole({
   // role.roleArn, role.denyArns, role.instanceProfileArn, role.addedRoleToInstanceProfile
 })
 ```
+<a name="alks+awsAccountRoles"></a>
+
+### alks.awsAccountRoles(props) ⇒ <code>Promise.&lt;Array.&lt;awsAccountRole&gt;&gt;</code>
+Returns a Promise for an array of AWS account roles
+
+**Kind**: instance method of [<code>alks</code>](#alks)  
+**Params**
+
+- props <code>Object</code> - An object containing the following properties
+    - .baseUrl <code>string</code> - The base URL of the ALKS service
+    - .accessToken <code>string</code> - The OAuth2 access token used to authorize the request
+    - .account <code>string</code> - The account number to get AWS roles for
+
+**Example**  
+```js
+alks.awsAccountRoles({
+  baseUrl: 'https://your.alks-host.com',
+  accessToken: 'abc123',
+  account: '1234567890',
+}).then((roles) => {
+  // roles[i].roleArn, roles[i].isMachineIdentity, roles[i].assumeRolePolicyDocument
+})
+```
 <a name="alks+listAWSAccountRoles"></a>
 
-### alks.listAWSAccountRoles(props) ⇒ <code>Promise.&lt;Array.&lt;string&gt;&gt;</code>
+### ~~alks.listAWSAccountRoles(props) ⇒ <code>Promise.&lt;Array.&lt;string&gt;&gt;</code>~~
+***Deprecated***
+
 Returns a Promise for an array of AWS custom AWS IAM account roles
 
 **Kind**: instance method of [<code>alks</code>](#alks)  
@@ -579,6 +608,18 @@ Custom AWS IAM account role
 - denyArns <code>string</code> - The ARNs for the deny policies associated with this role  
 - instanceProfileArn <code>string</code> - The Instance Profile ARN associated with this role  
 - addedRoleToInstanceProfile <code>boolean</code> - Whether this role was added to an Instance Profile  
+
+<a name="awsAccountRole"></a>
+
+## awsAccountRole : <code>Object</code>
+AWS account role type
+
+**Kind**: global typedef  
+**Properties**
+
+- roleArn <code>string</code> - The AWS Role ARN  
+- isMachineIdentity <code>boolean</code> - true|false value of if this role is a machine identity  
+- assumeRolePolicyDocument <code>Object</code> - The AWS assume role policy document associated with this role  
 
 <a name="AccessKeys"></a>
 

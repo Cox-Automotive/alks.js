@@ -304,8 +304,38 @@
   };
 
   /**
+  * AWS account role type
+  * @typedef {Object} awsAccountRole
+  * @property {string} roleArn - The AWS Role ARN
+  * @property {boolean} isMachineIdentity - true|false value of if this role is a machine identity
+  * @property {Object} assumeRolePolicyDocument - The AWS assume role policy document associated with this role
+  */
+
+  /**
+   * Returns a Promise for an array of AWS account roles
+   *
+   * @param {Object} props - An object containing the following properties
+   * @param {string} props.baseUrl - The base URL of the ALKS service
+   * @param {string} props.accessToken - The OAuth2 access token used to authorize the request
+   * @param {string} props.account - The account number to get AWS roles for
+   * @returns {Promise<awsAccountRole[]>}
+   * @example
+   * alks.awsAccountRoles({
+    * baseUrl: 'https://your.alks-host.com',
+    * accessToken: 'abc123',
+    * account: '1234567890',
+    * }).then((roles) => {
+    * // roles[i].roleArn, roles[i].isMachineIdentity, roles[i].assumeRolePolicyDocument
+    * })
+    */
+  alks.prototype.awsAccountRoles = function awsAccountRoles (props) {
+    return(this._doFetch('awsAccountRoles', props).then(function (results) { return results.awsRoleList; }))
+  };
+
+  /**
    * Returns a Promise for an array of AWS custom AWS IAM account roles
    *
+   * @deprecated Replaced by getAllAWSRoleTypes which includes all AWS role types and their details
    * @param {Object} props - An object containing the following properties
    * @param {string} props.baseUrl - The base URL of the ALKS service
    * @param {string} props.accessToken - The OAuth2 access token used to authorize the request
@@ -322,7 +352,6 @@
    * // ['customRole1', 'customRole2', ...]
    * })
    */
-
   alks.prototype.listAWSAccountRoles = function listAWSAccountRoles (props) {
     return(this._doFetch('listAWSAccountRoles', props).then(function (results) { return JSON.parse(results.jsonAWSRoleList).map(function (r) { return r.split('/').slice(-1)[0]; }); }
     ))
