@@ -154,8 +154,36 @@ class alks {
   }
 
   /**
+  * AWS IAM role type
+  * @typedef {Object} awsRoleType
+  * @property {string} roleTypeName - The AWS IAM role type name
+  * @property {Array<string>} defaultArns - The default ARNs (default policies) associated with this role
+  * @property {Object} trustRelationship - The AWS trust relationship document associated with this role
+  */
+
+  /**
+   * Returns a Promise for an array of all available role types (AWS IAM role types, custom role types) and their details
+   *
+   * @param {Object} props - An object containing the following properties
+   * @param {string} props.baseUrl - The base URL of the ALKS service
+   * @param {string} props.accessToken - The OAuth2 access token used to authorize the request
+   * @returns {Promise<Array<awsRoleType>>}
+   * @example
+   * alks.getAllAWSRoleTypes({
+    *   baseUrl: 'https://your.alks-host.com',
+    *   accessToken: 'abc123',
+    * }).then((roleTypes) {
+    *   // roleTypes[i].roleTypeName, roleTypes[i].defaultArns, roleTypes[i].trustRelationship
+    * })
+    */
+  getAllAWSRoleTypes(props) {
+    return(this._doFetch('allAwsRoleTypes', props).then(results => results.roleTypes))
+  }
+
+  /**
    * Returns a Promise for an array of available AWS IAM role types
    *
+   * @deprecated Replaced by getAllAWSRoleTypes which includes all AWS role types and their details
    * @param {Object} props - An object containing the following properties
    * @param {string} props.baseUrl - The base URL of the ALKS service
    * @param {string} props.accessToken - The OAuth2 access token used to authorize the request
@@ -177,6 +205,7 @@ class alks {
   /**
    * Returns a Promise for an array of available custom role types
    *
+   * @deprecated Replaced by getAllAWSRoleTypes which includes all AWS role types and their details
    * @param {Object} props - An object containing the following properties
    * @param {string} props.baseUrl - The base URL of the ALKS service
    * @param {string} props.accessToken - The OAuth2 access token used to authorize the request

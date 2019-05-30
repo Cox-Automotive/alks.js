@@ -15,6 +15,9 @@
 <dt><a href="#credentials">credentials</a> : <code>Object</code></dt>
 <dd><p>AWS STS Credentials</p>
 </dd>
+<dt><a href="#awsRoleType">awsRoleType</a> : <code>Object</code></dt>
+<dd><p>AWS IAM role type</p>
+</dd>
 <dt><a href="#customRole">customRole</a> : <code>Object</code></dt>
 <dd><p>Custom AWS IAM account role</p>
 </dd>
@@ -35,8 +38,9 @@ ALKS JavaScript API
     * [.getAccounts(props)](#alks+getAccounts) ⇒ <code>Promise.&lt;Array.&lt;account&gt;&gt;</code>
     * [.getKeys(props)](#alks+getKeys) ⇒ [<code>Promise.&lt;credentials&gt;</code>](#credentials)
     * [.getIAMKeys(props)](#alks+getIAMKeys) ⇒ [<code>Promise.&lt;credentials&gt;</code>](#credentials)
-    * [.getAWSRoleTypes(props)](#alks+getAWSRoleTypes) ⇒ <code>Promise.&lt;Array.&lt;string&gt;&gt;</code>
-    * [.getNonServiceAWSRoleTypes(props)](#alks+getNonServiceAWSRoleTypes) ⇒ <code>Promise.&lt;Array.&lt;string&gt;&gt;</code>
+    * [.getAllAWSRoleTypes(props)](#alks+getAllAWSRoleTypes) ⇒ <code>Promise.&lt;Array.&lt;awsRoleType&gt;&gt;</code>
+    * ~~[.getAWSRoleTypes(props)](#alks+getAWSRoleTypes) ⇒ <code>Promise.&lt;Array.&lt;string&gt;&gt;</code>~~
+    * ~~[.getNonServiceAWSRoleTypes(props)](#alks+getNonServiceAWSRoleTypes) ⇒ <code>Promise.&lt;Array.&lt;string&gt;&gt;</code>~~
     * [.createRole(props)](#alks+createRole) ⇒ [<code>Promise.&lt;customRole&gt;</code>](#customRole)
     * [.createNonServiceRole(props)](#alks+createNonServiceRole) ⇒ [<code>Promise.&lt;customRole&gt;</code>](#customRole)
     * [.listAWSAccountRoles(props)](#alks+listAWSAccountRoles) ⇒ <code>Promise.&lt;Array.&lt;string&gt;&gt;</code>
@@ -154,9 +158,32 @@ alks.getIAMKeys({
   // creds.accessKey, creds.secretKey, creds.sessionToken, creds.consoleURL
 })
 ```
+<a name="alks+getAllAWSRoleTypes"></a>
+
+### alks.getAllAWSRoleTypes(props) ⇒ <code>Promise.&lt;Array.&lt;awsRoleType&gt;&gt;</code>
+Returns a Promise for an array of all available role types (AWS IAM role types, custom role types) and their details
+
+**Kind**: instance method of [<code>alks</code>](#alks)  
+**Params**
+
+- props <code>Object</code> - An object containing the following properties
+    - .baseUrl <code>string</code> - The base URL of the ALKS service
+    - .accessToken <code>string</code> - The OAuth2 access token used to authorize the request
+
+**Example**  
+```js
+alks.getAllAWSRoleTypes({
+  baseUrl: 'https://your.alks-host.com',
+  accessToken: 'abc123',
+}).then((roleTypes) {
+  // roleTypes[i].roleTypeName, roleTypes[i].defaultArns, roleTypes[i].trustRelationship
+})
+```
 <a name="alks+getAWSRoleTypes"></a>
 
-### alks.getAWSRoleTypes(props) ⇒ <code>Promise.&lt;Array.&lt;string&gt;&gt;</code>
+### ~~alks.getAWSRoleTypes(props) ⇒ <code>Promise.&lt;Array.&lt;string&gt;&gt;</code>~~
+***Deprecated***
+
 Returns a Promise for an array of available AWS IAM role types
 
 **Kind**: instance method of [<code>alks</code>](#alks)  
@@ -177,7 +204,9 @@ alks.getAWSRoleTypes({
 ```
 <a name="alks+getNonServiceAWSRoleTypes"></a>
 
-### alks.getNonServiceAWSRoleTypes(props) ⇒ <code>Promise.&lt;Array.&lt;string&gt;&gt;</code>
+### ~~alks.getNonServiceAWSRoleTypes(props) ⇒ <code>Promise.&lt;Array.&lt;string&gt;&gt;</code>~~
+***Deprecated***
+
 Returns a Promise for an array of available custom role types
 
 **Kind**: instance method of [<code>alks</code>](#alks)  
@@ -525,6 +554,18 @@ AWS STS Credentials
 - accessKey <code>string</code> - AWS access key  
 - secretKey <code>string</code> - AWS secret key  
 - sessionToken <code>string</code> - AWS STS session token  
+
+<a name="awsRoleType"></a>
+
+## awsRoleType : <code>Object</code>
+AWS IAM role type
+
+**Kind**: global typedef  
+**Properties**
+
+- roleTypeName <code>string</code> - The AWS IAM role type name  
+- defaultArns <code>Array.&lt;string&gt;</code> - The default ARNs (default policies) associated with this role  
+- trustRelationship <code>Object</code> - The AWS trust relationship document associated with this role  
 
 <a name="customRole"></a>
 
