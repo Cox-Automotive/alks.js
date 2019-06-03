@@ -327,7 +327,7 @@ class alks {
     * })
     */
   awsAccountRoles(props) {
-    return(this._doFetch('awsAccountRoles', props).then(results => results.awsRoleList))
+    return(this._doFetch('awsAccountRoles', props, 'GET').then(results => results.awsRoleList))
   }
 
   /**
