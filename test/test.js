@@ -253,7 +253,7 @@ describe('alks.js', function() {
       ]
 
       const _fetch = fetchMock.sandbox().mock('https://your.alks-host.com/allAwsRoleTypes/', {
-        body: { 
+        body: {
           statusMessage: 'Success',
           requestId: 'reqId',
           roleTypes: roleTypes
@@ -423,43 +423,43 @@ describe('alks.js', function() {
   describe('awsAccountRoles', () => {
 
     it('should return a list of roles', async () => {
-      const awsRoleList = JSON.parse(`[
-            {
-              "roleArn": "arn:aws:iam::805619180788:role/acct-managed/MyCustomRole1",
-              "isMachineIdentity": false,
-              "assumeRolePolicyDocument": {
-                "Version": "2012-10-17",
-                "Statement": [
-                  {
-                    "Action": "sts:AssumeRole",
-                    "Effect": "Allow",
-                    "Principal": {
-                      "Service": "s3.amazonaws.com"
-                    }
-                  }
-                ]
+      const awsRoleList = [
+        {
+          'roleArn': 'arn:aws:iam::805619180788:role/acct-managed/MyCustomRole1',
+          'isMachineIdentity': false,
+          'assumeRolePolicyDocument': {
+            'Version': '2012-10-17',
+            'Statement': [
+              {
+                'Action': 'sts:AssumeRole',
+                'Effect': 'Allow',
+                'Principal': {
+                  'Service': 's3.amazonaws.com'
+                }
               }
-            },
-            {
-              "roleArn": "arn:aws:iam::805619180788:role/acct-managed/MyCustomRole2",
-              "isMachineIdentity": true,
-              "assumeRolePolicyDocument": {
-                "Version": "2012-10-17",
-                "Statement": [
-                  {
-                    "Action": "sts:AssumeRole",
-                    "Effect": "Allow",
-                    "Principal": {
-                      "Service": "s3.amazonaws.com"
-                    }
-                  }
-                ]
+            ]
+          }
+        },
+        {
+          'roleArn': 'arn:aws:iam::805619180788:role/acct-managed/MyCustomRole2',
+          'isMachineIdentity': true,
+          'assumeRolePolicyDocument': {
+            'Version': '2012-10-17',
+            'Statement': [
+              {
+                'Action': 'sts:AssumeRole',
+                'Effect': 'Allow',
+                'Principal': {
+                  'Service': 's3.amazonaws.com'
+                }
               }
-            }
-          ]`)
+            ]
+          }
+        }
+      ]
 
-      const _fetch = fetchMock.sandbox().mock('https://your.alks-host.com/awsAccountRoles/', {
-        body: { 
+      const _fetch = fetchMock.sandbox().mock('https://your.alks-host.com/awsAccountRoles?account=1234567890/', {
+        body: {
           statusMessage: 'Success',
           requestId: 'reqId',
           awsRoleList: awsRoleList
@@ -470,7 +470,7 @@ describe('alks.js', function() {
       const result = await alks.awsAccountRoles({
         baseUrl: 'https://your.alks-host.com',
         accessToken: 'abc123',
-        account: '123457890',
+        account: '1234567890',
         _fetch
       })
 
