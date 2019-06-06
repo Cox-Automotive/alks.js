@@ -4,7 +4,7 @@
   (global = global || self, global.alks = factory());
 }(this, function () { 'use strict';
 
-  var version = "1.3.0";
+  var version = "1.4.1";
 
   var fetch = window.fetch.bind(window);
 
@@ -329,13 +329,13 @@
     * })
     */
   alks.prototype.awsAccountRoles = function awsAccountRoles (props) {
-    return(this._doFetch('awsAccountRoles', props).then(function (results) { return results.awsRoleList; }))
+    return(this._doFetch(("awsAccountRoles?account=" + (props.account)), props, 'GET').then(function (results) { return results.awsRoleList; }))
   };
 
   /**
    * Returns a Promise for an array of AWS custom AWS IAM account roles
    *
-   * @deprecated Replaced by getAllAWSRoleTypes which includes all AWS role types and their details
+   * @deprecated Replaced by awsAccountRoles which includes AWS account roles and their details
    * @param {Object} props - An object containing the following properties
    * @param {string} props.baseUrl - The base URL of the ALKS service
    * @param {string} props.accessToken - The OAuth2 access token used to authorize the request
