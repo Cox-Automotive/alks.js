@@ -177,7 +177,7 @@ class alks {
     * })
     */
   getAllAWSRoleTypes(props) {
-    return(this._doFetch('allAwsRoleTypes', props).then(results => results.roleTypes))
+    return(this._doFetch('allAwsRoleTypes', props, 'GET').then(results => results.roleTypes))
   }
 
   /**

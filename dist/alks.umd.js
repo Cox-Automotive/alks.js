@@ -4,7 +4,7 @@
   (global = global || self, global.alks = factory());
 }(this, function () { 'use strict';
 
-  var version = "1.4.1";
+  var version = "1.4.2";
 
   var fetch = window.fetch.bind(window);
 
@@ -181,7 +181,7 @@
     * })
     */
   alks.prototype.getAllAWSRoleTypes = function getAllAWSRoleTypes (props) {
-    return(this._doFetch('allAwsRoleTypes', props).then(function (results) { return results.roleTypes; }))
+    return(this._doFetch('allAwsRoleTypes', props, 'GET').then(function (results) { return results.roleTypes; }))
   };
 
   /**
