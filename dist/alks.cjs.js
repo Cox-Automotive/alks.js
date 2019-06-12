@@ -1,6 +1,6 @@
 'use strict';
 
-var version = "1.4.1";
+var version = "1.4.2";
 
 const Buffer = require('buffer').Buffer;
 const fetch = require('node-fetch');
@@ -178,7 +178,7 @@ class alks {
     * })
     */
   getAllAWSRoleTypes(props) {
-    return(this._doFetch('allAwsRoleTypes', props).then(results => results.roleTypes))
+    return(this._doFetch('allAwsRoleTypes', props, 'GET').then(results => results.roleTypes))
   }
 
   /**
