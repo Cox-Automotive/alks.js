@@ -4,7 +4,7 @@
   (global = global || self, global.alks = factory());
 }(this, function () { 'use strict';
 
-  var version = "1.4.2";
+  var version = "1.4.3";
 
   var fetch = window.fetch.bind(window);
 
@@ -84,7 +84,7 @@
    * baseUrl: 'https://your.alks-host.com',
    * accessToken: 'abc123',
    * }).then((accounts) => {
-   * // accounts[0].account, accounts[0].role, accounts[0].iamKeyActive, accounts[0].maxKeyDuration
+   * // accounts[0].account, accounts[0].role, accounts[0].iamKeyActive, accounts[0].maxKeyDuration, accounts[0].skypieaAccount
    * })
    */
   alks.prototype.getAccounts = function getAccounts (props) {
@@ -92,7 +92,8 @@
         account: key,
         role: results.accountListRole[key][0].role,
         iamKeyActive: results.accountListRole[key][0].iamKeyActive,
-        maxKeyDuration: results.accountListRole[key][0].maxKeyDuration
+        maxKeyDuration: results.accountListRole[key][0].maxKeyDuration,
+        skypieaAccount: results.accountListRole[key][0].skypieaAccount
       }); }); }
     ))
   };

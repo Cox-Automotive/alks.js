@@ -105,7 +105,7 @@ alks.getAccounts({
   baseUrl: 'https://your.alks-host.com',
   accessToken: 'abc123',
 }).then((accounts) => {
-  // accounts[0].account, accounts[0].role, accounts[0].iamKeyActive, accounts[0].maxKeyDuration
+  // accounts[0].account, accounts[0].role, accounts[0].iamKeyActive, accounts[0].maxKeyDuration, accounts[0].skypieaAccount
 })
 ```
 <a name="alks+getKeys"></a>
