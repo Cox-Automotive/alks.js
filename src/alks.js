@@ -160,6 +160,7 @@ class alks {
   * @property {string} roleTypeName - The AWS IAM role type name
   * @property {Array<string>} defaultArns - The default ARNs (default policies) associated with this role
   * @property {Object} trustRelationship - The AWS trust relationship document associated with this role
+  * @property {boolean} instanceProfile - Whether this role is an instance profile
   */
 
   /**

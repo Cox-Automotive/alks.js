@@ -599,7 +599,7 @@ AWS IAM role type
 - roleTypeName <code>string</code> - The AWS IAM role type name  
 - defaultArns <code>Array.&lt;string&gt;</code> - The default ARNs (default policies) associated with this role  
 - trustRelationship <code>Object</code> - The AWS trust relationship document associated with this role  
-- instanceProfile <code>boolean</code> - Whether this role is an instance profile
+- instanceProfile <code>boolean</code> - Whether this role is an instance profile  
 
 <a name="customRole"></a>
 
