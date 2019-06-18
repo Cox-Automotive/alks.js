@@ -64,12 +64,19 @@
   };
 
   /**
+   * Skypiea Account
+   * @typedef {Object} skypieaAccount
+   * @type {string} label - the friendly name of the account
+   */
+
+  /**
    * AWS Account
    * @typedef {Object} account
    * @property {string} account - The name of the account
    * @property {string} role - The user's role in this account
    * @property {boolean} iamKeyActive - Whether credentials with IAM permissions can be provisioned from this account
    * @property {number} maxKeyDuration - The maximum key duration for this account
+   * @property {skypieaAccount} skypieaAccount - extra information about the account from Skypiea
    */
 
   /**
