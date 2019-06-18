@@ -1,4 +1,4 @@
-var version = "1.4.3";
+var version = "1.4.4";
 
 const fetch = window.fetch.bind(window);
 
@@ -165,6 +165,7 @@ class alks {
   * @property {string} roleTypeName - The AWS IAM role type name
   * @property {Array<string>} defaultArns - The default ARNs (default policies) associated with this role
   * @property {Object} trustRelationship - The AWS trust relationship document associated with this role
+  * @property {boolean} instanceProfile - Whether this role is an instance profile
   */
 
   /**
@@ -250,6 +251,7 @@ class alks {
    * @param {string} props.roleName - The name of the custom AWS IAM role to create
    * @param {string} props.roleType - The type of AWS role to use when creating the new role
    * @param {number} props.includeDefaultPolicy - Whether to include the default policy in the new role (1 = yes, 0 = no)
+   * @param {boolean} props.enableAlksAccess - Whether the role has a machine identity
    * @returns {Promise<customRole>}
    * @example
    * alks.createRole({
@@ -259,7 +261,8 @@ class alks {
    *   role: 'IAMAdmin',
    *   roleName: 'awsRoleName',
    *   roleType: 'Amazon EC2',
-   *   includeDefaultPolicy: 1
+   *   includeDefaultPolicy: 1,
+   *   enableAlksAccess: true
    * }).then((role) => {
    *   // role.roleArn, role.denyArns, role.instanceProfileArn, role.addedRoleToInstanceProfile
    * })
@@ -284,6 +287,7 @@ class alks {
    * @param {number} props.includeDefaultPolicy - Whether to include the default policy in the new role (1 = yes, 0 = no)
    * @param {string} props.trustArn - The Arn of the existing role to trust
    * @param {string} props.trustType - Whether the trust is 'Cross Account' or 'Inner Account'
+   * @param {boolean} props.enableAlksAccess - Whether the role has a machine identity
    * @returns {Promise<customRole>}
    * @example
    * alks.createNonServiceRole({
@@ -295,7 +299,8 @@ class alks {
    *   roleType: 'Amazon EC2',
    *   includeDefaultPolicy: 1,
    *   trustArn: 'anExistingRoleArn',
-   *   trustType: 'Cross Account'
+   *   trustType: 'Cross Account',
+   *   enableAlksAccess: true
    * }).then((role) => {
    *   // role.roleArn, role.denyArns, role.instanceProfileArn, role.addedRoleToInstanceProfile
    * })

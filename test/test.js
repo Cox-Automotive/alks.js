@@ -17,8 +17,8 @@ describe('alks.js', function() {
         body: {
           statusMessage: 'Success',
           accountListRole: {
-            '1234 - foobar': [{ account: '1234', role: 'role1', iamKeyActive: true, maxKeyDuration: 2, skypieaAccount: { label: 'Foo Bar' } }],
-            '2345 - foobar': [{ account: '2345', role: 'role2', iamKeyActive: false, maxKeyDuration: 36, skypieaAccount: { label: 'Foo Bar 2' } }],
+            '1234 - foobar': [{ account: '1234', role: 'role1', iamKeyActive: true, maxKeyDuration: 2, skypieaAccount: null }],
+            '2345 - foobar': [{ account: '2345', role: 'role2', iamKeyActive: false, maxKeyDuration: 36, skypieaAccount: {label: '2345-label'} }],
           }
         },
         status: 200
@@ -35,8 +35,16 @@ describe('alks.js', function() {
         role: 'role1',
         iamKeyActive: true,
         maxKeyDuration: 2,
+        skypieaAccount: null
+      })
+
+      expect(result).to.deep.include({
+        account: '2345 - foobar',
+        role: 'role2',
+        iamKeyActive: false,
+        maxKeyDuration: 36,
         skypieaAccount: {
-          label: 'Foo Bar'
+          label: '2345-label'
         }
       })
     })
@@ -600,8 +608,8 @@ describe('alks.js', function() {
         body: {
           statusMessage: 'Success',
           accountListRole: {
-            '1234 - foobar': [{ account: '1234', role: 'role1', iamKeyActive: true, maxKeyDuration: 2, skypieaAccount: { label: 'Foo Bar' } }],
-            '2345 - foobar': [{ account: '2345', role: 'role2', iamKeyActive: false, maxKeyDuration: 36, skypieaAccount: { label: 'Foo Bar 2' } }],
+            '1234 - foobar': [{ account: '1234', role: 'role1', iamKeyActive: true, maxKeyDuration: 2, skypieaAccount: null }],
+            '2345 - foobar': [{ account: '2345', role: 'role2', iamKeyActive: false, maxKeyDuration: 36, skypieaAccount: null }],
           }
         },
         status: 200
@@ -614,7 +622,7 @@ describe('alks.js', function() {
       })
 
       const accounts = await myAlks.getAccounts()
-      expect(accounts).to.deep.include({account: '2345 - foobar', role: 'role2', iamKeyActive: false, maxKeyDuration: 36, skypieaAccount: { label: 'Foo Bar 2' } })
+      expect(accounts).to.deep.include({account: '2345 - foobar', role: 'role2', iamKeyActive: false, maxKeyDuration: 36, skypieaAccount: null  })
     })
 
     it('should return a copy with defaults from the passed-in alks object', async () => {

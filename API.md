@@ -105,7 +105,7 @@ alks.getAccounts({
   baseUrl: 'https://your.alks-host.com',
   accessToken: 'abc123',
 }).then((accounts) => {
-  // accounts[0].account, accounts[0].role, accounts[0].iamKeyActive, accounts[0].maxKeyDuration
+  // accounts[0].account, accounts[0].role, accounts[0].iamKeyActive, accounts[0].maxKeyDuration, accounts[0].skypieaAccount
 })
 ```
 <a name="alks+getKeys"></a>
@@ -245,6 +245,7 @@ Returns a Promise for the results of creating a new custom AWS IAM account role
     - .roleName <code>string</code> - The name of the custom AWS IAM role to create
     - .roleType <code>string</code> - The type of AWS role to use when creating the new role
     - .includeDefaultPolicy <code>number</code> - Whether to include the default policy in the new role (1 = yes, 0 = no)
+    - .enableAlksAccess <code>boolean</code> - Whether the role has a machine identity
 
 **Example**  
 ```js
@@ -255,7 +256,8 @@ alks.createRole({
   role: 'IAMAdmin',
   roleName: 'awsRoleName',
   roleType: 'Amazon EC2',
-  includeDefaultPolicy: 1
+  includeDefaultPolicy: 1,
+  enableAlksAccess: true
 }).then((role) => {
   // role.roleArn, role.denyArns, role.instanceProfileArn, role.addedRoleToInstanceProfile
 })
@@ -278,6 +280,7 @@ Returns a Promise for the results of creating a new custom AWS IAM trust role
     - .includeDefaultPolicy <code>number</code> - Whether to include the default policy in the new role (1 = yes, 0 = no)
     - .trustArn <code>string</code> - The Arn of the existing role to trust
     - .trustType <code>string</code> - Whether the trust is 'Cross Account' or 'Inner Account'
+    - .enableAlksAccess <code>boolean</code> - Whether the role has a machine identity
 
 **Example**  
 ```js
@@ -290,7 +293,8 @@ alks.createNonServiceRole({
   roleType: 'Amazon EC2',
   includeDefaultPolicy: 1,
   trustArn: 'anExistingRoleArn',
-  trustType: 'Cross Account'
+  trustType: 'Cross Account',
+  enableAlksAccess: true
 }).then((role) => {
   // role.roleArn, role.denyArns, role.instanceProfileArn, role.addedRoleToInstanceProfile
 })
@@ -595,6 +599,7 @@ AWS IAM role type
 - roleTypeName <code>string</code> - The AWS IAM role type name  
 - defaultArns <code>Array.&lt;string&gt;</code> - The default ARNs (default policies) associated with this role  
 - trustRelationship <code>Object</code> - The AWS trust relationship document associated with this role  
+- instanceProfile <code>boolean</code> - Whether this role is an instance profile  
 
 <a name="customRole"></a>
 
