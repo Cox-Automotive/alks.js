@@ -4,7 +4,7 @@
   (global = global || self, global.alks = factory());
 }(this, function () { 'use strict';
 
-  var version = "1.4.2";
+  var version = "1.4.3";
 
   var fetch = window.fetch.bind(window);
 
@@ -64,12 +64,19 @@
   };
 
   /**
+   * Skypiea Account
+   * @typedef {Object} skypieaAccount
+   * @type {string} label - the friendly name of the account
+   */
+
+  /**
    * AWS Account
    * @typedef {Object} account
    * @property {string} account - The name of the account
    * @property {string} role - The user's role in this account
    * @property {boolean} iamKeyActive - Whether credentials with IAM permissions can be provisioned from this account
    * @property {number} maxKeyDuration - The maximum key duration for this account
+   * @property {skypieaAccount} skypieaAccount - extra information about the account from Skypiea
    */
 
   /**
@@ -84,7 +91,7 @@
    * baseUrl: 'https://your.alks-host.com',
    * accessToken: 'abc123',
    * }).then((accounts) => {
-   * // accounts[0].account, accounts[0].role, accounts[0].iamKeyActive, accounts[0].maxKeyDuration
+   * // accounts[0].account, accounts[0].role, accounts[0].iamKeyActive, accounts[0].maxKeyDuration, accounts[0].skypieaAccount
    * })
    */
   alks.prototype.getAccounts = function getAccounts (props) {
@@ -92,7 +99,8 @@
         account: key,
         role: results.accountListRole[key][0].role,
         iamKeyActive: results.accountListRole[key][0].iamKeyActive,
-        maxKeyDuration: results.accountListRole[key][0].maxKeyDuration
+        maxKeyDuration: results.accountListRole[key][0].maxKeyDuration,
+        skypieaAccount: results.accountListRole[key][0].skypieaAccount
       }); }); }
     ))
   };
