@@ -17,8 +17,8 @@ describe('alks.js', function() {
         body: {
           statusMessage: 'Success',
           accountListRole: {
-            '1234 - foobar': [{ account: '1234', role: 'role1', iamKeyActive: true, maxKeyDuration: 2 }],
-            '2345 - foobar': [{ account: '2345', role: 'role2', iamKeyActive: false, maxKeyDuration: 36 }],
+            '1234 - foobar': [{ account: '1234', role: 'role1', iamKeyActive: true, maxKeyDuration: 2, skypieaAccount: { label: 'Foo Bar' } }],
+            '2345 - foobar': [{ account: '2345', role: 'role2', iamKeyActive: false, maxKeyDuration: 36, skypieaAccount: { label: 'Foo Bar 2' } }],
           }
         },
         status: 200
@@ -34,7 +34,10 @@ describe('alks.js', function() {
         account: '1234 - foobar',
         role: 'role1',
         iamKeyActive: true,
-        maxKeyDuration: 2
+        maxKeyDuration: 2,
+        skypieaAccount: {
+          label: 'Foo Bar'
+        }
       })
     })
   })
@@ -597,8 +600,8 @@ describe('alks.js', function() {
         body: {
           statusMessage: 'Success',
           accountListRole: {
-            '1234 - foobar': [{ account: '1234', role: 'role1', iamKeyActive: true, maxKeyDuration: 2 }],
-            '2345 - foobar': [{ account: '2345', role: 'role2', iamKeyActive: false, maxKeyDuration: 36 }],
+            '1234 - foobar': [{ account: '1234', role: 'role1', iamKeyActive: true, maxKeyDuration: 2, skypieaAccount: { label: 'Foo Bar' } }],
+            '2345 - foobar': [{ account: '2345', role: 'role2', iamKeyActive: false, maxKeyDuration: 36, skypieaAccount: { label: 'Foo Bar 2' } }],
           }
         },
         status: 200
@@ -611,7 +614,7 @@ describe('alks.js', function() {
       })
 
       const accounts = await myAlks.getAccounts()
-      expect(accounts).to.deep.include({account: '2345 - foobar', role: 'role2', iamKeyActive: false, maxKeyDuration: 36  })
+      expect(accounts).to.deep.include({account: '2345 - foobar', role: 'role2', iamKeyActive: false, maxKeyDuration: 36, skypieaAccount: { label: 'Foo Bar 2' } })
     })
 
     it('should return a copy with defaults from the passed-in alks object', async () => {
