@@ -3,6 +3,7 @@
   "version": "1.5.1",
   "description": "JavaScript client for the ALKS API, usable in both modern browsers and node.js",
   "main": "dist/alks.cjs.js",
+  "types": "index.d.ts",
   "unpkg": "dist/alks.min.js",
   "browser": "dist/alks.umd.js",
   "module": "dist/alks.esm.js",
