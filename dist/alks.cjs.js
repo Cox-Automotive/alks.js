@@ -1,6 +1,6 @@
 'use strict';
 
-var version = "1.4.4";
+var version = "1.5.1";
 
 const Buffer = require('buffer').Buffer;
 const fetch = require('node-fetch');
