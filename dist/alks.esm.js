@@ -1,4 +1,4 @@
-var version = "1.4.4";
+var version = "1.5.1";
 
 const fetch = window.fetch.bind(window);
 

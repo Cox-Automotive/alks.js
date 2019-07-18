@@ -4,7 +4,7 @@
   (global = global || self, global.alks = factory());
 }(this, function () { 'use strict';
 
-  var version = "1.4.4";
+  var version = "1.5.1";
 
   var fetch = window.fetch.bind(window);
 
