@@ -18,6 +18,44 @@ It provides a lightweight wrapper around the ALKS REST API, with the following f
 
 For browser usage, it expects `fetch` (and Promises) [to be available](http://caniuse.com/#search=Fetch).  If they're not, you'll need to [polyfill](https://github.com/github/fetch) them.
 
+## Installation
+
+Install with [NPM](https://www.npmjs.com/package/alks.js) like this
+```
+npm install alks.js
+```
+
+or Yarn
+```
+yarn install alks.js
+```
+
+## Example
+
+```javascript
+// Using ES2015 module syntax
+import * as ALKS from 'alks.js';
+
+// Using node's require syntax
+const ALKS = require('alks.js');
+
+const myAlks = ALKS.create({
+  baseUrl: 'https://your.alks-host.com',
+  accessToken: 'abc123',
+});
+
+myAlks.getKeys({
+  account: '012345678910/ALKSPowerUser',
+  role: 'PowerUser',
+  sessionTime: 1
+}).then((creds) => {
+  console.log(`here are your temporary access keys:
+    Access Key: ${creds.accessKey}
+    Secret Key: ${creds.secretKey}
+    Session Token: ${creds.sessionToken}`);
+});
+```
+
 ## Documentation
 View the [API documentation](API.md)
 
