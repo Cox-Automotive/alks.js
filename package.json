@@ -8,7 +8,7 @@
   "browser": "dist/alks.umd.js",
   "module": "dist/alks.esm.js",
   "scripts": {
-    "rmdirs": "rimraf lib dist",
+    "rmdirs": "rimraf lib dist/*.js",
     "mkdirs": "mkdirp lib dist",
     "clean": "npm run rmdirs && npm run mkdirs",
     "rollup": "rollup -c rollup.config.js",
