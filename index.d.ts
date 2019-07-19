@@ -4,7 +4,7 @@ declare namespace ALKS {
     role: string;
     iamKeyActive: boolean;
     maxKeyDuration: number;
-    skypieaAccount: SkypieaAccount;
+    skypieaAccount: SkypieaAccount | null;
   }
 
   export interface SkypieaAccount {
