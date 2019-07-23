@@ -4,7 +4,7 @@
   (global = global || self, global.alks = factory());
 }(this, function () { 'use strict';
 
-  var version = "1.5.1";
+  var version = "1.5.2";
 
   var fetch = window.fetch.bind(window);
 
@@ -633,8 +633,14 @@
 
   var AlksError = /*@__PURE__*/(function (Error) {
     function AlksError(response, json) {
-      Error.call(this, response.statusText);
+      var errors = Array.isArray(json.errors) ? json.errors : [];
+      if (response.statusText) {
+        errors.unshift(response.statusText);
+      }
+      var message = errors.join('; ');
+      Error.call(this, message);
       this.status = response.status;
+      this.message = message;
       Object.assign(this, json);
     }
 
