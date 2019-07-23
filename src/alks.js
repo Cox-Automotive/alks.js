@@ -631,7 +631,12 @@ const pick = (obj, props) => props.reduce((a, e) => (a[e] = obj[e], a), {})
 
 class AlksError extends Error {
   constructor(response, json) {
-    super(response.statusText)
+    const errors = Array.isArray(json.errors) ? json.errors : []
+    if (response.statusText) {
+      errors.unshift(response.statusText)
+    }
+    const message = errors.join('; ')
+    super(message)
     this.status = response.status
     Object.assign(this, json)
   }
