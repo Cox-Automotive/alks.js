@@ -639,6 +639,7 @@ class AlksError extends Error {
     const message = errors.join('; ');
     super(message);
     this.status = response.status;
+    this.message = message;
     Object.assign(this, json);
   }
 }

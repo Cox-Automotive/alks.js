@@ -640,6 +640,7 @@
       var message = errors.join('; ');
       Error.call(this, message);
       this.status = response.status;
+      this.message = message;
       Object.assign(this, json);
     }
 
