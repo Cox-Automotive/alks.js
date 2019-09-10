@@ -169,6 +169,14 @@ declare namespace ALKS {
 
   export interface GetAllAWSRoleTypesProps extends Partial<AlksProps> {}
 
+  export interface AddRoleMachineIdentityProps extends Partial<AlksProps> {
+    roleArn: string;
+  }
+
+  export interface DeleteRoleMachineIdentityProps extends Partial<AlksProps> {
+    roleArn: string;
+  }
+
   export class Alks {
     public create: (props: AlksProps) => Alks;
     public getAccounts: (props?: GetAccountsProps) => Promise<Account[]>;
@@ -204,6 +212,8 @@ declare namespace ALKS {
     public getAllAWSRoleTypes: (
       props: GetAllAWSRoleTypesProps
     ) => Promise<AwsRoleType[]>;
+    public addRoleMachineIdentity: (props: AddRoleMachineIdentityProps) => Promise<string>;
+    public deleteRoleMachineIdentity: (props: DeleteRoleMachineIdentityProps) => Promise<string>;
   }
 
   export function create(props: AlksProps): Alks;
@@ -244,6 +254,8 @@ declare namespace ALKS {
   export function getAllAWSRoleTypes(
     props: GetAllAWSRoleTypesProps
   ): Promise<AwsRoleType[]>;
+  export function addRoleMachineIdentity(props: AddRoleMachineIdentityProps): Promise<string>;
+  export function deleteRole(props: DeleteRoleMachineIdentityProps) : Promise<string>;
 }
 
 export = ALKS;
