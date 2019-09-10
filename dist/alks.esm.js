@@ -1,4 +1,4 @@
-var version = "1.5.2";
+var version = "1.5.5";
 
 const fetch = window.fetch.bind(window);
 
@@ -420,6 +420,52 @@ class alks {
    */
   deleteRole(props) {
     return(this._doFetch('deleteRole', props).then(() => true ))
+  }
+
+  /**
+   * Returns a Promise for a string arn indicating the role was enabled for machine identity
+   *
+   * @param {Object} props - An object containing the following properties
+   * @param {string} props.baseUrl - The base URL of the ALKS service
+   * @param {string} props.accessToken - The OAuth2 access token used to authorize the request
+   * @param {string} props.roleArn - The Amazon Resource Name (ARN) associated with the role
+   * @returns {Promise<string>}
+   * @example
+   * alks.addRoleMachineIdentity({
+    *   baseUrl: 'https://your.alks-host.com',
+    *   accessToken: 'abc123',
+    *   roleArn: 'arn:aws:iam::123:role/acct-managed/awsRoleName'
+    * }).then((roleArn) => {
+    *   // arn:aws:iam::123:role/acct-managed/awsRoleName
+    * })
+    */
+  addRoleMachineIdentity(props) {
+    return(this._doFetch('roleMachineIdentity', props).then((results) => 
+      pick(results,['machineIdentityArn']))
+    )
+  }
+
+  /**
+   * Returns a Promise for a string arn indicating the role was disabled for machine identity
+   *
+   * @param {Object} props - An object containing the following properties
+   * @param {string} props.baseUrl - The base URL of the ALKS service
+   * @param {string} props.accessToken - The OAuth2 access token used to authorize the request
+   * @param {string} props.roleArn - The Amazon Resource Name (ARN) associated with the role
+   * @returns {Promise<string>}
+   * @example
+   * alks.deleteRoleMachineIdentity({
+    *   baseUrl: 'https://your.alks-host.com',
+    *   accessToken: 'abc123',
+    *   roleArn: 'arn:aws:iam::123:role/acct-managed/awsRoleName'
+    * }).then((roleArn) => {
+    *   // arn:aws:iam::123:role/acct-managed/awsRoleName
+    * })
+    */
+  deleteRoleMachineIdentity(props) {
+    return(this._doFetch('roleMachineIdentity', props, 'DELETE').then((results) => 
+      pick(results,['machineIdentityArn']))
+    )
   }
 
   /**
