@@ -57,6 +57,8 @@ ALKS JavaScript API
     * [.getAccessToken(props)](#alks+getAccessToken) ⇒ <code>Promise.&lt;Object&gt;</code>
     * [.getRefreshTokens(props)](#alks+getRefreshTokens) ⇒ <code>Array.&lt;Object&gt;</code>
     * [.revoke(props)](#alks+revoke) ⇒ <code>boolean</code>
+    * [.addRoleMachineIdentity](#alks+addRoleMachineIdentity) ⇒ <code>Promise.&lt;String</code>
+    * [.deleteRoleMachineIdentity](#alks+deleteRoleMachineIdentity) ⇒ <code>Promise.&lt;String</code>
 
 <a name="alks+create"></a>
 
@@ -563,6 +565,51 @@ alks.revoke({
   // success == true
 })
 ```
+
+<a name="alks+addRoleMachineIdentity"></a>
+
+### alks.addRoleMachineIdentity(props) ⇒ <code>Promise.&lt;String&gt;</code>
+Enable machine identity for a role
+
+**Kind**: instance method of [<code>alks</code>](#alks)  
+**Params**
+
+- props <code>Object</code> - An object containing the following properties
+    - [.roleARN] <code>string</code> - the Amazon Resource Number (ARN) of the role
+
+**Example**  
+```js
+alks.addRoleMachineIdentity({
+  baseUrl: 'https://your.alks-host.com',
+  accessToken: 'abc123',
+  roleARN: 'arn:aws:iam::123:role/acct-managed/awsRoleName',
+}).then((roleARN) => {
+  // arn:aws:iam::123:role/acct-managed/awsRoleName
+})
+```
+
+<a name="alks+deleteRoleMachineIdentity"></a>
+
+### alks.deleteRoleMachineIdentity(props) ⇒ <code>Promise.&lt;String&gt;</code>
+Disable machine identity for a role
+
+**Kind**: instance method of [<code>alks</code>](#alks)  
+**Params**
+
+- props <code>Object</code> - An object containing the following properties
+    - [.roleARN] <code>string</code> - the Amazon Resource Number (ARN) of the role
+
+**Example**  
+```js
+alks.deleteRoleMachineIdentity({
+  baseUrl: 'https://your.alks-host.com',
+  accessToken: 'abc123',
+  roleARN: 'arn:aws:iam::123:role/acct-managed/awsRoleName',
+}).then((roleARN) => {
+  // arn:aws:iam::123:role/acct-managed/awsRoleName
+})
+```
+
 <a name="account"></a>
 
 ## account : <code>Object</code>
