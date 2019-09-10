@@ -794,4 +794,54 @@ describe('alks.js', function() {
       expect(result).to.be.true
     })
   })
+
+  describe('addRoleMachineIdentity', () => {
+
+    it('should return the arn on success', async () => {
+      const baseUrl = 'https://your.alks-host.com'
+      const roleArn = 'arn:aws:iam::123:role/acct-managed/awsRoleName'
+
+      const _fetch = fetchMock.sandbox().mock(`${baseUrl}/roleMachineIdentity/`, {
+        body: {
+          machineIdentityArn: 'arn:aws:iam::123:role/acct-managed/awsRoleName'
+        },
+        status: 200
+      })
+
+      const myAlks = alks.create({
+        baseUrl,
+        accessToken: 'abc123',
+        _fetch
+      })
+
+      const result = await myAlks.addRoleMachineIdentity({roleArn})
+
+      expect(result).to.have.keys('machineIdentityArn')
+    })
+  })
+
+  describe('deleteRoleMachineIdentity', () => {
+
+    it('should return the arn on success', async () => {
+      const baseUrl = 'https://your.alks-host.com'
+      const roleArn = 'arn:aws:iam::123:role/acct-managed/awsRoleName'
+
+      const _fetch = fetchMock.sandbox().mock(`${baseUrl}/roleMachineIdentity/`, {
+        body: {
+          machineIdentityArn: 'arn:aws:iam::123:role/acct-managed/awsRoleName'
+        },
+        status: 200
+      }, { method: 'DELETE'})
+
+      const myAlks = alks.create({
+        baseUrl,
+        accessToken: 'abc123',
+        _fetch
+      })
+
+      const result = await myAlks.deleteRoleMachineIdentity({roleArn})
+
+      expect(result).to.have.keys('machineIdentityArn')
+    })
+  })
 })
