@@ -27,6 +27,9 @@
 <dt><a href="#AccessKeys">AccessKeys</a> : <code>Object</code></dt>
 <dd><p>Response containing access keys.</p>
 </dd>
+<dt><a href="#MachineIdentity">MachineIdentity</a> : <code>Object</code></dt>
+<dd><p>Response containing machine identity arn.</p>
+</dd>
 </dl>
 
 <a name="alks"></a>
@@ -57,8 +60,8 @@ ALKS JavaScript API
     * [.getAccessToken(props)](#alks+getAccessToken) ⇒ <code>Promise.&lt;Object&gt;</code>
     * [.getRefreshTokens(props)](#alks+getRefreshTokens) ⇒ <code>Array.&lt;Object&gt;</code>
     * [.revoke(props)](#alks+revoke) ⇒ <code>boolean</code>
-    * [.addRoleMachineIdentity](#alks+addRoleMachineIdentity) ⇒ <code>Promise.&lt;Object></code>
-    * [.deleteRoleMachineIdentity](#alks+deleteRoleMachineIdentity) ⇒ <code>Promise.&lt;Object></code>
+    * [.addRoleMachineIdentity](#alks+addRoleMachineIdentity) ⇒ <code>Promise.&lt;MachineIdentity></code>
+    * [.deleteRoleMachineIdentity](#alks+deleteRoleMachineIdentity) ⇒ <code>Promise.&lt;MachineIdentity></code>
 
 <a name="alks+create"></a>
 
@@ -568,7 +571,7 @@ alks.revoke({
 
 <a name="alks+addRoleMachineIdentity"></a>
 
-### alks.addRoleMachineIdentity(props) ⇒ <code>Promise.&lt;Object&gt;</code>
+### alks.addRoleMachineIdentity(props) ⇒ <code>Promise.&lt;MachineIdentity&gt;</code>
 Enable machine identity for a role
 
 **Kind**: instance method of [<code>alks</code>](#alks)  
@@ -590,7 +593,7 @@ alks.addRoleMachineIdentity({
 
 <a name="alks+deleteRoleMachineIdentity"></a>
 
-### alks.deleteRoleMachineIdentity(props) ⇒ <code>Promise.&lt;Object&gt;</code>
+### alks.deleteRoleMachineIdentity(props) ⇒ <code>Promise.&lt;MachineIdentity&gt;</code>
 Disable machine identity for a role
 
 **Kind**: instance method of [<code>alks</code>](#alks)  
@@ -686,3 +689,12 @@ Response containing access keys.
 - secretKey <code>string</code> - the secret key for the long term access key  
 - addedIAMUserToGroup <code>boolean</code> - whether the user was successfuly added to the deny policy group  
 
+<a name="MachineIdentity"></a>
+
+## MachineIdentity : <code>Object</code>
+Response containing machine identity ARN.
+
+**Kind**: global typedef  
+**Properties**
+
+- machineIdentityArn <code>string</code> - the arn of machine identity
