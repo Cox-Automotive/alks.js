@@ -434,8 +434,8 @@ class alks {
    * alks.addRoleMachineIdentity({
     *   baseUrl: 'https://your.alks-host.com',
     *   accessToken: 'abc123',
-    *   roleArn: 'arn:aws:iam::123:role/acct-managed/awsRoleName'
-    * }).then((roleArn) => {
+    *   roleARN: 'arn:aws:iam::123:role/acct-managed/awsRoleName'
+    * }).then((roleARN) => {
     *   // arn:aws:iam::123:role/acct-managed/awsRoleName
     * })
     */
@@ -457,8 +457,8 @@ class alks {
    * alks.deleteRoleMachineIdentity({
     *   baseUrl: 'https://your.alks-host.com',
     *   accessToken: 'abc123',
-    *   roleArn: 'arn:aws:iam::123:role/acct-managed/awsRoleName'
-    * }).then((roleArn) => {
+    *   roleARN: 'arn:aws:iam::123:role/acct-managed/awsRoleName'
+    * }).then((roleARN) => {
     *   // arn:aws:iam::123:role/acct-managed/awsRoleName
     * })
     */

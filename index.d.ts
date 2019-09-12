@@ -174,11 +174,11 @@ declare namespace ALKS {
   export interface GetAllAWSRoleTypesProps extends Partial<AlksProps> {}
 
   export interface AddRoleMachineIdentityProps extends Partial<AlksProps> {
-    roleArn: string;
+    roleARN: string;
   }
 
   export interface DeleteRoleMachineIdentityProps extends Partial<AlksProps> {
-    roleArn: string;
+    roleARN: string;
   }
 
   export class Alks {

@@ -799,7 +799,7 @@ describe('alks.js', function() {
 
     it('should return the arn on success', async () => {
       const baseUrl = 'https://your.alks-host.com'
-      const roleArn = 'arn:aws:iam::123:role/acct-managed/awsRoleName'
+      const roleARN = 'arn:aws:iam::123:role/acct-managed/awsRoleName'
 
       const _fetch = fetchMock.sandbox().mock(`${baseUrl}/roleMachineIdentity/`, {
         body: {
@@ -814,7 +814,7 @@ describe('alks.js', function() {
         _fetch
       })
 
-      const result = await myAlks.addRoleMachineIdentity({roleArn})
+      const result = await myAlks.addRoleMachineIdentity({roleARN})
 
       expect(result).to.have.keys('machineIdentityArn')
     })
@@ -824,7 +824,7 @@ describe('alks.js', function() {
 
     it('should return the arn on success', async () => {
       const baseUrl = 'https://your.alks-host.com'
-      const roleArn = 'arn:aws:iam::123:role/acct-managed/awsRoleName'
+      const roleARN = 'arn:aws:iam::123:role/acct-managed/awsRoleName'
 
       const _fetch = fetchMock.sandbox().mock(`${baseUrl}/roleMachineIdentity/`, {
         body: {
@@ -839,7 +839,7 @@ describe('alks.js', function() {
         _fetch
       })
 
-      const result = await myAlks.deleteRoleMachineIdentity({roleArn})
+      const result = await myAlks.deleteRoleMachineIdentity({roleARN})
 
       expect(result).to.have.keys('machineIdentityArn')
     })
