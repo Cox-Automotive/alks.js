@@ -57,8 +57,8 @@ ALKS JavaScript API
     * [.getAccessToken(props)](#alks+getAccessToken) ⇒ <code>Promise.&lt;Object&gt;</code>
     * [.getRefreshTokens(props)](#alks+getRefreshTokens) ⇒ <code>Array.&lt;Object&gt;</code>
     * [.revoke(props)](#alks+revoke) ⇒ <code>boolean</code>
-    * [.addRoleMachineIdentity](#alks+addRoleMachineIdentity) ⇒ <code>Promise.&lt;String</code>
-    * [.deleteRoleMachineIdentity](#alks+deleteRoleMachineIdentity) ⇒ <code>Promise.&lt;String</code>
+    * [.addRoleMachineIdentity](#alks+addRoleMachineIdentity) ⇒ <code>Promise.&lt;Object></code>
+    * [.deleteRoleMachineIdentity](#alks+deleteRoleMachineIdentity) ⇒ <code>Promise.&lt;Object></code>
 
 <a name="alks+create"></a>
 
@@ -568,7 +568,7 @@ alks.revoke({
 
 <a name="alks+addRoleMachineIdentity"></a>
 
-### alks.addRoleMachineIdentity(props) ⇒ <code>Promise.&lt;String&gt;</code>
+### alks.addRoleMachineIdentity(props) ⇒ <code>Promise.&lt;Object&gt;</code>
 Enable machine identity for a role
 
 **Kind**: instance method of [<code>alks</code>](#alks)  
@@ -590,7 +590,7 @@ alks.addRoleMachineIdentity({
 
 <a name="alks+deleteRoleMachineIdentity"></a>
 
-### alks.deleteRoleMachineIdentity(props) ⇒ <code>Promise.&lt;String&gt;</code>
+### alks.deleteRoleMachineIdentity(props) ⇒ <code>Promise.&lt;Object&gt;</code>
 Disable machine identity for a role
 
 **Kind**: instance method of [<code>alks</code>](#alks)  
