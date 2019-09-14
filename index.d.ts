@@ -57,6 +57,10 @@ declare namespace ALKS {
     instanceProfile: boolean;
   }
 
+  export interface MachineIdentity {
+    machineIdentityArn: string;
+  }
+
   export enum TrustType {
     CrossAccount = 'Cross Account',
     InnerAccount = 'Inner Account',
@@ -212,8 +216,8 @@ declare namespace ALKS {
     public getAllAWSRoleTypes: (
       props: GetAllAWSRoleTypesProps
     ) => Promise<AwsRoleType[]>;
-    public addRoleMachineIdentity: (props: AddRoleMachineIdentityProps) => Promise<string>;
-    public deleteRoleMachineIdentity: (props: DeleteRoleMachineIdentityProps) => Promise<string>;
+    public addRoleMachineIdentity: (props: AddRoleMachineIdentityProps) => Promise<MachineIdentity>;
+    public deleteRoleMachineIdentity: (props: DeleteRoleMachineIdentityProps) => Promise<MachineIdentity>;
   }
 
   export function create(props: AlksProps): Alks;
@@ -254,8 +258,8 @@ declare namespace ALKS {
   export function getAllAWSRoleTypes(
     props: GetAllAWSRoleTypesProps
   ): Promise<AwsRoleType[]>;
-  export function addRoleMachineIdentity(props: AddRoleMachineIdentityProps): Promise<string>;
-  export function deleteRole(props: DeleteRoleMachineIdentityProps) : Promise<string>;
+  export function addRoleMachineIdentity(props: AddRoleMachineIdentityProps): Promise<MachineIdentity>;
+  export function deleteRole(props: DeleteRoleMachineIdentityProps) : Promise<MachineIdentity>;
 }
 
 export = ALKS;
