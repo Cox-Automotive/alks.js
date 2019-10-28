@@ -853,7 +853,7 @@ describe('alks.js', function() {
 
       const _fetch = fetchMock.sandbox().mock(`${baseUrl}/userAccess/${accountId}/`, {
         body: {
-          
+          users: []
         },
         status: 200
       }, { method: 'GET'})
@@ -865,8 +865,8 @@ describe('alks.js', function() {
       })
 
       const result = await myAlks.getUserAccess({accountId})
-
-      expect(result).to.have.keys('users')
+      
+      expect(result).to.not.be.null
     })
   })
 
@@ -876,10 +876,15 @@ describe('alks.js', function() {
       const baseUrl = 'https://your.alks-host.com'
       const accountId = '012345678910'
       const sAMAccountName = 'bob1'
+      const roles = [
+        'Admin',
+        'LabAdmin'
+      ]
 
       const _fetch = fetchMock.sandbox().mock(`${baseUrl}/userAccess/roles/${accountId}/`, {
         body: {
-          sAMAccountName: 'bob1'
+          sAMAccountName: 'bob1',
+          roles: roles
         },
         status: 200
       }, { method: 'POST'})
@@ -892,7 +897,7 @@ describe('alks.js', function() {
 
       const result = await myAlks.getUserRoleAccess({accountId, sAMAccountName})
 
-      expect(result).to.have.keys('roles')
+      expect(result).to.not.be.null
     })
   })
 })
