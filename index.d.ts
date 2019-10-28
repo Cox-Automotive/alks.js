@@ -61,6 +61,14 @@ declare namespace ALKS {
     machineIdentityArn: string;
   }
 
+  export interface User {
+    sAMAccountName: string;
+    displayName: string;
+    email: string;
+    title: string;
+    department: string;
+  }
+
   export enum TrustType {
     CrossAccount = 'Cross Account',
     InnerAccount = 'Inner Account',
@@ -181,6 +189,15 @@ declare namespace ALKS {
     roleARN: string;
   }
 
+  export interface GetUserAccessProps extends Partial<AlksProps> {
+    accountId: string;
+  }
+
+  export interface GetUserRoleAccessProps extends Partial<AlksProps> {
+    accountId: string;
+    sAMAccountName: string;
+  }
+
   export class Alks {
     public create: (props: AlksProps) => Alks;
     public getAccounts: (props?: GetAccountsProps) => Promise<Account[]>;
@@ -218,6 +235,8 @@ declare namespace ALKS {
     ) => Promise<AwsRoleType[]>;
     public addRoleMachineIdentity: (props: AddRoleMachineIdentityProps) => Promise<MachineIdentity>;
     public deleteRoleMachineIdentity: (props: DeleteRoleMachineIdentityProps) => Promise<MachineIdentity>;
+    public getUserAccess: (props: GetUserAccessProps) => Promise<User[]>;
+    public getUserRoleAccess: (props: GetUserRoleAccessProps) => Promise<string[]>;
   }
 
   export function create(props: AlksProps): Alks;
@@ -260,6 +279,8 @@ declare namespace ALKS {
   ): Promise<AwsRoleType[]>;
   export function addRoleMachineIdentity(props: AddRoleMachineIdentityProps): Promise<MachineIdentity>;
   export function deleteRole(props: DeleteRoleMachineIdentityProps) : Promise<MachineIdentity>;
+  export function getUserAccess(props: GetUserAccessProps) : Promise<User[]>;
+  export function getUserRoleAccess(props: GetUserRoleAccessProps) : Promise<string[]>;
 }
 
 export = ALKS;
