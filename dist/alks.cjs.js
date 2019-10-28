@@ -501,7 +501,7 @@ class alks {
   getUserAccess(props) {
     const {accountId} = props;
     return(this._doFetch(`userAccess/${accountId}`, props, 'GET').then((results) =>
-      pick(results,['users']))
+      results.users)
     )
   }
 
@@ -527,7 +527,7 @@ class alks {
   getUserRoleAccess(props) {
     const {accountId} = props;
     return(this._doFetch(`userAccess/roles/${accountId}`, props).then((results) =>
-      pick(results,['roles']))
+      results.roles)
     )
   }
 

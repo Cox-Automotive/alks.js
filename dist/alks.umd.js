@@ -498,7 +498,7 @@
    */
   alks.prototype.getUserAccess = function getUserAccess (props) {
     var accountId = props.accountId;
-    return(this._doFetch(("userAccess/" + accountId), props, 'GET').then(function (results) { return pick(results,['users']); })
+    return(this._doFetch(("userAccess/" + accountId), props, 'GET').then(function (results) { return results.users; })
     )
   };
 
@@ -523,7 +523,7 @@
    */
   alks.prototype.getUserRoleAccess = function getUserRoleAccess (props) {
     var accountId = props.accountId;
-    return(this._doFetch(("userAccess/roles/" + accountId), props).then(function (results) { return pick(results,['roles']); })
+    return(this._doFetch(("userAccess/roles/" + accountId), props).then(function (results) { return results.roles; })
     )
   };
 
