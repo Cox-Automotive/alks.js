@@ -4,7 +4,7 @@
   (global = global || self, global.alks = factory());
 }(this, function () { 'use strict';
 
-  var version = "1.6.1";
+  var version = "1.6.2";
 
   var fetch = window.fetch.bind(window);
 
@@ -466,6 +466,64 @@
     */
   alks.prototype.deleteRoleMachineIdentity = function deleteRoleMachineIdentity (props) {
     return(this._doFetch('roleMachineIdentity', props, 'DELETE').then(function (results) { return pick(results,['machineIdentityArn']); })
+    )
+  };
+
+  /**
+   * ALKS User representation
+   * @typedef {Object} alksUser
+   * @property {string} sAMAccountName - The network id
+   * @property {string} displayName - The display nme
+   * @property {string} email - The user email
+   * @property {string} title - The user title
+   * @property {string} department - The user department
+   */
+
+  /**
+   * Returns a Promise for a list of users who have access to the given account
+   * 
+   * @param {Object} props- An object containing the following properties
+   * @param {string} props.baseUrl - The base URL of the ALKS service
+   * @param {string} props.accessToken - The OAuth2 access token used to authorize the request
+   * @param {string} props.accountId - The accountId used to find which users have access to the account
+   * @returns {Promise<alksUser[]>}
+   * @example
+   * alks.getUserAccess({
+   *  baseUrl: 'https://your.alks-host.com',
+   *  accessToken: 'abc123',
+   *  accountId: '012345678910',
+   * }).then((users) => {
+   *  // users[i].sAMAccountName, users[i].displayName, users[i].email, users[i].title, users[i].department
+   * })
+   */
+  alks.prototype.getUserAccess = function getUserAccess (props) {
+    var accountId = props.accountId;
+    return(this._doFetch(("userAccess/" + accountId), props, 'GET').then(function (results) { return results.users; })
+    )
+  };
+
+  /**
+   * Returns a Promise for a list of roles a user has for a given account
+   * 
+   * @param {Object} props - An object containing the following properties
+   * @param {string} props.baseUrl - The base URL of the ALKS service
+   * @param {string} props.accessToken - The OAuth2 access token used to authorize the request
+   * @param {string} props.accountId - The accountId used to find which users have access to the account
+   * @param {string} props.sAMAccountName - The network id of the user to lookup
+   * @returns {Promise<string[]>}
+   * @example
+   * alks.getUserRoleAccess({
+   *  baseUrl: 'https://your.alks-host.com',
+   *  accessToken: 'abc123',
+   *  accountId: '012345678910',
+   *  sAMAccountName: 'bob1',
+   * }).then((roles) => {
+   *  // ['Admin', 'LabAdmin', ...]
+   * })
+   */
+  alks.prototype.getUserRoleAccess = function getUserRoleAccess (props) {
+    var accountId = props.accountId;
+    return(this._doFetch(("userAccess/roles/" + accountId), props).then(function (results) { return results.roles; })
     )
   };
 

@@ -30,6 +30,9 @@
 <dt><a href="#MachineIdentity">MachineIdentity</a> : <code>Object</code></dt>
 <dd><p>Response containing machine identity arn.</p>
 </dd>
+<dt><a href="#User">User</a> : <code>Object</code></dt>
+<dd><p>Response containing user info.</p>
+</dd>
 </dl>
 
 <a name="alks"></a>
@@ -62,6 +65,8 @@ ALKS JavaScript API
     * [.revoke(props)](#alks+revoke) ⇒ <code>boolean</code>
     * [.addRoleMachineIdentity](#alks+addRoleMachineIdentity) ⇒ <code>Promise.&lt;MachineIdentity></code>
     * [.deleteRoleMachineIdentity](#alks+deleteRoleMachineIdentity) ⇒ <code>Promise.&lt;MachineIdentity></code>
+    * [.getUserAccess](#alks+getUserAccess) ⇒ <code>Promise.&lt;Array.&lt;User&gt;></code>
+    * [.getUserRoleAccess](#alks+getUserRoleAccess) ⇒ <code>Promise.&lt;Array.&lt;string&gt;></code>
 
 <a name="alks+create"></a>
 
@@ -613,6 +618,53 @@ alks.deleteRoleMachineIdentity({
 })
 ```
 
+<a name="alks+getUserAccess"></a>
+
+### alks.getUserAccess(props) ⇒ <code>Promise.&lt;Array.&lt;User&gt;&gt;</code>
+Get a list of users who have access to an account
+
+**Kind**: instance method of [<code>alks</code>](#alks)  
+**Params**
+
+- props <code>Object</code> - An object containing the following properties
+    - [.accountId] <code>string</code> - the account Id of the account
+
+**Example**  
+```js
+alks.getUserAccess({
+  baseUrl: 'https://your.alks-host.com',
+  accessToken: 'abc123',
+  accountId: '012345678910',
+}).then((users) => {
+  // users[i].sAMAccountName, users[i].displayName, users[i].email, users[i].title, users[i].department
+})
+```
+
+<a name="alks+getUserRoleAccess"></a>
+
+### alks.getUserRoleAccess(props) ⇒ <code>Promise.&lt;Array.&lt;string&gt;&gt;</code>
+Get a list of roles of a user for a given account
+
+**Kind**: instance method of [<code>alks</code>](#alks)  
+**Params**
+
+- props <code>Object</code> - An object containing the following properties
+    - [.accountId] <code>string</code> - the account Id of the account
+    - [.sAMAccountName] <code>string</code> - the network id of the user
+
+**Example**  
+```js
+alks.getUserRoleAccess({
+  baseUrl: 'https://your.alks-host.com',
+  accessToken: 'abc123',
+  accountId: '012345678910',
+  sAMAccountName: 'bob1',
+}).then((users) => {
+  // ['Admin', 'LabAdmin', ...]
+})
+```
+
+
 <a name="account"></a>
 
 ## account : <code>Object</code>
@@ -698,3 +750,17 @@ Response containing machine identity ARN.
 **Properties**
 
 - machineIdentityArn <code>string</code> - the arn of machine identity
+
+<a name="User"></a>
+
+## User : <code>Object</code>
+Response containing user info.
+
+**Kind**: global typedef  
+**Properties**
+
+- sAMAccountName <code>string</code> - the network id of the user
+- diplayName <code>string</code> - the display name of the user
+- email <code>string</code> - the email of the user
+- title <code>string</code> - the title of the user
+- department <code>string</code> - the department of the user

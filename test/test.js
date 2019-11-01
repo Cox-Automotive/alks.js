@@ -844,4 +844,60 @@ describe('alks.js', function() {
       expect(result).to.have.keys('machineIdentityArn')
     })
   })
+
+  describe('getUserAccess', () => {
+
+    it('should return a list of users on success', async () => {
+      const baseUrl = 'https://your.alks-host.com'
+      const accountId = '012345678910'
+
+      const _fetch = fetchMock.sandbox().mock(`${baseUrl}/userAccess/${accountId}/`, {
+        body: {
+          users: []
+        },
+        status: 200
+      }, { method: 'GET'})
+
+      const myAlks = alks.create({
+        baseUrl,
+        accessToken: 'abc123',
+        _fetch
+      })
+
+      const result = await myAlks.getUserAccess({accountId})
+      
+      expect(result).to.not.be.null
+    })
+  })
+
+  describe('getUserRoleAccess', () => {
+
+    it('should return a list of roles on success', async () => {
+      const baseUrl = 'https://your.alks-host.com'
+      const accountId = '012345678910'
+      const sAMAccountName = 'bob1'
+      const roles = [
+        'Admin',
+        'LabAdmin'
+      ]
+
+      const _fetch = fetchMock.sandbox().mock(`${baseUrl}/userAccess/roles/${accountId}/`, {
+        body: {
+          sAMAccountName: 'bob1',
+          roles: roles
+        },
+        status: 200
+      }, { method: 'POST'})
+
+      const myAlks = alks.create({
+        baseUrl,
+        accessToken: 'abc123',
+        _fetch
+      })
+
+      const result = await myAlks.getUserRoleAccess({accountId, sAMAccountName})
+
+      expect(result).to.not.be.null
+    })
+  })
 })
