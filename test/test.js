@@ -870,6 +870,34 @@ describe('alks.js', function() {
     })
   })
 
+  describe('getUserAccessByRole', () => {
+
+    it('should return a map of roles to users on success', async () => {
+      const baseUrl = 'https://your.alks-host.com'
+      const accountId = '012345678910'
+
+      const _fetch = fetchMock.sandbox().mock(`${baseUrl}/reports/users-by-role?accountId=${accountId}/`, {
+        body: {
+          users: {
+            'Admin': []
+          }
+        },
+        status: 200
+      }, { method: 'GET'})
+
+      const myAlks = alks.create({
+        baseUrl,
+        accessToken: 'abc123',
+        _fetch
+      })
+
+      const result = await myAlks.getUserAccessByRole({accountId})
+      
+      expect(result).to.be.ok
+      expect(result['Admin']).to.be.ok
+    })
+  })
+
   describe('getUserRoleAccess', () => {
 
     it('should return a list of roles on success', async () => {
