@@ -198,6 +198,10 @@ declare namespace ALKS {
     sAMAccountName: string;
   }
 
+  export interface GetUserAccessByRoleProps extends Partial<AlksProps> {
+    accountId: string;
+  }
+
   export class Alks {
     public create: (props: AlksProps) => Alks;
     public getAccounts: (props?: GetAccountsProps) => Promise<Account[]>;
@@ -237,6 +241,7 @@ declare namespace ALKS {
     public deleteRoleMachineIdentity: (props: DeleteRoleMachineIdentityProps) => Promise<MachineIdentity>;
     public getUserAccess: (props: GetUserAccessProps) => Promise<User[]>;
     public getUserRoleAccess: (props: GetUserRoleAccessProps) => Promise<string[]>;
+    public getUserAccessByRole: (props: GetUserAccessByRoleProps) => Promise<Record<string, User[]>>;
   }
 
   export function create(props: AlksProps): Alks;
@@ -281,6 +286,7 @@ declare namespace ALKS {
   export function deleteRole(props: DeleteRoleMachineIdentityProps) : Promise<MachineIdentity>;
   export function getUserAccess(props: GetUserAccessProps) : Promise<User[]>;
   export function getUserRoleAccess(props: GetUserRoleAccessProps) : Promise<string[]>;
+  export function getUserAccessByRole(props: GetUserAccessByRoleProps) : Promise<Record<string, User[]>>;
 }
 
 export = ALKS;

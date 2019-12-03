@@ -1,4 +1,4 @@
-var version = "1.6.2";
+var version = "1.7.0";
 
 const fetch = window.fetch.bind(window);
 
@@ -498,6 +498,30 @@ class alks {
   getUserAccess(props) {
     const {accountId} = props;
     return(this._doFetch(`userAccess/${accountId}`, props, 'GET').then((results) =>
+      results.users)
+    )
+  }
+
+  /**
+   * Returns a Promise for a map of role names to the list of users with that role for a given account
+   * 
+   * @param {Object} props  - An object containing the following properties
+   * @param {string} props.baseUrl - The base URL of the ALKS service
+   * @param {string} props.accessToken - The OAuth2 access token used to authorize the request
+   * @param {string} props.accountId - The accountId used to find which users have access to the account
+   * @returns {Promise<Object>}
+   * @example
+   * alks.getUserAccess({
+   *    baseUrl: 'https://your.alks-host.com',
+   *    accessToken: 'abc123',
+   *    accountId: '012345678910',
+   * }).then((users) => {
+   *    // users['Admin'].sAMAccountName, users['Admin'].displayName, users['Admin'].email, users['Admin'].title, users['Admin'].department
+   * })
+   */
+  getUserAccessByRole(props) {
+    const {accountId} = props;
+    return(this._doFetch(`reports/users-by-role?accountId=${accountId}`, props, 'GET').then((results) =>
       results.users)
     )
   }

@@ -9,6 +9,9 @@
 ## Typedefs
 
 <dl>
+<dt><a href="#skypieaAccount">skypieaAccount</a> : <code>Object</code></dt>
+<dd><p>Skypiea Account</p>
+</dd>
 <dt><a href="#account">account</a> : <code>Object</code></dt>
 <dd><p>AWS Account</p>
 </dd>
@@ -24,14 +27,11 @@
 <dt><a href="#awsAccountRole">awsAccountRole</a> : <code>Object</code></dt>
 <dd><p>AWS account role type</p>
 </dd>
+<dt><a href="#alksUser">alksUser</a> : <code>Object</code></dt>
+<dd><p>ALKS User representation</p>
+</dd>
 <dt><a href="#AccessKeys">AccessKeys</a> : <code>Object</code></dt>
 <dd><p>Response containing access keys.</p>
-</dd>
-<dt><a href="#MachineIdentity">MachineIdentity</a> : <code>Object</code></dt>
-<dd><p>Response containing machine identity arn.</p>
-</dd>
-<dt><a href="#User">User</a> : <code>Object</code></dt>
-<dd><p>Response containing user info.</p>
 </dd>
 </dl>
 
@@ -56,6 +56,11 @@ ALKS JavaScript API
     * ~~[.listAWSAccountRoles(props)](#alks+listAWSAccountRoles) ⇒ <code>Promise.&lt;Array.&lt;string&gt;&gt;</code>~~
     * [.getAccountRole(props)](#alks+getAccountRole) ⇒ <code>Promise.&lt;string&gt;</code>
     * [.deleteRole(props)](#alks+deleteRole) ⇒ <code>Promise.&lt;boolean&gt;</code>
+    * [.addRoleMachineIdentity(props)](#alks+addRoleMachineIdentity) ⇒ <code>Promise.&lt;string&gt;</code>
+    * [.deleteRoleMachineIdentity(props)](#alks+deleteRoleMachineIdentity) ⇒ <code>Promise.&lt;string&gt;</code>
+    * [.getUserAccess(props)](#alks+getUserAccess) ⇒ <code>Promise.&lt;Array.&lt;alksUser&gt;&gt;</code>
+    * [.getUserAccessByRole(props)](#alks+getUserAccessByRole) ⇒ <code>Promise.&lt;Object&gt;</code>
+    * [.getUserRoleAccess(props)](#alks+getUserRoleAccess) ⇒ <code>Promise.&lt;Array.&lt;string&gt;&gt;</code>
     * [.createAccessKeys(props)](#alks+createAccessKeys) ⇒ [<code>Promise.&lt;AccessKeys&gt;</code>](#AccessKeys)
     * [.deleteIAMUser(props)](#alks+deleteIAMUser) ⇒ <code>Promise.&lt;boolean&gt;</code>
     * [.version(props)](#alks+version) ⇒ <code>Promise.&lt;Object&gt;</code>
@@ -63,10 +68,6 @@ ALKS JavaScript API
     * [.getAccessToken(props)](#alks+getAccessToken) ⇒ <code>Promise.&lt;Object&gt;</code>
     * [.getRefreshTokens(props)](#alks+getRefreshTokens) ⇒ <code>Array.&lt;Object&gt;</code>
     * [.revoke(props)](#alks+revoke) ⇒ <code>boolean</code>
-    * [.addRoleMachineIdentity](#alks+addRoleMachineIdentity) ⇒ <code>Promise.&lt;MachineIdentity></code>
-    * [.deleteRoleMachineIdentity](#alks+deleteRoleMachineIdentity) ⇒ <code>Promise.&lt;MachineIdentity></code>
-    * [.getUserAccess](#alks+getUserAccess) ⇒ <code>Promise.&lt;Array.&lt;User&gt;></code>
-    * [.getUserRoleAccess](#alks+getUserRoleAccess) ⇒ <code>Promise.&lt;Array.&lt;string&gt;></code>
 
 <a name="alks+create"></a>
 
@@ -413,6 +414,123 @@ alks.deleteRole({
   // success!
 })
 ```
+<a name="alks+addRoleMachineIdentity"></a>
+
+### alks.addRoleMachineIdentity(props) ⇒ <code>Promise.&lt;string&gt;</code>
+Returns a Promise for a string arn indicating the role was enabled for machine identity
+
+**Kind**: instance method of [<code>alks</code>](#alks)  
+**Params**
+
+- props <code>Object</code> - An object containing the following properties
+    - .baseUrl <code>string</code> - The base URL of the ALKS service
+    - .accessToken <code>string</code> - The OAuth2 access token used to authorize the request
+    - .roleArn <code>string</code> - The Amazon Resource Name (ARN) associated with the role
+
+**Example**  
+```js
+alks.addRoleMachineIdentity({
+  baseUrl: 'https://your.alks-host.com',
+  accessToken: 'abc123',
+  roleARN: 'arn:aws:iam::123:role/acct-managed/awsRoleName'
+}).then((roleARN) => {
+  // arn:aws:iam::123:role/acct-managed/awsRoleName
+})
+```
+<a name="alks+deleteRoleMachineIdentity"></a>
+
+### alks.deleteRoleMachineIdentity(props) ⇒ <code>Promise.&lt;string&gt;</code>
+Returns a Promise for a string arn indicating the role was disabled for machine identity
+
+**Kind**: instance method of [<code>alks</code>](#alks)  
+**Params**
+
+- props <code>Object</code> - An object containing the following properties
+    - .baseUrl <code>string</code> - The base URL of the ALKS service
+    - .accessToken <code>string</code> - The OAuth2 access token used to authorize the request
+    - .roleArn <code>string</code> - The Amazon Resource Name (ARN) associated with the role
+
+**Example**  
+```js
+alks.deleteRoleMachineIdentity({
+  baseUrl: 'https://your.alks-host.com',
+  accessToken: 'abc123',
+  roleARN: 'arn:aws:iam::123:role/acct-managed/awsRoleName'
+}).then((roleARN) => {
+  // arn:aws:iam::123:role/acct-managed/awsRoleName
+})
+```
+<a name="alks+getUserAccess"></a>
+
+### alks.getUserAccess(props) ⇒ <code>Promise.&lt;Array.&lt;alksUser&gt;&gt;</code>
+Returns a Promise for a list of users who have access to the given account
+
+**Kind**: instance method of [<code>alks</code>](#alks)  
+**Params**
+
+- props <code>Object</code> - An object containing the following properties
+    - .baseUrl <code>string</code> - The base URL of the ALKS service
+    - .accessToken <code>string</code> - The OAuth2 access token used to authorize the request
+    - .accountId <code>string</code> - The accountId used to find which users have access to the account
+
+**Example**  
+```js
+alks.getUserAccess({
+   baseUrl: 'https://your.alks-host.com',
+   accessToken: 'abc123',
+   accountId: '012345678910',
+}).then((users) => {
+   // users[i].sAMAccountName, users[i].displayName, users[i].email, users[i].title, users[i].department
+})
+```
+<a name="alks+getUserAccessByRole"></a>
+
+### alks.getUserAccessByRole(props) ⇒ <code>Promise.&lt;Object&gt;</code>
+Returns a Promise for a map of role names to the list of users with that role for a given account
+
+**Kind**: instance method of [<code>alks</code>](#alks)  
+**Params**
+
+- props <code>Object</code> - An object containing the following properties
+    - .baseUrl <code>string</code> - The base URL of the ALKS service
+    - .accessToken <code>string</code> - The OAuth2 access token used to authorize the request
+    - .accountId <code>string</code> - The accountId used to find which users have access to the account
+
+**Example**  
+```js
+alks.getUserAccess({
+   baseUrl: 'https://your.alks-host.com',
+   accessToken: 'abc123',
+   accountId: '012345678910',
+}).then((users) => {
+   // users['Admin'].sAMAccountName, users['Admin'].displayName, users['Admin'].email, users['Admin'].title, users['Admin'].department
+})
+```
+<a name="alks+getUserRoleAccess"></a>
+
+### alks.getUserRoleAccess(props) ⇒ <code>Promise.&lt;Array.&lt;string&gt;&gt;</code>
+Returns a Promise for a list of roles a user has for a given account
+
+**Kind**: instance method of [<code>alks</code>](#alks)  
+**Params**
+
+- props <code>Object</code> - An object containing the following properties
+    - .baseUrl <code>string</code> - The base URL of the ALKS service
+    - .accessToken <code>string</code> - The OAuth2 access token used to authorize the request
+    - .accountId <code>string</code> - The accountId used to find which users have access to the account
+    - .sAMAccountName <code>string</code> - The network id of the user to lookup
+
+**Example**  
+```js
+alks.getUserRoleAccess({
+   baseUrl: 'https://your.alks-host.com',
+   accessToken: 'abc123',
+   accountId: '012345678910',
+   sAMAccountName: 'bob1',
+}).then((roles) => {
+   // ['Admin', 'LabAdmin', ...]
+})
+```
 <a name="alks+createAccessKeys"></a>
 
 ### alks.createAccessKeys(props) ⇒ [<code>Promise.&lt;AccessKeys&gt;</code>](#AccessKeys)
@@ -573,98 +691,12 @@ alks.revoke({
   // success == true
 })
 ```
+<a name="skypieaAccount"></a>
 
-<a name="alks+addRoleMachineIdentity"></a>
+## skypieaAccount : <code>Object</code>
+Skypiea Account
 
-### alks.addRoleMachineIdentity(props) ⇒ <code>Promise.&lt;MachineIdentity&gt;</code>
-Enable machine identity for a role
-
-**Kind**: instance method of [<code>alks</code>](#alks)  
-**Params**
-
-- props <code>Object</code> - An object containing the following properties
-    - [.roleARN] <code>string</code> - the Amazon Resource Number (ARN) of the role
-
-**Example**  
-```js
-alks.addRoleMachineIdentity({
-  baseUrl: 'https://your.alks-host.com',
-  accessToken: 'abc123',
-  roleARN: 'arn:aws:iam::123:role/acct-managed/awsRoleName',
-}).then((roleARN) => {
-  // arn:aws:iam::123:role/acct-managed/awsRoleName
-})
-```
-
-<a name="alks+deleteRoleMachineIdentity"></a>
-
-### alks.deleteRoleMachineIdentity(props) ⇒ <code>Promise.&lt;MachineIdentity&gt;</code>
-Disable machine identity for a role
-
-**Kind**: instance method of [<code>alks</code>](#alks)  
-**Params**
-
-- props <code>Object</code> - An object containing the following properties
-    - [.roleARN] <code>string</code> - the Amazon Resource Number (ARN) of the role
-
-**Example**  
-```js
-alks.deleteRoleMachineIdentity({
-  baseUrl: 'https://your.alks-host.com',
-  accessToken: 'abc123',
-  roleARN: 'arn:aws:iam::123:role/acct-managed/awsRoleName',
-}).then((roleARN) => {
-  // arn:aws:iam::123:role/acct-managed/awsRoleName
-})
-```
-
-<a name="alks+getUserAccess"></a>
-
-### alks.getUserAccess(props) ⇒ <code>Promise.&lt;Array.&lt;User&gt;&gt;</code>
-Get a list of users who have access to an account
-
-**Kind**: instance method of [<code>alks</code>](#alks)  
-**Params**
-
-- props <code>Object</code> - An object containing the following properties
-    - [.accountId] <code>string</code> - the account Id of the account
-
-**Example**  
-```js
-alks.getUserAccess({
-  baseUrl: 'https://your.alks-host.com',
-  accessToken: 'abc123',
-  accountId: '012345678910',
-}).then((users) => {
-  // users[i].sAMAccountName, users[i].displayName, users[i].email, users[i].title, users[i].department
-})
-```
-
-<a name="alks+getUserRoleAccess"></a>
-
-### alks.getUserRoleAccess(props) ⇒ <code>Promise.&lt;Array.&lt;string&gt;&gt;</code>
-Get a list of roles of a user for a given account
-
-**Kind**: instance method of [<code>alks</code>](#alks)  
-**Params**
-
-- props <code>Object</code> - An object containing the following properties
-    - [.accountId] <code>string</code> - the account Id of the account
-    - [.sAMAccountName] <code>string</code> - the network id of the user
-
-**Example**  
-```js
-alks.getUserRoleAccess({
-  baseUrl: 'https://your.alks-host.com',
-  accessToken: 'abc123',
-  accountId: '012345678910',
-  sAMAccountName: 'bob1',
-}).then((users) => {
-  // ['Admin', 'LabAdmin', ...]
-})
-```
-
-
+**Kind**: global typedef  
 <a name="account"></a>
 
 ## account : <code>Object</code>
@@ -677,6 +709,7 @@ AWS Account
 - role <code>string</code> - The user's role in this account  
 - iamKeyActive <code>boolean</code> - Whether credentials with IAM permissions can be provisioned from this account  
 - maxKeyDuration <code>number</code> - The maximum key duration for this account  
+- skypieaAccount [<code>skypieaAccount</code>](#skypieaAccount) - extra information about the account from Skypiea  
 
 <a name="credentials"></a>
 
@@ -728,6 +761,20 @@ AWS account role type
 - isMachineIdentity <code>boolean</code> - true|false value of if this role is a machine identity  
 - assumeRolePolicyDocument <code>Object</code> - The AWS assume role policy document associated with this role  
 
+<a name="alksUser"></a>
+
+## alksUser : <code>Object</code>
+ALKS User representation
+
+**Kind**: global typedef  
+**Properties**
+
+- sAMAccountName <code>string</code> - The network id  
+- displayName <code>string</code> - The display nme  
+- email <code>string</code> - The user email  
+- title <code>string</code> - The user title  
+- department <code>string</code> - The user department  
+
 <a name="AccessKeys"></a>
 
 ## AccessKeys : <code>Object</code>
@@ -741,26 +788,3 @@ Response containing access keys.
 - secretKey <code>string</code> - the secret key for the long term access key  
 - addedIAMUserToGroup <code>boolean</code> - whether the user was successfuly added to the deny policy group  
 
-<a name="MachineIdentity"></a>
-
-## MachineIdentity : <code>Object</code>
-Response containing machine identity ARN.
-
-**Kind**: global typedef  
-**Properties**
-
-- machineIdentityArn <code>string</code> - the arn of machine identity
-
-<a name="User"></a>
-
-## User : <code>Object</code>
-Response containing user info.
-
-**Kind**: global typedef  
-**Properties**
-
-- sAMAccountName <code>string</code> - the network id of the user
-- diplayName <code>string</code> - the display name of the user
-- email <code>string</code> - the email of the user
-- title <code>string</code> - the title of the user
-- department <code>string</code> - the department of the user
