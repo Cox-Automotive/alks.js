@@ -1,4 +1,4 @@
-var version = "1.7.0";
+var version = "1.8.0";
 
 const fetch = window.fetch.bind(window);
 
@@ -58,6 +58,7 @@ class alks {
    * Skypiea Account
    * @typedef {Object} skypieaAccount
    * @type {string} label - the friendly name of the account
+   * @type {string[]} accountOwners - the samAccountNames of the account owners
    */
 
   /**
