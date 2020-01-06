@@ -9,7 +9,7 @@ declare namespace ALKS {
 
   export interface SkypieaAccount {
     label: string;
-    accountOwners: string[];
+    accountOwners: Object[];
   }
 
   export interface Key {
