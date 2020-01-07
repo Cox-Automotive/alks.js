@@ -58,7 +58,7 @@ class alks {
    * Skypiea Account
    * @typedef {Object} skypieaAccount
    * @type {string} label - the friendly name of the account
-   * @type {string[]} accountOwners - the samAccountNames of the account owners
+   * @type {Object[]} accountOwners - the samAccountNames of the account owners
    */
 
   /**
