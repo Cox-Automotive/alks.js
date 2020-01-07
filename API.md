@@ -12,6 +12,9 @@
 <dt><a href="#skypieaAccount">skypieaAccount</a> : <code>Object</code></dt>
 <dd><p>Skypiea Account</p>
 </dd>
+<dt><a href="#accountOwners">accountOwners</a> : <code>Object</code></dt>
+<dd><p>AccountUserDetails</p>
+</dd>
 <dt><a href="#account">account</a> : <code>Object</code></dt>
 <dd><p>AWS Account</p>
 </dd>
@@ -697,6 +700,18 @@ alks.revoke({
 Skypiea Account
 
 **Kind**: global typedef  
+<a name="accountOwners"></a>
+
+## accountOwners : <code>Object</code>
+AccountUserDetails
+
+**Kind**: global typedef  
+**Params**
+
+- samAccountName <code>string</code> - the samAccountName of the user
+- email <code>string</code> - the email of the user
+- href <code>string</code> - the href self link
+
 <a name="account"></a>
 
 ## account : <code>Object</code>
