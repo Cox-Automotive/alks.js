@@ -63,13 +63,13 @@ class alks {
    * @type {AccountUserDetails[]} accountOwners - the samAccountNames of the account owners
    */
 
-   /**
-    * AccountUserDetails
-    * @typedef {Object} accountOwners
-    * @param {string} samAccountName - the samAccountName of the user
-    * @param {string} email - the email of the user
-    * @param {string} href - the href self link
-    */
+  /**
+   * AccountUserDetails
+   * @typedef {Object} accountOwners
+   * @param {string} samAccountName - the samAccountName of the user
+   * @param {string} email - the email of the user
+   * @param {string} href - the href self link
+   */
 
   /**
    * AWS Account
