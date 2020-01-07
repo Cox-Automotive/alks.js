@@ -4,7 +4,7 @@
   (global = global || self, global.alks = factory());
 }(this, function () { 'use strict';
 
-  var version = "1.7.0";
+  var version = "1.8.0";
 
   var fetch = window.fetch.bind(window);
 
@@ -67,6 +67,15 @@
    * Skypiea Account
    * @typedef {Object} skypieaAccount
    * @type {string} label - the friendly name of the account
+   * @type {AccountUserDetails[]} accountOwners - the samAccountNames of the account owners
+   */
+
+  /**
+   * AccountUserDetails
+   * @typedef {Object} accountOwners
+   * @param {string} samAccountName - the samAccountName of the user
+   * @param {string} email - the email of the user
+   * @param {string} href - the href self link
    */
 
   /**
