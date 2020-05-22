@@ -1,4 +1,4 @@
-var version = "1.8.0";
+var version = "1.9.3";
 
 const fetch = window.fetch.bind(window);
 
@@ -59,6 +59,24 @@ class alks {
    * @typedef {Object} skypieaAccount
    * @type {string} label - the friendly name of the account
    * @type {AccountUserDetails[]} accountOwners - the samAccountNames of the account owners
+   * @type {CloudsploitReport[]} cloudsploitTrend - the cloudsploit trends
+   */
+
+  /**
+   * CloudsploitReport
+   * @typedef {Object} cloudsploitTrend
+   * @param {number} year - the year of the scan
+   * @param {number} month - the month of the scan
+   * @param {number} day - the day of the scan
+   * @param {string} href - the link to the skypiea resource
+   * @param {string} awsAccountId - the AWS account Id
+   * @param {number} scanId - the id of the scan
+   * @param {string} scanDate - the date of the scan
+   * @param {number} newRisks - the amount of new risks
+   * @param {number} passing - the amount of pass
+   * @param {number} warning - the amount of warnings
+   * @param {number} failing - the amount of fails
+   * @param {number} unknown - the amount of unknowns
    */
 
   /**

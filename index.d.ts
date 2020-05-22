@@ -10,6 +10,22 @@ declare namespace ALKS {
   export interface SkypieaAccount {
     label: string;
     accountOwners: AccountUserDetails[];
+    cloudsploitTrend: CloudsploitReport[];
+  }
+
+  export interface CloudsploitReport {
+    year: number;
+    month: number;
+    day: number;
+    href: string;
+    awsAccountId: string;
+    scanId: number;
+    scanDate: string;
+    newRisks: number;
+    passing: number;
+    warning: number;
+    failing: number;
+    unknown: number;
   }
 
   export interface AccountUserDetails {
