@@ -773,7 +773,7 @@ class alks {
       delete opts.accessKey
     }
     if( opts.secretKey ) {
-      headers['ALKS-STS-Secret-Key'] = opts.secretKey;
+      headers['ALKS-STS-Secret-Key'] = opts.secretKey
       delete opts.secretKey
     }
     if( opts.sessionToken ) {
