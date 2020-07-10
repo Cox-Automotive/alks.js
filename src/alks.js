@@ -768,6 +768,19 @@ class alks {
       delete opts.password
     }
 
+    if( opts.accessKey ) {
+      headers['ALKS-STS-Access-Key'] = opts.accessKey
+      delete opts.accessKey
+    }
+    if( opts.secretKey ) {
+      headers['ALKS-STS-Secret-Key'] = opts.secretKey
+      delete opts.secretKey
+    }
+    if( opts.sessionToken ) {
+      headers['ALKS-STS-Session-Token'] = opts.sessionToken
+      delete opts.sessionToken
+    }
+
     var responsePromise = opts._fetch(`${opts.baseUrl}/${path}/`, {
       method, headers, body: method == 'GET' ? undefined : JSON.stringify(opts)
     })
