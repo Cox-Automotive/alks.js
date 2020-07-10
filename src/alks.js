@@ -769,7 +769,7 @@ class alks {
     }
 
     if( opts.accessKey ) {
-      headers['ALKS-STS-Access-Key'] = opts.accessKey;
+      headers['ALKS-STS-Access-Key'] = opts.accessKey
       delete opts.accessKey
     }
     if( opts.secretKey ) {
