@@ -225,6 +225,10 @@ declare namespace ALKS {
     accountId: string;
   }
 
+  export interface GetAccountOwnersProps extends Partial<AlksProps> {
+    accountId: string;
+  }
+
   export class Alks {
     public create: (props: AlksProps) => Alks;
     public getAccounts: (props?: GetAccountsProps) => Promise<Account[]>;
@@ -265,6 +269,7 @@ declare namespace ALKS {
     public getUserAccess: (props: GetUserAccessProps) => Promise<User[]>;
     public getUserRoleAccess: (props: GetUserRoleAccessProps) => Promise<string[]>;
     public getUserAccessByRole: (props: GetUserAccessByRoleProps) => Promise<Record<string, User[]>>;
+    public getAccountOwners: (props: GetAccountOwnersProps) => Promise<User[]>;
   }
 
   export function create(props: AlksProps): Alks;
@@ -310,6 +315,7 @@ declare namespace ALKS {
   export function getUserAccess(props: GetUserAccessProps) : Promise<User[]>;
   export function getUserRoleAccess(props: GetUserRoleAccessProps) : Promise<string[]>;
   export function getUserAccessByRole(props: GetUserAccessByRoleProps) : Promise<Record<string, User[]>>;
+  export function getAccountOwners(props: GetAccountOwnersProps) : Promise<User[]>;
 }
 
 export = ALKS;

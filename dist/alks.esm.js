@@ -1,4 +1,4 @@
-var version = "1.9.3";
+var version = "1.10.2";
 
 const fetch = window.fetch.bind(window);
 
@@ -580,6 +580,28 @@ class alks {
   }
 
   /**
+   * Returns a Promise containing a list of the account owners for an account
+   * 
+   * @param {Object} props - An object containing the following properties
+   * @param {string} props.baseUrl - The base URL of the ALKS service
+   * @param {string} props.accessToken - The OAuth2 access token used to authorize the request
+   * @param {string} props.accountId - The accountId used to find which users have access to the account
+   * @returns {Promise<Object[]>}
+   * @example
+   * alks.getAccountOwners({
+   *    baseUrl: 'https://your.alks-host.com',
+   *    accessToken: 'abc123',
+   *    accountId: '012345678910',
+   * }).then((owners) => {
+   *    // owners[0].sAMAccountName, owners[0].displayName, owners[0].email, owners[0].title, owners[0].department
+   * })
+   */
+  getAccountOwners(props) {
+    const {accountId} = props;
+    return(this._doFetch(`userAccess/owners/${accountId}`, props, 'GET').then((results) => results.accountOwners))
+  }
+
+  /**
    *  Response containing access keys.
    *
    *  @typedef {Object} AccessKeys
@@ -764,6 +786,19 @@ class alks {
       headers['Authorization'] = `Basic ${credentials}`;
       delete opts.userid;
       delete opts.password;
+    }
+
+    if( opts.accessKey ) {
+      headers['ALKS-STS-Access-Key'] = opts.accessKey;
+      delete opts.accessKey;
+    }
+    if( opts.secretKey ) {
+      headers['ALKS-STS-Secret-Key'] = opts.secretKey;
+      delete opts.secretKey;
+    }
+    if( opts.sessionToken ) {
+      headers['ALKS-STS-Session-Token'] = opts.sessionToken;
+      delete opts.sessionToken;
     }
 
     var responsePromise = opts._fetch(`${opts.baseUrl}/${path}/`, {

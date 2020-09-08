@@ -928,4 +928,43 @@ describe('alks.js', function() {
       expect(result).to.not.be.null
     })
   })
+
+  describe('getAccountOwners', () => {
+
+    it('should return a list of account owners on success', async () => {
+      const baseUrl = 'https://your.alks-host.com'
+      const accountId = '012345678910'
+
+      const dummyOwner = {
+        department: 'Executive',
+        displayName: 'Joe, Bob (CAI - Atlanta)',
+        email: 'joe.bob@coxautoinc.com',
+        sAMAccountName: 'jbob1',
+        title: 'CEO'
+      }
+
+      const _fetch = fetchMock.sandbox().mock(`${baseUrl}/userAccess/owners/${accountId}/`, {
+        body: {
+          accountOwners: [
+            dummyOwner
+          ]
+        },
+        status: 200
+      }, { method: 'GET'})
+
+      const myAlks = alks.create({
+        baseUrl,
+        accessToken: 'abc123',
+        _fetch
+      })
+
+      const result = await myAlks.getAccountOwners({accountId})
+
+      expect(result).to.not.be.null
+      expect(result).to.not.be.empty
+      const firstElem = result[0]
+      expect(firstElem).to.not.be.null
+      expect(firstElem).to.deep.equal(dummyOwner)
+    })
+  })
 })
