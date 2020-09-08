@@ -599,8 +599,8 @@ class alks {
    * })
    */
   getAccountOwners(props) {
-    const {accountId} = props;
-    return this._doFetch(`userAccess/owners/${accountId}`, props).then((results) => results.accountOwners);
+    const {accountId} = props
+    return(this._doFetch(`userAccess/owners/${accountId}`, props, 'GET').then((results) => results.accountOwners))
   }
 
   /**

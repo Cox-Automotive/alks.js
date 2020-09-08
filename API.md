@@ -12,6 +12,9 @@
 <dt><a href="#skypieaAccount">skypieaAccount</a> : <code>Object</code></dt>
 <dd><p>Skypiea Account</p>
 </dd>
+<dt><a href="#cloudsploitTrend">cloudsploitTrend</a> : <code>Object</code></dt>
+<dd><p>CloudsploitReport</p>
+</dd>
 <dt><a href="#accountOwners">accountOwners</a> : <code>Object</code></dt>
 <dd><p>AccountUserDetails</p>
 </dd>
@@ -64,6 +67,7 @@ ALKS JavaScript API
     * [.getUserAccess(props)](#alks+getUserAccess) ⇒ <code>Promise.&lt;Array.&lt;alksUser&gt;&gt;</code>
     * [.getUserAccessByRole(props)](#alks+getUserAccessByRole) ⇒ <code>Promise.&lt;Object&gt;</code>
     * [.getUserRoleAccess(props)](#alks+getUserRoleAccess) ⇒ <code>Promise.&lt;Array.&lt;string&gt;&gt;</code>
+    * [.getAccountOwners(props)](#alks+getAccountOwners) ⇒ <code>Promise.&lt;Array.&lt;Object&gt;&gt;</code>
     * [.createAccessKeys(props)](#alks+createAccessKeys) ⇒ [<code>Promise.&lt;AccessKeys&gt;</code>](#AccessKeys)
     * [.deleteIAMUser(props)](#alks+deleteIAMUser) ⇒ <code>Promise.&lt;boolean&gt;</code>
     * [.version(props)](#alks+version) ⇒ <code>Promise.&lt;Object&gt;</code>
@@ -534,6 +538,29 @@ alks.getUserRoleAccess({
    // ['Admin', 'LabAdmin', ...]
 })
 ```
+<a name="alks+getAccountOwners"></a>
+
+### alks.getAccountOwners(props) ⇒ <code>Promise.&lt;Array.&lt;Object&gt;&gt;</code>
+Returns a Promise containing a list of the account owners for an account
+
+**Kind**: instance method of [<code>alks</code>](#alks)  
+**Params**
+
+- props <code>Object</code> - An object containing the following properties
+    - .baseUrl <code>string</code> - The base URL of the ALKS service
+    - .accessToken <code>string</code> - The OAuth2 access token used to authorize the request
+    - .accountId <code>string</code> - The accountId used to find which users have access to the account
+
+**Example**  
+```js
+alks.getAccountOwners({
+   baseUrl: 'https://your.alks-host.com',
+   accessToken: 'abc123',
+   accountId: '012345678910',
+}).then((owners) => {
+   // owners[0].sAMAccountName, owners[0].displayName, owners[0].email, owners[0].title, owners[0].department
+})
+```
 <a name="alks+createAccessKeys"></a>
 
 ### alks.createAccessKeys(props) ⇒ [<code>Promise.&lt;AccessKeys&gt;</code>](#AccessKeys)
@@ -700,6 +727,27 @@ alks.revoke({
 Skypiea Account
 
 **Kind**: global typedef  
+<a name="cloudsploitTrend"></a>
+
+## cloudsploitTrend : <code>Object</code>
+CloudsploitReport
+
+**Kind**: global typedef  
+**Params**
+
+- year <code>number</code> - the year of the scan
+- month <code>number</code> - the month of the scan
+- day <code>number</code> - the day of the scan
+- href <code>string</code> - the link to the skypiea resource
+- awsAccountId <code>string</code> - the AWS account Id
+- scanId <code>number</code> - the id of the scan
+- scanDate <code>string</code> - the date of the scan
+- newRisks <code>number</code> - the amount of new risks
+- passing <code>number</code> - the amount of pass
+- warning <code>number</code> - the amount of warnings
+- failing <code>number</code> - the amount of fails
+- unknown <code>number</code> - the amount of unknowns
+
 <a name="accountOwners"></a>
 
 ## accountOwners : <code>Object</code>

@@ -936,11 +936,11 @@ describe('alks.js', function() {
       const accountId = '012345678910'
 
       const dummyOwner = {
-        department: "Executive",
-        displayName: "Joe, Bob (CAI - Atlanta)",
-        email: "joe.bob@coxautoinc.com",
-        sAMAccountName: "jbob1",
-        title: "CEO"
+        department: 'Executive',
+        displayName: 'Joe, Bob (CAI - Atlanta)',
+        email: 'joe.bob@coxautoinc.com',
+        sAMAccountName: 'jbob1',
+        title: 'CEO'
       }
 
       const _fetch = fetchMock.sandbox().mock(`${baseUrl}/userAccess/owners/${accountId}/`, {
@@ -964,11 +964,7 @@ describe('alks.js', function() {
       expect(result).to.not.be.empty
       const firstElem = result[0]
       expect(firstElem).to.not.be.null
-      expect(firstElem.department).to.be(dummyOwner.department)
-      expect(firstElem.displayName).to.be(dummyOwner.displayName)
-      expect(firstElem.email).to.be(dummyOwner.email)
-      expect(firstElem.sAMAccountName).to.be(dummyOwner.sAMAccountName)
-      expect(firstElem.title).to.be(dummyOwner.title)
+      expect(firstElem).to.deep.equal(dummyOwner)
     })
   })
 })
