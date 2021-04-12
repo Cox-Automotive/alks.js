@@ -136,6 +136,7 @@ declare namespace ALKS {
     roleType: string;
     enableAlksAccess: boolean;
     includeDefaultPolicy: PseudoBoolean;
+    templateFields?: Record<string, string>;
   }
 
   export interface CreateNonServiceRoleProps extends Partial<AlksProps> {

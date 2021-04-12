@@ -264,6 +264,7 @@ Returns a Promise for the results of creating a new custom AWS IAM account role
     - .roleType <code>string</code> - The type of AWS role to use when creating the new role
     - .includeDefaultPolicy <code>number</code> - Whether to include the default policy in the new role (1 = yes, 0 = no)
     - .enableAlksAccess <code>boolean</code> - Whether the role has a machine identity
+    - .templateFields <code>Object</code> - An object whose keys are template variable names and values are the value to substitute for those template variables
 
 **Example**  
 ```js
@@ -276,6 +277,26 @@ alks.createRole({
   roleType: 'Amazon EC2',
   includeDefaultPolicy: 1,
   enableAlksAccess: true
+}).then((role) => {
+  // role.roleArn, role.denyArns, role.instanceProfileArn, role.addedRoleToInstanceProfile
+})
+```
+**Example**  
+```js
+alks.createRole({
+  baseUrl: 'https://your.alks-host.com',
+  accessToken: 'abc123',
+  account: 'anAccount',
+  role: 'IAMAdmin',
+  roleName: 'awsRoleName',
+  roleType: 'Amazon EKS IRSA',
+  includeDefaultPolicy: 1,
+  enableAlksAccess: false,
+  templateFields: {
+    OIDC_PROVIDER: 'oidc.eks.us-east-1.amazonaws.com/id/88G998884RBAD6687HBE3GETY67FQE04',
+    K8S_NAMESPACE: 'myNamespace',
+    K8S_SERVICE_ACCOUNT: 'myServiceAccount'
+  }
 }).then((role) => {
   // role.roleArn, role.denyArns, role.instanceProfileArn, role.addedRoleToInstanceProfile
 })
