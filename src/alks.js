@@ -223,7 +223,7 @@ class alks {
     * })
     */
   getAllAWSRoleTypes(props) {
-    const url = props.getDynamicValues ? 'allAwsRoleTypes?getDynamicValues=true' : "allAwsRoleTypes"
+    const url = props.getDynamicValues ? 'allAwsRoleTypes?getDynamicValues=true' : 'allAwsRoleTypes'
     return(this._doFetch(url, props, 'GET').then(results => results.roleTypes))
   }
 
