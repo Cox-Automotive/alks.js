@@ -203,6 +203,7 @@ class alks {
    * @param {Object} props - An object containing the following properties
    * @param {string} props.baseUrl - The base URL of the ALKS service
    * @param {string} props.accessToken - The OAuth2 access token used to authorize the request
+   * @param {boolean} [props.getDynamicValues] - Whether to include the names of any template variables in the response (defaults to false)
    * @returns {Promise<Array<awsRoleType>>}
    * @example
    * alks.getAllAWSRoleTypes({
@@ -211,9 +212,19 @@ class alks {
     * }).then((roleTypes) {
     *   // roleTypes[i].roleTypeName, roleTypes[i].defaultArns, roleTypes[i].trustRelationship
     * })
+    * 
+    * @example
+    * alks.getAllAWSRoleTypes({
+    *   baseUrl: 'https://your.alks-host.com',
+    *   accessToken: 'abc123',
+    *   getDynamicValues: true,
+    * }).then((roleTypes) {
+    *   // roleTypes[i].roleTypeName, roleTypes[i].defaultArns, roleTypes[i].trustRelationship, roleTypes[i].templateVariables[i]
+    * })
     */
   getAllAWSRoleTypes(props) {
-    return(this._doFetch('allAwsRoleTypes', props, 'GET').then(results => results.roleTypes))
+    const url = props.getDynamicValues ? 'allAwsRoleTypes' : 'allAwsRoleTypes?getDynamicValues=true';
+    return(this._doFetch(url, props, 'GET').then(results => results.roleTypes))
   }
 
   /**
