@@ -191,6 +191,7 @@ Returns a Promise for an array of all available role types (AWS IAM role types, 
 - props <code>Object</code> - An object containing the following properties
     - .baseUrl <code>string</code> - The base URL of the ALKS service
     - .accessToken <code>string</code> - The OAuth2 access token used to authorize the request
+    - [.getDynamicValues] <code>boolean</code> - Whether to include the names of any template variables in the response (defaults to false)
 
 **Example**  
 ```js
@@ -199,6 +200,16 @@ alks.getAllAWSRoleTypes({
   accessToken: 'abc123',
 }).then((roleTypes) {
   // roleTypes[i].roleTypeName, roleTypes[i].defaultArns, roleTypes[i].trustRelationship
+})
+```
+**Example**  
+```js
+alks.getAllAWSRoleTypes({
+  baseUrl: 'https://your.alks-host.com',
+  accessToken: 'abc123',
+  getDynamicValues: true,
+}).then((roleTypes) {
+  // roleTypes[i].roleTypeName, roleTypes[i].defaultArns, roleTypes[i].trustRelationship, roleTypes[i].templateVariables[i]
 })
 ```
 <a name="alks+getAWSRoleTypes"></a>

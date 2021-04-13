@@ -78,6 +78,7 @@ declare namespace ALKS {
     defaultArns: string[];
     trustRelationship: object;
     instanceProfile: boolean;
+    templateVariables?: string[];
   }
 
   export interface MachineIdentity {
@@ -203,7 +204,9 @@ declare namespace ALKS {
 
   export type RevokeProps = RevokeByIdProps | RevokeByValueProps;
 
-  export interface GetAllAWSRoleTypesProps extends Partial<AlksProps> {}
+  export interface GetAllAWSRoleTypesProps extends Partial<AlksProps> {
+    getDynamicValues?: boolean;
+  }
 
   export interface AddRoleMachineIdentityProps extends Partial<AlksProps> {
     roleARN: string;
