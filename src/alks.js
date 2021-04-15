@@ -834,7 +834,7 @@ class alks {
       delete opts.sessionToken
     }
 
-    var responsePromise = opts._fetch(`${opts.baseUrl}/${path}/`, {
+    var responsePromise = opts._fetch(`${opts.baseUrl}/${path}`, {
       method, headers, body: method == 'GET' ? undefined : JSON.stringify(opts)
     })
 

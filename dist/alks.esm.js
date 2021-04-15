@@ -1,4 +1,4 @@
-var version = "1.11.2";
+var version = "1.11.3";
 
 const fetch = window.fetch.bind(window);
 
@@ -221,7 +221,7 @@ class alks {
     * })
     */
   getAllAWSRoleTypes(props) {
-    const url = props.getDynamicValues ? 'allAwsRoleTypes' : 'allAwsRoleTypes?getDynamicValues=true';
+    const url = props.getDynamicValues ? 'allAwsRoleTypes?getDynamicValues=true' : 'allAwsRoleTypes';
     return(this._doFetch(url, props, 'GET').then(results => results.roleTypes))
   }
 
@@ -832,7 +832,7 @@ class alks {
       delete opts.sessionToken;
     }
 
-    var responsePromise = opts._fetch(`${opts.baseUrl}/${path}/`, {
+    var responsePromise = opts._fetch(`${opts.baseUrl}/${path}`, {
       method, headers, body: method == 'GET' ? undefined : JSON.stringify(opts)
     });
 

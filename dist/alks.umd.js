@@ -4,7 +4,7 @@
   (global = global || self, global.alks = factory());
 }(this, function () { 'use strict';
 
-  var version = "1.11.2";
+  var version = "1.11.3";
 
   var fetch = window.fetch.bind(window);
 
@@ -227,7 +227,7 @@
     * })
     */
   alks.prototype.getAllAWSRoleTypes = function getAllAWSRoleTypes (props) {
-    var url = props.getDynamicValues ? 'allAwsRoleTypes' : 'allAwsRoleTypes?getDynamicValues=true';
+    var url = props.getDynamicValues ? 'allAwsRoleTypes?getDynamicValues=true' : 'allAwsRoleTypes';
     return(this._doFetch(url, props, 'GET').then(function (results) { return results.roleTypes; }))
   };
 
@@ -829,7 +829,7 @@
       delete opts.sessionToken;
     }
 
-    var responsePromise = opts._fetch(((opts.baseUrl) + "/" + path + "/"), {
+    var responsePromise = opts._fetch(((opts.baseUrl) + "/" + path), {
       method: method, headers: headers, body: method == 'GET' ? undefined : JSON.stringify(opts)
     });
 
