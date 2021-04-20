@@ -1,4 +1,4 @@
-var version = "1.11.5";
+var version = "1.12.0";
 
 const fetch = window.fetch.bind(window);
 
@@ -829,6 +829,11 @@ class alks {
     if( opts.sessionToken ) {
       headers['ALKS-STS-Session-Token'] = opts.sessionToken;
       delete opts.sessionToken;
+    }
+
+    if (opts.userAgent) {
+      headers['User-Agent'] += ` ${opts.userAgent}`;
+      delete opts.userAgent;
     }
 
     var responsePromise = opts._fetch(`${opts.baseUrl}/${path}`, {

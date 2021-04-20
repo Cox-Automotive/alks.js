@@ -106,6 +106,7 @@ declare namespace ALKS {
   export interface AlksProps {
     baseUrl: string;
     accessToken: string;
+    userAgent?: string;
   }
 
   export interface AwsAccountRolesProps extends Partial<AlksProps> {
