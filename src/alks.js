@@ -833,6 +833,11 @@ class alks {
       delete opts.sessionToken
     }
 
+    if (opts.userAgent) {
+      headers['User-Agent'] += ` ${opts.userAgent}`
+      delete opts.userAgent
+    }
+
     var responsePromise = opts._fetch(`${opts.baseUrl}/${path}`, {
       method, headers, body: method == 'GET' ? undefined : JSON.stringify(opts)
     })
