@@ -724,7 +724,7 @@
   alks.prototype.getLoginRole = function getLoginRole (props) {
     var accountId = props.accountId;
       var role = props.role;
-    return this._doFetch(("loginRoles/id/" + accountId + "/" + role), null, 'GET').then(function (results) { return pick(results, ['account', 'role', 'iamKeyActive', 'maxKeyDuration']); })
+    return this._doFetch(("loginRoles/id/" + accountId + "/" + role), null, 'GET').then(function (results) { return pick(results.loginRole, ['account', 'role', 'iamKeyActive', 'maxKeyDuration']); })
   };
 
   /**
