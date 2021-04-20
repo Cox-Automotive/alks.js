@@ -1,6 +1,6 @@
 'use strict';
 
-var version = "1.11.4";
+var version = "1.11.5";
 
 const Buffer = require('buffer').Buffer;
 const fetch = require('node-fetch');
@@ -832,6 +832,11 @@ class alks {
     if( opts.sessionToken ) {
       headers['ALKS-STS-Session-Token'] = opts.sessionToken;
       delete opts.sessionToken;
+    }
+
+    if (opts.userAgent) {
+      headers['User-Agent'] += ` ${opts.userAgent}`;
+      delete opts.userAgent;
     }
 
     var responsePromise = opts._fetch(`${opts.baseUrl}/${path}`, {
