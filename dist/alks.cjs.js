@@ -729,7 +729,7 @@ class alks {
    */
   getLoginRole(props) {
     const {accountId, role} = props;
-    return this._doFetch(`loginRoles/id/${accountId}/${role}`, 'GET').then((results) =>
+    return this._doFetch(`loginRoles/id/${accountId}/${role}`, null, 'GET').then((results) =>
       pick(results, ['account', 'role', 'iamKeyActive', 'maxKeyDuration']))
   }
 
