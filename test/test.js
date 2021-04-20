@@ -716,10 +716,12 @@ describe('alks.js', function() {
 
       const _fetch = fetchMock.sandbox().mock(`${baseUrl}/loginRoles/id/${accountId}/${role}`, {
         body: {
-          account,
-          role,
-          iamKeyActive,
-          maxKeyDuration
+          loginRole: {
+            account,
+            role,
+            iamKeyActive,
+            maxKeyDuration
+          }
         },
         status: 200
       })

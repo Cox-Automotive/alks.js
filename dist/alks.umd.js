@@ -713,7 +713,6 @@
    * @param {Object} props - An object containing the following properties
    * @param {string} props.accountId - The 12-digit account ID associated with the custom role
    * @param {string} props.role - The user's role associated with the account
-   * @param {number} props.maxKeyDuration - The maximum key duration for this account
    * @returns {Promise<Object>}
    * @example
    * alks.getLoginRole({
@@ -725,7 +724,7 @@
   alks.prototype.getLoginRole = function getLoginRole (props) {
     var accountId = props.accountId;
       var role = props.role;
-    return this._doFetch(("loginRoles/id/" + accountId + "/" + role), null).then(function (results) { return pick(results, ['account', 'role', 'iamKeyActive', 'maxKeyDuration']); })
+    return this._doFetch(("loginRoles/id/" + accountId + "/" + role), null, 'GET').then(function (results) { return pick(results.loginRole, ['account', 'role', 'iamKeyActive', 'maxKeyDuration']); })
   };
 
   /**
