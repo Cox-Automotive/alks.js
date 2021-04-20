@@ -185,7 +185,6 @@ declare namespace ALKS {
   export interface GetLoginRoleProps {
     accountId: string;
     role: string;
-    maxKeyDuration: number;
   }
 
   export interface GetAccessTokenProps extends Partial<AlksProps> {
