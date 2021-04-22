@@ -4,7 +4,7 @@
   (global = global || self, global.alks = factory());
 }(this, function () { 'use strict';
 
-  var version = "1.11.5";
+  var version = "1.12.0";
 
   var fetch = window.fetch.bind(window);
 
@@ -724,7 +724,7 @@
   alks.prototype.getLoginRole = function getLoginRole (props) {
     var accountId = props.accountId;
       var role = props.role;
-    return this._doFetch(("loginRoles/id/" + accountId + "/" + role), null, 'GET').then(function (results) { return pick(results.loginRole, ['account', 'role', 'iamKeyActive', 'maxKeyDuration']); })
+    return this._doFetch(("loginRoles/id/" + accountId + "/" + role), props, 'GET').then(function (results) { return pick(results.loginRole, ['account', 'role', 'iamKeyActive', 'maxKeyDuration']); })
   };
 
   /**
