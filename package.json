@@ -47,13 +47,13 @@
     "node-fetch": "^2.3.0"
   },
   "devDependencies": {
-    "browserify": "^16.2.3",
+    "browserify": "^17.0.0",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
     "coveralls": "^3.0.3",
     "eslint": "^5.15.1",
     "eslint-plugin-jsdoc": "^4.1.1",
-    "fetch-mock": "^7.3.1",
+    "fetch-mock": "^9.11.0",
     "jsdoc-to-markdown": "^5.0.0",
     "karma": "^4.4.1",
     "karma-browserify": "^6.0.0",
