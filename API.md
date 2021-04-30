@@ -676,7 +676,6 @@ Returns information about one of the roles used to generate keys
 - props <code>Object</code> - An object containing the following properties
     - .accountId <code>string</code> - The 12-digit account ID associated with the custom role
     - .role <code>string</code> - The user's role associated with the account
-    - .maxKeyDuration <code>number</code> - The maximum key duration for this account
 
 **Example**  
 ```js
