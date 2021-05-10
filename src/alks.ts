@@ -1021,16 +1021,16 @@ export class Alks {
     const opts = {
       fetch: fetch,
       ...this.config,
-      ...args,
+      ...args
     };
 
     const payload: any = {
-      ...opts,
+      ...opts
     };
 
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',
-      'User-Agent': `AlksJS/${packageJson.version}`,
+      'User-Agent': `AlksJS/${packageJson.version}`
     };
 
     if (isTokenAuth(opts)) {
