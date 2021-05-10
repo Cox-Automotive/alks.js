@@ -1,33 +1,357 @@
-import * as packageJson from '../package.json'
-const Buffer = process.browser ? undefined : require('buffer').Buffer
-const fetch = process.browser ? window.fetch.bind(window) : require('node-fetch')
+import * as packageJson from '../package.json';
+import { Buffer } from 'buffer';
+import fetch, { Response } from 'node-fetch';
+
+interface BaseConfig {
+  baseUrl: string;
+  fetch?: typeof fetch;
+  userAgent?: string;
+}
+
+function isStsAuth(a: Auth): a is StsAuth {
+  return (a as StsAuth).accessKey !== undefined;
+}
+
+interface StsAuth {
+  accessKey: string;
+  secretKey: string;
+  sessionToken: string;
+}
+
+function isPasswordAuth(a: Auth): a is PasswordAuth {
+  return (a as PasswordAuth).userid !== undefined;
+}
+
+interface PasswordAuth {
+  userid: string;
+  password: string;
+}
+
+function isTokenAuth(a: Auth): a is TokenAuth {
+  return (a as TokenAuth).accessToken !== undefined;
+}
+
+interface TokenAuth {
+  accessToken: string;
+}
+
+type Auth = StsAuth | PasswordAuth | TokenAuth;
+
+export type AlksProps = BaseConfig & Auth;
+
+/**
+ * AWS Account
+ * @property account - The name of the account
+ * @property role - The user's role in this account
+ * @property iamKeyActive - Whether credentials with IAM permissions can be provisioned from this account
+ * @property maxKeyDuration - The maximum key duration for this account
+ * @property skypieaAccount - extra information about the account from Skypiea
+ */
+export interface Account {
+  account: string;
+  role: string;
+  iamKeyActive: boolean;
+  maxKeyDuration: number;
+  skypieaAccount: SkypieaAccount | null;
+}
+
+/**
+ * Skypiea Account
+ * @property label - the friendly name of the account
+ * @property accountOwners - the samAccountNames of the account owners
+ * @property cloudsploitTrend - the cloudsploit trends
+ */
+export interface SkypieaAccount {
+  label: string;
+  accountOwners: AccountUserDetails[];
+  cloudsploitTrend: CloudsploitReport[];
+}
+
+/**
+ * CloudsploitReport
+ * @property year - the year of the scan
+ * @property month - the month of the scan
+ * @property day - the day of the scan
+ * @property href - the link to the skypiea resource
+ * @property awsAccountId - the AWS account Id
+ * @property scanId - the id of the scan
+ * @property scanDate - the date of the scan
+ * @property newRisks - the amount of new risks
+ * @property passing - the amount of pass
+ * @property warning - the amount of warnings
+ * @property failing - the amount of fails
+ * @property unknown - the amount of unknowns
+ */
+export interface CloudsploitReport {
+  year: number;
+  month: number;
+  day: number;
+  href: string;
+  awsAccountId: string;
+  scanId: number;
+  scanDate: string;
+  newRisks: number;
+  passing: number;
+  warning: number;
+  failing: number;
+  unknown: number;
+}
+
+/**
+ * AccountUserDetails
+ * @property samAccountName - the samAccountName of the user
+ * @property email - the email of the user
+ * @property href - the href self link
+ */
+export interface AccountUserDetails {
+  samAccountName: string;
+  email: string;
+  href: string;
+}
+
+/**
+ * AWS STS Credentials
+ * @property accessKey - AWS access key
+ * @property secretKey - AWS secret key
+ * @property sessionToken - AWS STS session token
+ * @property consoleURL - a URL to the AWS console using these keys
+ */
+export interface Key {
+  accessKey: string;
+  secretKey: string;
+  sessionToken: string;
+  consoleURL: string;
+}
+
+/**
+ * Response containing access keys.
+ * @property iamUserArn - the arn of the IAM user owning the long term access keys
+ * @property accessKey - the long term access key
+ * @property secretKey - the secret key for the long term access key
+ * @property addedIAMUserToGroup - whether the user was successfuly added to the deny policy group
+ */
+export interface LongTermKey {
+  iamUserArn: string;
+  accessKey: string;
+  secretKey: string;
+  addedIAMUserToGroup: boolean;
+}
+
+/**
+ * Custom AWS IAM account role
+ * @property roleArn - The Amazon Resource Name (ARN) associated with the new role
+ * @property denyArns - The ARNs for the deny policies associated with this role
+ * @property instanceProfileArn - The Instance Profile ARN associated with this role
+ * @property addedRoleToInstanceProfile - Whether this role was added to an Instance Profile
+ */
+export interface Role {
+  roleArn: string;
+  denyArns: string;
+  instanceProfileArn: string;
+  addedRoleToInstanceProfile: boolean;
+}
+
+export interface AccessToken {
+  accessToken: string;
+  expiresIn: string;
+}
+
+export interface RefreshToken {
+  clientId: string;
+  id: string;
+  userId: string;
+  value: string;
+}
+
+/**
+ * AWS account role type
+ * @property roleArn - The AWS Role ARN
+ * @property isMachineIdentity - true|false value of if this role is a machine identity
+ * @property assumeRolePolicyDocument - The AWS assume role policy document associated with this role
+ */
+export interface AwsAccountRole {
+  roleArn: string;
+  isMachineIdentity: boolean;
+  assumeRolePolicyDocument: object;
+}
+
+/**
+ * AWS IAM role type
+ * @property roleTypeName - The AWS IAM role type name
+ * @property defaultArns - The default ARNs (default policies) associated with this role
+ * @property trustRelationship - The AWS trust policy document associated with this role
+ * @property instanceProfile - Whether this role is an instance profile
+ * @property templateVariables - A list of template variables that exist within the role type's trust policy document
+ */
+export interface AwsRoleType {
+  roleTypeName: string;
+  defaultArns: string[];
+  trustRelationship: object;
+  instanceProfile: boolean;
+  templateVariables?: string[];
+}
+
+export interface MachineIdentity {
+  machineIdentityArn: string;
+}
+
+/**
+ * ALKS User representation
+ * @property sAMAccountName - The network id
+ * @property displayName - The display nme
+ * @property email - The user email
+ * @property title - The user title
+ * @property department - The user department
+ */
+export interface User {
+  sAMAccountName: string;
+  displayName: string;
+  email: string;
+  title: string;
+  department: string;
+}
+
+export enum TrustType {
+  CrossAccount = 'Cross Account',
+  InnerAccount = 'Inner Account',
+}
+
+export enum PseudoBoolean {
+  True = 1,
+  False = 0,
+}
+
+export type AwsAccountRolesProps = Partial<AlksProps> & {
+  account: string;
+}
+
+export type GetAccountsProps = Partial<AlksProps> & {}
+
+export type GetKeysProps = Partial<AlksProps> & {
+  account: string;
+  role: string;
+  sessionTime: number;
+}
+
+export type GetIAMKeysProps = Partial<AlksProps> & {
+  account: string;
+  role: string;
+  sessionTime: number;
+}
+
+export type GetAWSRoleTypesProps = Partial<AlksProps> & {}
+
+export type GetNonServiceAWSRoleTypesProps = Partial<AlksProps> & {}
+
+export type CreateRoleProps = Partial<AlksProps> & {
+  account: string;
+  role: string;
+  roleName: string;
+  roleType: string;
+  enableAlksAccess: boolean;
+  includeDefaultPolicy: PseudoBoolean;
+  templateFields?: Record<string, string>;
+}
+
+export type CreateNonServiceRoleProps = Partial<AlksProps> & {
+  account: string;
+  role: string;
+  roleName: string;
+  roleType: TrustType;
+  enableAlksAccess: boolean;
+  includeDefaultPolicy: PseudoBoolean;
+  trustArn: string;
+  externalId?: string;
+}
+
+export type ListAWSAccountRolesProps = Partial<AlksProps> & {
+  account: string;
+  role: string;
+}
+
+export type GetAccountRoleProps = Partial<AlksProps> & {
+  account: string;
+  role: string;
+  roleName: string;
+}
+
+export type DeleteRoleProps = Partial<AlksProps> & {
+  account: string;
+  role: string;
+  roleName: string;
+}
+
+export type CreateAccessKeysProps = Partial<AlksProps> & {
+  account: string;
+  role: string;
+  iamUserName: string;
+}
+
+export type DeleteIAMUserProps = Partial<AlksProps> & {
+  account: string;
+  role: string;
+  iamUserName: string;
+}
+
+export type VersionProps = Partial<AlksProps> & {}
+
+export type GetLoginRoleProps = Partial<AlksProps> & {
+  accountId: string;
+  role: string;
+}
+
+export type GetAccessTokenProps = Partial<AlksProps> & {
+  refreshToken: string;
+}
+
+export type GetRefreshTokensProps = Partial<AlksProps> & {}
+
+export type RevokeByIdProps = Partial<AlksProps> & {
+  tokenId: string;
+}
+
+export type RevokeByValueProps = Partial<AlksProps> & {
+  token: string;
+}
+
+export type RevokeProps = RevokeByIdProps | RevokeByValueProps;
+
+export type GetAllAWSRoleTypesProps = Partial<AlksProps> & {
+  getDynamicValues?: boolean;
+}
+
+export type AddRoleMachineIdentityProps = Partial<AlksProps> & {
+  roleARN: string;
+}
+
+export type DeleteRoleMachineIdentityProps = Partial<AlksProps> & {
+  roleARN: string;
+}
+
+export type GetUserAccessProps = Partial<AlksProps> & {
+  accountId: string;
+}
+
+export type GetUserRoleAccessProps = Partial<AlksProps> & {
+  accountId: string;
+  sAMAccountName: string;
+}
+
+export type GetUserAccessByRoleProps = Partial<AlksProps> & {
+  accountId: string;
+}
+
+export type GetAccountOwnersProps = Partial<AlksProps> & {
+  accountId: string;
+}
 
 /**
  * ALKS JavaScript API
- *
  */
-class alks {
-  constructor(props, existing = {}) {
-    this.defaults = Object.assign({}, existing, { _fetch: fetch }, props)
-  }
+export class Alks {
+  private config = {} as AlksProps;
 
-  /**
-   * Encodes a string to base 64
-   *
-   * @param {string} str - the string to encode
-   * @private
-   * @returns {string} the base64 encoded string
-   * @example
-   * var input = 'password'
-   * alks.base64Encode(input)
-   */
-  _base64Encode(str = '') {
-    if (process.browser) {
-      return btoa(str)
-    } else {
-      return Buffer.from(str).toString('base64')
-    }
-  }
+  private constructor() {}
 
   /**
    * Returns a new instance of alks with pre-defined properties (which don't need to be supplied to every method).
@@ -36,8 +360,8 @@ class alks {
    *
    * Properties present on the current object are carried through to the newly created one.
    *
-   * @param {Object} props - An object containing settings for the new ALKS object
-   * @returns {alks}
+   * @param props - An object containing settings for the new ALKS object
+   * @returns a new Alks object with the provided configuration
    * @example
    * var myAlks = alks.create({
    *   baseUrl: 'https://your.alks-host.com',
@@ -52,52 +376,11 @@ class alks {
    *   // creds.accessKey, creds.secretKey, creds.sessionToken
    * })
    */
-  create(props) {
-    return(new alks(props, this.defaults))
+  create(props: AlksProps): Alks {
+    const alks = new Alks();
+    alks.config = props;
+    return alks;
   }
-
-  /**
-   * Skypiea Account
-   * @typedef {Object} skypieaAccount
-   * @type {string} label - the friendly name of the account
-   * @type {AccountUserDetails[]} accountOwners - the samAccountNames of the account owners
-   * @type {CloudsploitReport[]} cloudsploitTrend - the cloudsploit trends
-   */
-
-  /**
-   * CloudsploitReport
-   * @typedef {Object} cloudsploitTrend
-   * @param {number} year - the year of the scan
-   * @param {number} month - the month of the scan
-   * @param {number} day - the day of the scan
-   * @param {string} href - the link to the skypiea resource
-   * @param {string} awsAccountId - the AWS account Id
-   * @param {number} scanId - the id of the scan
-   * @param {string} scanDate - the date of the scan
-   * @param {number} newRisks - the amount of new risks
-   * @param {number} passing - the amount of pass
-   * @param {number} warning - the amount of warnings
-   * @param {number} failing - the amount of fails
-   * @param {number} unknown - the amount of unknowns
-   */
-
-  /**
-   * AccountUserDetails
-   * @typedef {Object} accountOwners
-   * @param {string} samAccountName - the samAccountName of the user
-   * @param {string} email - the email of the user
-   * @param {string} href - the href self link
-   */
-
-  /**
-   * AWS Account
-   * @typedef {Object} account
-   * @property {string} account - The name of the account
-   * @property {string} role - The user's role in this account
-   * @property {boolean} iamKeyActive - Whether credentials with IAM permissions can be provisioned from this account
-   * @property {number} maxKeyDuration - The maximum key duration for this account
-   * @property {skypieaAccount} skypieaAccount - extra information about the account from Skypiea
-   */
 
   /**
    * Returns a Promise for an array of AWS accounts (and roles) accessible by the user
@@ -114,25 +397,16 @@ class alks {
    *   // accounts[0].account, accounts[0].role, accounts[0].iamKeyActive, accounts[0].maxKeyDuration, accounts[0].skypieaAccount
    * })
    */
-  getAccounts(props) {
-    return(this._doFetch('getAccounts', props).then(results =>
-      Object.keys(results.accountListRole).map((key) => ({
-        account: key,
-        role: results.accountListRole[key][0].role,
-        iamKeyActive: results.accountListRole[key][0].iamKeyActive,
-        maxKeyDuration: results.accountListRole[key][0].maxKeyDuration,
-        skypieaAccount: results.accountListRole[key][0].skypieaAccount
-      }))
-    ))
+  async getAccounts(props: GetAccountsProps): Promise<Account[]> {
+    const results = await this.internalFetch('getAccounts', props);
+    return Object.keys(results.accountListRole).map((key) => ({
+      account: key,
+      role: results.accountListRole[key][0].role,
+      iamKeyActive: results.accountListRole[key][0].iamKeyActive,
+      maxKeyDuration: results.accountListRole[key][0].maxKeyDuration,
+      skypieaAccount: results.accountListRole[key][0].skypieaAccount
+    }));
   }
-
-  /**
-   * AWS STS Credentials
-   * @typedef {Object} credentials
-   * @property {string} accessKey - AWS access key
-   * @property {string} secretKey - AWS secret key
-   * @property {string} sessionToken - AWS STS session token
-   */
 
   /**
    * Returns a Promise for AWS STS credentials from ALKS.
@@ -155,10 +429,9 @@ class alks {
    *   // creds.accessKey, creds.secretKey, creds.sessionToken, creds.consoleURL
    * })
    */
-  getKeys(props) {
-    return(this._doFetch('getKeys', props).then(results =>
-      pick(results, ['accessKey', 'secretKey', 'sessionToken', 'consoleURL'])
-    ))
+  async getKeys(props: GetKeysProps): Promise<Key> {
+    const results = await this.internalFetch('getKeys', props);
+    return pick(results, ['accessKey', 'secretKey', 'sessionToken', 'consoleURL']);
   }
 
   /**
@@ -182,20 +455,10 @@ class alks {
    *   // creds.accessKey, creds.secretKey, creds.sessionToken, creds.consoleURL
    * })
    */
-  getIAMKeys(props) {
-    return(this._doFetch('getIAMKeys', props).then(results =>
-      pick(results, ['accessKey', 'secretKey', 'sessionToken', 'consoleURL'])
-    ))
+  async getIAMKeys(props: GetIAMKeysProps): Promise<Key> {
+    const results = await this.internalFetch('getIAMKeys', props);
+    return pick(results, ['accessKey', 'secretKey', 'sessionToken', 'consoleURL']);
   }
-
-  /**
-  * AWS IAM role type
-  * @typedef {Object} awsRoleType
-  * @property {string} roleTypeName - The AWS IAM role type name
-  * @property {Array<string>} defaultArns - The default ARNs (default policies) associated with this role
-  * @property {Object} trustRelationship - The AWS trust relationship document associated with this role
-  * @property {boolean} instanceProfile - Whether this role is an instance profile
-  */
 
   /**
    * Returns a Promise for an array of all available role types (AWS IAM role types, custom role types) and their details
@@ -222,9 +485,10 @@ class alks {
     *   // roleTypes[i].roleTypeName, roleTypes[i].defaultArns, roleTypes[i].trustRelationship, roleTypes[i].templateVariables[i]
     * })
     */
-  getAllAWSRoleTypes(props) {
-    const url = props.getDynamicValues ? 'allAwsRoleTypes?getDynamicValues=true' : 'allAwsRoleTypes'
-    return(this._doFetch(url, props, 'GET').then(results => results.roleTypes))
+  async getAllAWSRoleTypes(props: GetAllAWSRoleTypesProps): Promise<AwsRoleType[]> {
+    const url = props.getDynamicValues ? 'allAwsRoleTypes?getDynamicValues=true' : 'allAwsRoleTypes';
+    const results = await this.internalFetch(url, props, 'GET')
+    return results.roleTypes;
   }
 
   /**
@@ -243,10 +507,9 @@ class alks {
    *   // ['AWS Lambda', 'Amazon EC2', ... ]
    * })
    */
-  getAWSRoleTypes(props) {
-    return(this._doFetch('getAWSRoleTypes', props).then(results =>
-      JSON.parse(results.roleTypes)
-    ))
+  async getAWSRoleTypes(props: GetAWSRoleTypesProps): Promise<string[]> {
+    const results = await this.internalFetch('getAWSRoleTypes', props);
+    return JSON.parse(results.roleTypes);
   }
 
   /**
@@ -265,20 +528,10 @@ class alks {
    *   // ['AWS Lambda', 'Amazon EC2', ...]
    * })
    */
-  getNonServiceAWSRoleTypes(props) {
-    return(this._doFetch('getNonServiceAWSRoleTypes', props).then(results =>
-      JSON.parse(results.roleTypes)
-    ))
+  async getNonServiceAWSRoleTypes(props: GetNonServiceAWSRoleTypesProps): Promise<string[]> {
+    const results = await this.internalFetch('getNonServiceAWSRoleTypes', props);
+    return JSON.parse(results.roleTypes);
   }
-
-  /**
-  * Custom AWS IAM account role
-  * @typedef {Object} customRole
-  * @property {string} roleArn - The Amazon Resource Name (ARN) associated with the new role
-  * @property {string} denyArns - The ARNs for the deny policies associated with this role
-  * @property {string} instanceProfileArn - The Instance Profile ARN associated with this role
-  * @property {boolean} addedRoleToInstanceProfile - Whether this role was added to an Instance Profile
-  */
 
   /**
    * Returns a Promise for the results of creating a new custom AWS IAM account role
@@ -327,11 +580,10 @@ class alks {
    *   // role.roleArn, role.denyArns, role.instanceProfileArn, role.addedRoleToInstanceProfile
    * })
    */
-  createRole(props) {
-    return(this._doFetch('createRole', props).then((results) => {
-      results.denyArns = results.denyArns.split(',')
-      return(pick(results,['roleArn', 'denyArns','instanceProfileArn','addedRoleToInstanceProfile']))
-    }))
+  async createRole(props: CreateRoleProps): Promise<Role> {
+    const results = await this.internalFetch('createRole', props);
+    results.denyArns = results.denyArns.split(',');
+    return pick(results,['roleArn', 'denyArns','instanceProfileArn','addedRoleToInstanceProfile']);
   }
 
   /**
@@ -365,20 +617,11 @@ class alks {
    *   // role.roleArn, role.denyArns, role.instanceProfileArn, role.addedRoleToInstanceProfile
    * })
    */
-  createNonServiceRole(props) {
-    return(this._doFetch('createNonServiceRole', props).then((results) => {
-      results.denyArns = results.denyArns.split(',')
-      return(pick(results,['roleArn', 'denyArns','instanceProfileArn','addedRoleToInstanceProfile']))
-    }))
+  async createNonServiceRole(props: CreateNonServiceRoleProps): Promise<Role> {
+    const results = await this.internalFetch('createNonServiceRole', props);
+    results.denyArns = results.denyArns.split(',');
+    return pick(results, ['roleArn', 'denyArns','instanceProfileArn','addedRoleToInstanceProfile']);
   }
-
-  /**
-  * AWS account role type
-  * @typedef {Object} awsAccountRole
-  * @property {string} roleArn - The AWS Role ARN
-  * @property {boolean} isMachineIdentity - true|false value of if this role is a machine identity
-  * @property {Object} assumeRolePolicyDocument - The AWS assume role policy document associated with this role
-  */
 
   /**
    * Returns a Promise for an array of AWS account roles
@@ -397,8 +640,9 @@ class alks {
     *   // roles[i].roleArn, roles[i].isMachineIdentity, roles[i].assumeRolePolicyDocument
     * })
     */
-  awsAccountRoles(props) {
-    return(this._doFetch(`awsAccountRoles?account=${props.account}`, props, 'GET').then(results => results.awsRoleList))
+  async awsAccountRoles(props: AwsAccountRolesProps): Promise<AwsAccountRole[]> {
+    const results = await this.internalFetch(`awsAccountRoles?account=${props.account}`, props, 'GET')
+    return results.awsRoleList;
   }
 
   /**
@@ -421,10 +665,9 @@ class alks {
    *   // ['customRole1', 'customRole2', ...]
    * })
    */
-  listAWSAccountRoles(props) {
-    return(this._doFetch('listAWSAccountRoles', props).then(results =>
-      JSON.parse(results.jsonAWSRoleList).map(r => r.split('/').slice(-1)[0])
-    ))
+  async listAWSAccountRoles(props: ListAWSAccountRolesProps): Promise<string[]> {
+    const results = await this.internalFetch('listAWSAccountRoles', props);
+    return JSON.parse(results.jsonAWSRoleList).map((r: string) => r.split('/').slice(-1)[0]);
   }
 
   /**
@@ -448,13 +691,12 @@ class alks {
    *   // arn:aws:iam::123:role/acct-managed/awsRoleName
    * })
    */
-  getAccountRole(props) {
-    return(this._doFetch('getAccountRole', props).then((results) => {
-      if (!results.roleExists) {
-        throw new Error(`Role ${props.roleName} does not exist in this account`)
-      }
-      return(results.roleARN)
-    }))
+  async getAccountRole(props: GetAccountRoleProps): Promise<string> {
+    const results = await this.internalFetch('getAccountRole', props);
+    if (!results.roleExists) {
+      throw new Error(`Role ${props.roleName} does not exist in this account`);
+    }
+    return results.roleARN;
   }
 
   /**
@@ -478,8 +720,9 @@ class alks {
    *   // success!
    * })
    */
-  deleteRole(props) {
-    return(this._doFetch('deleteRole', props).then(() => true ))
+  async deleteRole(props: DeleteRoleProps): Promise<boolean> {
+    await this.internalFetch('deleteRole', props);
+    return true;
   }
 
   /**
@@ -499,10 +742,9 @@ class alks {
     *   // arn:aws:iam::123:role/acct-managed/awsRoleName
     * })
     */
-  addRoleMachineIdentity(props) {
-    return(this._doFetch('roleMachineIdentity', props).then((results) => 
-      pick(results,['machineIdentityArn']))
-    )
+  async addRoleMachineIdentity(props: AddRoleMachineIdentityProps): Promise<MachineIdentity> {
+    const results = await this.internalFetch('roleMachineIdentity', props);
+    return pick(results,['machineIdentityArn']);
   }
 
   /**
@@ -522,21 +764,10 @@ class alks {
     *   // arn:aws:iam::123:role/acct-managed/awsRoleName
     * })
     */
-  deleteRoleMachineIdentity(props) {
-    return(this._doFetch('roleMachineIdentity', props, 'DELETE').then((results) => 
-      pick(results,['machineIdentityArn']))
-    )
+  async deleteRoleMachineIdentity(props: DeleteRoleMachineIdentityProps): Promise<MachineIdentity> {
+    const results = await this.internalFetch('roleMachineIdentity', props, 'DELETE');
+    return pick(results,['machineIdentityArn']);
   }
-
-  /**
-   * ALKS User representation
-   * @typedef {Object} alksUser
-   * @property {string} sAMAccountName - The network id
-   * @property {string} displayName - The display nme
-   * @property {string} email - The user email
-   * @property {string} title - The user title
-   * @property {string} department - The user department
-   */
 
   /**
    * Returns a Promise for a list of users who have access to the given account
@@ -555,11 +786,10 @@ class alks {
    *    // users[i].sAMAccountName, users[i].displayName, users[i].email, users[i].title, users[i].department
    * })
    */
-  getUserAccess(props) {
-    const {accountId} = props
-    return(this._doFetch(`userAccess/${accountId}`, props, 'GET').then((results) =>
-      results.users)
-    )
+  async getUserAccess(props: GetUserAccessProps): Promise<User[]> {
+    const {accountId} = props;
+    const results = await this.internalFetch(`userAccess/${accountId}`, props, 'GET');
+    return results.users;
   }
 
   /**
@@ -579,11 +809,10 @@ class alks {
    *    // users['Admin'].sAMAccountName, users['Admin'].displayName, users['Admin'].email, users['Admin'].title, users['Admin'].department
    * })
    */
-  getUserAccessByRole(props) {
-    const {accountId} = props
-    return(this._doFetch(`reports/users-by-role?accountId=${accountId}`, props, 'GET').then((results) =>
-      results.users)
-    )
+  async getUserAccessByRole(props: GetUserAccessByRoleProps): Promise<Record<string, User[]>> {
+    const {accountId} = props;
+    const results = await this.internalFetch(`reports/users-by-role?accountId=${accountId}`, props, 'GET');
+    return results.users;
   }
 
   /**
@@ -605,11 +834,10 @@ class alks {
    *    // ['Admin', 'LabAdmin', ...]
    * })
    */
-  getUserRoleAccess(props) {
-    const {accountId} = props
-    return(this._doFetch(`userAccess/roles/${accountId}`, props).then((results) =>
-      results.roles)
-    )
+  async getUserRoleAccess(props: GetUserRoleAccessProps): Promise<string[]> {
+    const {accountId} = props;
+    const results = await this.internalFetch(`userAccess/roles/${accountId}`, props);
+    return results.roles;
   }
 
   /**
@@ -629,20 +857,11 @@ class alks {
    *    // owners[0].sAMAccountName, owners[0].displayName, owners[0].email, owners[0].title, owners[0].department
    * })
    */
-  getAccountOwners(props) {
-    const {accountId} = props
-    return(this._doFetch(`userAccess/owners/${accountId}`, props, 'GET').then((results) => results.accountOwners))
+  async getAccountOwners(props: GetAccountOwnersProps): Promise<User[]> {
+    const {accountId} = props;
+    const results = await this.internalFetch(`userAccess/owners/${accountId}`, props, 'GET');
+    return results.accountOwners;
   }
-
-  /**
-   *  Response containing access keys.
-   *
-   *  @typedef {Object} AccessKeys
-   *  @property {string} iamUserArn - the arn of the IAM user owning the long term access keys
-   *  @property {string} accessKey - the long term access key
-   *  @property {string} secretKey - the secret key for the long term access key
-   *  @property {boolean} addedIAMUserToGroup - whether the user was successfuly added to the deny policy group
-   */
 
   /**
    * Returns a Promise for the results of creating new IAM user and long-term access keys
@@ -665,10 +884,9 @@ class alks {
    *   // user.iamUserArn, user.accessKey, user.secretKey, user.addedIAMUserToGroup
    * })
    */
-  createAccessKeys(props) {
-    return(this._doFetch('accessKeys', props).then((results) =>
-      pick(results,['iamUserArn', 'accessKey', 'secretKey', 'addedIAMUserToGroup']))
-    )
+  async createAccessKeys(props: CreateAccessKeysProps): Promise<LongTermKey> {
+    const results = await this.internalFetch('accessKeys', props);
+    return pick(results, ['iamUserArn', 'accessKey', 'secretKey', 'addedIAMUserToGroup']);
   }
 
   /**
@@ -692,8 +910,9 @@ class alks {
    *   // success!
    * })
    */
-  deleteIAMUser(props) {
-    return(this._doFetch('IAMUser', props, 'DELETE').then(() => true ))
+  async deleteIAMUser(props: DeleteIAMUserProps): Promise<boolean> {
+    await this.internalFetch('IAMUser', props, 'DELETE');
+    return true;
   }
 
   /**
@@ -708,8 +927,9 @@ class alks {
    *   // data.version
    * })
    */
-  version(props) {
-    return this._doFetch('version', props, 'GET').then((results) => pick(results, ['version']))
+  async version(props: VersionProps): Promise<{ version: string }> {
+    const results = await this.internalFetch('version', props, 'GET');
+    return pick(results, ['version']);
   }
 
   /**
@@ -726,10 +946,11 @@ class alks {
    *   // loginRole.account, loginRole.role, loginRole.iamKeyActive, loginRole.maxKeyDuration
    * })
    */
-  getLoginRole(props) {
-    const {accountId, role} = props
-    return this._doFetch(`loginRoles/id/${accountId}/${role}`, props, 'GET').then((results) =>
-      pick(results.loginRole, ['account', 'role', 'iamKeyActive', 'maxKeyDuration']))
+  async getLoginRole(props: GetLoginRoleProps): Promise<Omit<Account, 'skypieaAccount'>> {
+    const {accountId, role} = props;
+    const results = await this.internalFetch(`loginRoles/id/${accountId}/${role}`, props, 'GET') as { loginRole: Account };
+    // TODO we should probably update this function to include skypieaAccount in the result since it's already being fetched - Ben W 5/10/21
+    return pick(results.loginRole, ['account', 'role', 'iamKeyActive', 'maxKeyDuration']);
   }
 
   /**
@@ -745,10 +966,9 @@ class alks {
    *   // data.accessToken, data.expiresIn
    * })
    */
-  getAccessToken(props) {
-    return this._doFetch('accessToken', props).then((results) =>
-      pick(results, ['accessToken', 'expiresIn'])
-    )
+  async getAccessToken(props: GetAccessTokenProps): Promise<AccessToken> {
+    const results = await this.internalFetch('accessToken', props);
+    return pick(results, ['accessToken', 'expiresIn']);
   }
 
   /**
@@ -763,10 +983,9 @@ class alks {
    *   // token[i].clientId, token[i].id, token[i].userId, token[i].value
    * })
    */
-  getRefreshTokens(props) {
-    return this._doFetch('refreshTokens', props, 'GET').then((results) =>
-      results.refreshTokens.map((token) => pick(token, ['clientId', 'id', 'userId', 'value']))
-    )
+  async getRefreshTokens(props: GetRefreshTokensProps): Promise<RefreshToken[]> {
+    const results = await this.internalFetch('refreshTokens', props, 'GET') as { refreshTokens: RefreshToken[] };
+    return results.refreshTokens.map((token) => pick(token, ['clientId', 'id', 'userId', 'value']));
   }
 
   /**
@@ -793,81 +1012,102 @@ class alks {
    *   // success == true
    * })
    */
-  revoke(props) {
-    return this._doFetch('revoke', props).then((results) =>
-      results.statusMessage == 'Success'
-    )
+  async revoke(props: RevokeProps): Promise<boolean> {
+    const results = await this.internalFetch('revoke', props);
+    return results.statusMessage == 'Success';
   }
 
-  _doFetch(path, args = { }, method = 'POST') {
-    let opts = Object.assign({}, this.defaults, args)
+  private async internalFetch(path: string, args: Partial<AlksProps> = { }, method: string = 'POST'): Promise<any> {
+    const opts = {
+      fetch: fetch,
+      ...this.config,
+      ...args,
+    };
 
-    let headers = {
+    const payload: any = {
+      ...opts,
+    };
+
+    const headers: Record<string, string> = {
       'Content-Type': 'application/json',
       'User-Agent': `AlksJS/${packageJson.version}`,
-    }
+    };
 
-    if (opts.accessToken) {
-      headers['Authorization'] = `Bearer ${opts.accessToken}`
-      delete opts.accessToken
-    }
-
-    if (opts.userid || opts.password) {
-      console.error('The userid and password properties are deprecated and should be replaced with an access token')
-      const credentials = this._base64Encode(`${opts.userid}:${opts.password}`)
-      headers['Authorization'] = `Basic ${credentials}`
-      delete opts.userid
-      delete opts.password
-    }
-
-    if( opts.accessKey ) {
-      headers['ALKS-STS-Access-Key'] = opts.accessKey
-      delete opts.accessKey
-    }
-    if( opts.secretKey ) {
-      headers['ALKS-STS-Secret-Key'] = opts.secretKey
-      delete opts.secretKey
-    }
-    if( opts.sessionToken ) {
-      headers['ALKS-STS-Session-Token'] = opts.sessionToken
-      delete opts.sessionToken
+    if (isTokenAuth(opts)) {
+      headers['Authorization'] = `Bearer ${opts.accessToken}`;
+      delete payload.accessToken;
+    } else if (isStsAuth(opts)) {
+      headers['ALKS-STS-Access-Key'] = opts.accessKey;
+      headers['ALKS-STS-Secret-Key'] = opts.secretKey;
+      headers['ALKS-STS-Session-Token'] = opts.sessionToken;
+      delete payload.accessKey;
+      delete payload.secretKey;
+      delete payload.sessionToken;
+    } else if (isPasswordAuth(opts)) {
+      console.error('The userid and password properties are deprecated and should be replaced with an access token');
+      const credentials = base64Encode(`${opts.userid}:${opts.password}`);
+      headers['Authorization'] = `Basic ${credentials}`;
+      delete payload.userid;
+      delete payload.password;
+    } else {
+      // No auth provided
+      // TODO print some kind of error message if no auth was provided - Ben W 5/10/21
     }
 
     if (opts.userAgent) {
-      headers['User-Agent'] += ` ${opts.userAgent}`
-      delete opts.userAgent
+      headers['User-Agent'] += ` ${opts.userAgent}`;
+      delete payload.userAgent;
     }
 
-    var responsePromise = opts._fetch(`${opts.baseUrl}/${path}`, {
-      method, headers, body: method == 'GET' ? undefined : JSON.stringify(opts)
-    })
+    const response = await opts.fetch(`${opts.baseUrl}/${path}`, {
+      method, headers, body: method == 'GET' ? undefined : JSON.stringify(payload)
+    });
 
-    // Add catch here to swallow the JSON parsing error (it'll get picked up below)
-    let jsonPromise = responsePromise.then(r => r.json()).catch(() => {})
+    // Swallow any JSON parsing error that occurs (it'll get picked up below)
+    // TODO ^No it won't. We should fix this - Ben W 5/10/21
+    const json: any = await response.json().catch(() => {});
 
-    return Promise.all([responsePromise, jsonPromise]).then(([response, json]) => {
-      if (!response.ok) {
-        throw new AlksError(response, json)
-      }
-      return(json)
-    })
+    if (!response.ok) {
+      throw new AlksError(response, json);
+    }
+    return json;
   }
 }
 
-const pick = (obj, props) => props.reduce((a, e) => (a[e] = obj[e], a), {})
+/**
+ * Encodes a string to base 64
+ *
+ * @param str - the string to encode
+ * @private
+ * @returns the base64 encoded string
+ * @example
+ * var input = 'password';
+ * base64Encode(input);
+ */
+function base64Encode(str = ''): string {
+  return Buffer.from(str).toString('base64');
+}
 
-class AlksError extends Error {
-  constructor(response, json) {
-    const errors = Array.isArray(json.errors) ? json.errors : []
+function pick<Obj, Prop extends keyof Obj>(obj: Obj, props: Prop[]): Pick<Obj, Prop> { 
+  return props.reduce((acc, prop) => (acc[prop] = obj[prop], acc), {} as Pick<Obj, Prop>); 
+}
+
+export class AlksError extends Error {
+  public status: number;
+  [s: string]: any;
+
+  constructor(response: Response, json: any) {
+    const errors = Array.isArray(json?.errors) ? json.errors : []
     if (response.statusText) {
       errors.unshift(response.statusText)
     }
-    const message = errors.join('; ')
-    super(message)
-    this.status = response.status
-    this.message = message
-    Object.assign(this, json)
+    const message = errors.join('; ');
+    super(message);
+    this.status = response.status;
+    this.message = message;
+    Object.assign(this, json);
   }
 }
 
-export default new alks()
+// @ts-ignore
+export default new Alks();
