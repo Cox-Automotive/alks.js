@@ -2,12 +2,12 @@ import json from 'rollup-plugin-json';
 import pkg from './package.json';
 import builtins from 'rollup-plugin-node-builtins';
 import globals from 'rollup-plugin-node-globals';
-import typescript from '@rollup/plugin-typescript';
+// import typescript from '@rollup/plugin-typescript';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 
 export default [
   {
-    input: 'src/alks.ts',
+    input: 'lib/src/alks.js',
     output: {
       file: pkg.browser,
       format: 'umd',
@@ -18,27 +18,23 @@ export default [
       builtins(),
       globals(),
       nodeResolve(),
-      typescript(),
       json(),
     ]
   },
   {
-    input: 'src/alks.ts',
+    input: 'lib/src/alks.js',
     output: {
       file: pkg.main,
       format: 'cjs',
       exports: 'named',
     },
     plugins: [
-      builtins(),
-      globals(),
-      nodeResolve(),
-      typescript(),
+      nodeResolve({preferBuiltins: true}),
       json(),
     ]
   },
   {
-    input: 'src/alks.ts',
+    input: 'lib/src/alks.js',
     output: {
       file: pkg.module,
       format: 'es',
@@ -48,7 +44,6 @@ export default [
       builtins(),
       globals(),
       nodeResolve(),
-      typescript(),
       json(),
     ]
   }
