@@ -44,7 +44,9 @@
   "engines": {
     "node": ">=8.0.0"
   },
-  "dependencies": {},
+  "dependencies": {
+    "node-fetch": "^2.6.1"
+  },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^13.0.0",
     "@rollup/plugin-typescript": "^8.2.1",
@@ -67,7 +69,6 @@
     "lint-staged": "^11.0.0",
     "mkdirp": "^1.0.4",
     "mocha": "^8.3.2",
-    "node-fetch": "^2.6.1",
     "nyc": "^15.1.0",
     "prettier": "^2.3.0",
     "rimraf": "^3.0.2",
