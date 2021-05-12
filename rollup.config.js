@@ -2,8 +2,8 @@ import json from 'rollup-plugin-json';
 import pkg from './package.json';
 import builtins from 'rollup-plugin-node-builtins';
 import globals from 'rollup-plugin-node-globals';
-// import typescript from '@rollup/plugin-typescript';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
+import replace from 'rollup-plugin-replace';
 
 export default [
   {
@@ -15,6 +15,7 @@ export default [
       exports: 'named',
     },
     plugins: [
+      replace({'process.browser': true}),
       builtins(),
       globals(),
       nodeResolve(),
@@ -29,6 +30,7 @@ export default [
       exports: 'named',
     },
     plugins: [
+      replace({'process.browser': false}),
       nodeResolve({preferBuiltins: true}),
       json(),
     ]
@@ -41,6 +43,7 @@ export default [
       exports: 'named',
     },
     plugins: [
+      replace({'process.browser': true}),
       builtins(),
       globals(),
       nodeResolve(),
