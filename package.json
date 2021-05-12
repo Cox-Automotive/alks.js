@@ -19,7 +19,7 @@
     "mocha": "nyc mocha test/test.js",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "karma": "karma start",
-    "docs": "jsdoc2md --param-list-format list --property-list-format list --example-lang js src/alks.ts > API.md",
+    "docs": "typedoc src/",
     "prepare": "husky install",
     "compile": "tsc"
   },
@@ -46,6 +46,10 @@
     "node-fetch": "^2.6.1"
   },
   "devDependencies": {
+    "@babel/cli": "^7.13.16",
+    "@babel/core": "^7.14.2",
+    "@babel/preset-env": "^7.14.2",
+    "@babel/preset-typescript": "^7.13.0",
     "@rollup/plugin-node-resolve": "^13.0.0",
     "@rollup/plugin-typescript": "^8.2.1",
     "@types/node": "^15.0.2",
@@ -58,7 +62,8 @@
     "eslint-plugin-jsdoc": "^4.1.1",
     "fetch-mock": "^7.3.1",
     "husky": "^6.0.0",
-    "jsdoc-to-markdown": "^5.0.0",
+    "jsdoc-babel": "^0.5.0",
+    "jsdoc-to-markdown": "^5.0.3",
     "karma": "^6.3.2",
     "karma-browserify": "^8.0.0",
     "karma-chrome-launcher": "^3.1.0",

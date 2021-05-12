@@ -57,7 +57,7 @@ myAlks.getKeys({
 ```
 
 ## Documentation
-View the [API documentation](API.md)
+View the [API documentation](docs/index.html)
 
 To update the API documentation from the source, run `npm run docs`
 
