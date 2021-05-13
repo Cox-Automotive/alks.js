@@ -12,9 +12,9 @@
     "mkdirs": "mkdirp dist lib",
     "clean": "npm run rmdirs && npm run mkdirs",
     "rollup": "rollup -c rollup.config.js",
-    "minify": "uglifyjs -mc < dist/alks.umd.js > dist/alks.min.js",
+    "minify": "uglifyjs -m reserved=[\"global\"] -c < dist/alks.umd.js > dist/alks.min.js",
     "build": "npm run clean && npm run compile && npm run rollup && npm run minify",
-    "lint": "eslint src/*.js test/*.js",
+    "lint": "prettier --write {src,test}/**/*.{ts,js,json,md}",
     "test": "npm run build && npm run lint && npm run mocha && npm run karma",
     "mocha": "nyc mocha test/test.js",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
@@ -46,6 +46,7 @@
     "node-fetch": "^2.6.1"
   },
   "devDependencies": {
+    "@rollup/plugin-commonjs": "^19.0.0",
     "@rollup/plugin-node-resolve": "^13.0.0",
     "@rollup/plugin-typescript": "^8.2.1",
     "@types/node": "^15.0.2",
@@ -54,6 +55,7 @@
     "chai": "^4.3.4",
     "chai-as-promised": "^7.1.1",
     "coveralls": "^3.0.3",
+    "encoding": "^0.1.13",
     "eslint": "^7.25.0",
     "eslint-plugin-jsdoc": "^4.1.1",
     "fetch-mock": "^7.3.1",
@@ -69,7 +71,7 @@
     "nyc": "^15.1.0",
     "prettier": "^2.3.0",
     "rimraf": "^3.0.2",
-    "rollup": "^1.32.1",
+    "rollup": "^2.47.0",
     "rollup-plugin-json": "^3.1.0",
     "rollup-plugin-node-builtins": "^2.1.2",
     "rollup-plugin-node-globals": "^1.4.0",
@@ -89,7 +91,7 @@
     "trailingComma": "es5"
   },
   "lint-staged": {
-    "src/**/*.{js,ts,json,md}": [
+    "{src,test}/**/*.{js,ts,json,md}": [
       "prettier --write"
     ]
   }

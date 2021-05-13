@@ -3,7 +3,7 @@ declare const fetch: typeof nodeFetch;
 declare namespace ALKS {
     interface BaseConfig {
         baseUrl: string;
-        fetch?: typeof fetch;
+        _fetch?: typeof fetch;
         userAgent?: string;
     }
     interface StsAuth {

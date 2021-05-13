@@ -13,7 +13,7 @@ const fetch: typeof nodeFetch = process.browser
 namespace ALKS {
   interface BaseConfig {
     baseUrl: string;
-    fetch?: typeof fetch;
+    _fetch?: typeof fetch;
     userAgent?: string;
   }
 
@@ -1172,7 +1172,7 @@ namespace ALKS {
         delete payload.userAgent;
       }
 
-      const response = await (opts.fetch as typeof fetch)(
+      const response = await (opts._fetch as typeof fetch)(
         `${opts.baseUrl}/${path}`,
         {
           method,
@@ -1234,7 +1234,7 @@ namespace ALKS {
   }
 
   const defaultConfig = {
-    fetch: fetch,
+    _fetch: fetch,
   } as AlksProps;
   const defaultAlks = Alks.prototype.create.call({} as Alks, defaultConfig);
 

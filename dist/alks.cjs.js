@@ -6,7 +6,7 @@ var buffer_1 = require("buffer");
 var node_fetch_1 = tslib_1.__importDefault(require("node-fetch"));
 // Let it be known that it is incredibly stupid that we still have to do this - Ben W 5/12/21
 // @ts-ignore
-var fetch =  node_fetch_1.default;
+var fetch = node_fetch_1.default;
 var ALKS;
 (function (ALKS) {
     function isStsAuth(a) {
@@ -18,16 +18,14 @@ var ALKS;
     function isTokenAuth(a) {
         return a.accessToken !== undefined;
     }
-    var TrustType;
     (function (TrustType) {
         TrustType["CrossAccount"] = "Cross Account";
         TrustType["InnerAccount"] = "Inner Account";
-    })(TrustType = ALKS.TrustType || (ALKS.TrustType = {}));
-    var PseudoBoolean;
+    })(ALKS.TrustType || (ALKS.TrustType = {}));
     (function (PseudoBoolean) {
         PseudoBoolean[PseudoBoolean["True"] = 1] = "True";
         PseudoBoolean[PseudoBoolean["False"] = 0] = "False";
-    })(PseudoBoolean = ALKS.PseudoBoolean || (ALKS.PseudoBoolean = {}));
+    })(ALKS.PseudoBoolean || (ALKS.PseudoBoolean = {}));
     /**
      * ALKS JavaScript API
      */
@@ -968,11 +966,12 @@ var ALKS;
                                 delete payload.userid;
                                 delete payload.password;
                             }
+                            else ;
                             if (opts.userAgent) {
                                 headers['User-Agent'] += " " + opts.userAgent;
                                 delete payload.userAgent;
                             }
-                            return [4 /*yield*/, opts.fetch(opts.baseUrl + "/" + path, {
+                            return [4 /*yield*/, opts._fetch(opts.baseUrl + "/" + path, {
                                     method: method,
                                     headers: headers,
                                     body: method == 'GET' ? undefined : JSON.stringify(payload),
@@ -1029,7 +1028,7 @@ var ALKS;
         return props.reduce(function (acc, prop) { return ((acc[prop] = obj[prop]), acc); }, {});
     }
     var defaultConfig = {
-        fetch: fetch,
+        _fetch: fetch,
     };
     var defaultAlks = Alks.prototype.create.call({}, defaultConfig);
     ALKS.create = Alks.prototype.create.bind(defaultAlks);

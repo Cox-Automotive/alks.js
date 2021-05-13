@@ -4,6 +4,7 @@ import builtins from 'rollup-plugin-node-builtins';
 import globals from 'rollup-plugin-node-globals';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import replace from 'rollup-plugin-replace';
+import commonjs from '@rollup/plugin-commonjs';
 
 export default [
   {
@@ -13,13 +14,15 @@ export default [
       format: 'umd',
       name: 'alks',
       exports: 'named',
+      intro: 'var global = global || window || this;',
     },
     plugins: [
+      json(),
       replace({'process.browser': true}),
+      commonjs(),
       builtins(),
       globals(),
       nodeResolve(),
-      json(),
     ]
   },
   {
