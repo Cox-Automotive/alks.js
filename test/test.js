@@ -8,9 +8,6 @@ const libraryVersion = require('../package.json').version;
 
 var alks = require('../');
 
-// Need this for Karma tests to pass since UMD module doesn't export correctly
-if (alks.default) alks = alks.default;
-
 describe('alks.js', function () {
   describe('getAccounts', () => {
     it('should return a list of accounts', async () => {

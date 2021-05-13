@@ -15,6 +15,7 @@ export default [
       name: 'alks',
       exports: 'named',
       intro: 'var global = global || window || this;',
+      outro: 'Object.assign(exports, alks);'
     },
     plugins: [
       json(),
