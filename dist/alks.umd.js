@@ -287,12 +287,12 @@
 	var require$$0 = /*@__PURE__*/getAugmentedNamespace(tslib_es6);
 
 	var name = "alks.js";
-	var version = "1.12.6";
+	var version$1 = "1.12.6";
 	var description = "JavaScript client for the ALKS API, usable in both modern browsers and node.js";
 	var main = "dist/alks.cjs.js";
 	var types = "dist/src/alks.d.ts";
 	var unpkg = "dist/alks.min.js";
-	var browser = "dist/alks.umd.js";
+	var browser$2 = "dist/alks.umd.js";
 	var module = "dist/alks.esm.js";
 	var scripts = {
 		rmdirs: "rimraf dist lib",
@@ -330,7 +330,6 @@
 		node: ">=8.0.0"
 	};
 	var dependencies = {
-		buffer: "^6.0.3",
 		"node-fetch": "^2.6.1"
 	};
 	var devDependencies = {
@@ -361,8 +360,7 @@
 		rimraf: "^3.0.2",
 		rollup: "^2.47.0",
 		"rollup-plugin-json": "^3.1.0",
-		"rollup-plugin-node-builtins": "^2.1.2",
-		"rollup-plugin-node-globals": "^1.4.0",
+		"rollup-plugin-node-polyfills": "^0.2.1",
 		"rollup-plugin-replace": "^2.2.0",
 		sinon: "^10.0.0",
 		tslib: "^2.2.0",
@@ -380,12 +378,12 @@
 	};
 	var require$$1 = {
 		name: name,
-		version: version,
+		version: version$1,
 		description: description,
 		main: main,
 		types: types,
 		unpkg: unpkg,
-		browser: browser,
+		browser: browser$2,
 		module: module,
 		scripts: scripts,
 		files: files,
@@ -405,8 +403,8 @@
 	};
 
 	var global$1 = (typeof global !== "undefined" ? global :
-	            typeof self !== "undefined" ? self :
-	            typeof window !== "undefined" ? window : {});
+	  typeof self !== "undefined" ? self :
+	  typeof window !== "undefined" ? window : {});
 
 	var lookup = [];
 	var revLookup = [];
@@ -608,6 +606,13 @@
 	var isArray$2 = Array.isArray || function (arr) {
 	  return toString.call(arr) == '[object Array]';
 	};
+
+	/*!
+	 * The buffer module from node.js, for the browser.
+	 *
+	 * @author   Feross Aboukhadijeh <feross@feross.org> <http://feross.org>
+	 * @license  MIT
+	 */
 
 	var INSPECT_MAX_BYTES = 50;
 
@@ -2383,11 +2388,11 @@
 
 	var bufferEs6 = /*#__PURE__*/Object.freeze({
 		__proto__: null,
-		INSPECT_MAX_BYTES: INSPECT_MAX_BYTES,
-		kMaxLength: _kMaxLength,
 		Buffer: Buffer$1,
+		INSPECT_MAX_BYTES: INSPECT_MAX_BYTES,
 		SlowBuffer: SlowBuffer,
-		isBuffer: isBuffer
+		isBuffer: isBuffer,
+		kMaxLength: _kMaxLength
 	});
 
 	var require$$2 = /*@__PURE__*/getAugmentedNamespace(bufferEs6);
@@ -2991,15 +2996,94 @@
 	Item.prototype.run = function () {
 	    this.fun.apply(null, this.array);
 	};
+	var title = 'browser';
+	var platform = 'browser';
+	var browser = true;
+	var env = {};
+	var argv = [];
+	var version = ''; // empty string to avoid regexp issues
+	var versions = {};
+	var release = {};
+	var config = {};
+
+	function noop() {}
+
+	var on = noop;
+	var addListener = noop;
+	var once = noop;
+	var off = noop;
+	var removeListener = noop;
+	var removeAllListeners = noop;
+	var emit = noop;
+
+	function binding$1(name) {
+	    throw new Error('process.binding is not supported');
+	}
+
+	function cwd () { return '/' }
+	function chdir (dir) {
+	    throw new Error('process.chdir is not supported');
+	}function umask() { return 0; }
 
 	// from https://github.com/kumavis/browser-process-hrtime/blob/master/index.js
 	var performance = global$1.performance || {};
-	performance.now        ||
+	var performanceNow =
+	  performance.now        ||
 	  performance.mozNow     ||
 	  performance.msNow      ||
 	  performance.oNow       ||
 	  performance.webkitNow  ||
 	  function(){ return (new Date()).getTime() };
+
+	// generate timestamp or delta
+	// see http://nodejs.org/api/process.html#process_process_hrtime
+	function hrtime(previousTimestamp){
+	  var clocktime = performanceNow.call(performance)*1e-3;
+	  var seconds = Math.floor(clocktime);
+	  var nanoseconds = Math.floor((clocktime%1)*1e9);
+	  if (previousTimestamp) {
+	    seconds = seconds - previousTimestamp[0];
+	    nanoseconds = nanoseconds - previousTimestamp[1];
+	    if (nanoseconds<0) {
+	      seconds--;
+	      nanoseconds += 1e9;
+	    }
+	  }
+	  return [seconds,nanoseconds]
+	}
+
+	var startTime = new Date();
+	function uptime() {
+	  var currentTime = new Date();
+	  var dif = currentTime - startTime;
+	  return dif / 1000;
+	}
+
+	var browser$1 = {
+	  nextTick: nextTick,
+	  title: title,
+	  browser: browser,
+	  env: env,
+	  argv: argv,
+	  version: version,
+	  versions: versions,
+	  on: on,
+	  addListener: addListener,
+	  once: once,
+	  off: off,
+	  removeListener: removeListener,
+	  removeAllListeners: removeAllListeners,
+	  emit: emit,
+	  binding: binding$1,
+	  cwd: cwd,
+	  chdir: chdir,
+	  umask: umask,
+	  hrtime: hrtime,
+	  platform: platform,
+	  release: release,
+	  config: config,
+	  uptime: uptime
+	};
 
 	var inherits;
 	if (typeof Object.create === 'function'){
@@ -4104,7 +4188,7 @@
 
 	function chunkInvalid(state, chunk) {
 	  var er = null;
-	  if (!isBuffer(chunk) && typeof chunk !== 'string' && chunk !== null && chunk !== undefined && !state.objectMode) {
+	  if (!Buffer$1.isBuffer(chunk) && typeof chunk !== 'string' && chunk !== null && chunk !== undefined && !state.objectMode) {
 	    er = new TypeError('Invalid non-string/buffer chunk');
 	  }
 	  return er;
@@ -5472,7 +5556,7 @@
 	  // Fake the 'close' event, but only once 'end' fires
 	  self.on('end', function() {
 	    // The nextTick is necessary to prevent the 'request' module from causing an infinite loop
-	    nextTick(function() {
+	    browser$1.nextTick(function() {
 	      self.emit('close');
 	    });
 	  });
@@ -5807,7 +5891,7 @@
 	    try {
 	      xhr.open(self._opts.method, self._opts.url, true);
 	    } catch (err) {
-	      nextTick(function() {
+	      browser$1.nextTick(function() {
 	        self.emit('error', err);
 	      });
 	      return
@@ -5853,7 +5937,7 @@
 	    try {
 	      xhr.send(body);
 	    } catch (err) {
-	      nextTick(function() {
+	      browser$1.nextTick(function() {
 	        self.emit('error', err);
 	      });
 	      return
@@ -12661,7 +12745,7 @@
 	  this.write_in_progress = true;
 
 	  var self = this;
-	  nextTick(function() {
+	  browser$1.nextTick(function() {
 	    self.write_in_progress = false;
 	    var res = self._write(flush, input, in_off, in_len, out, out_off, out_len);
 	    self.callback(res[0], res[1]);
@@ -13021,7 +13105,7 @@
 	function zlibBufferSync(engine, buffer) {
 	  if (typeof buffer === 'string')
 	    buffer = new Buffer$1(buffer);
-	  if (!isBuffer(buffer))
+	  if (!Buffer$1.isBuffer(buffer))
 	    throw new TypeError('Not a string or buffer');
 
 	  var flushFlag = binding.Z_FINISH;
@@ -13137,7 +13221,7 @@
 	  }
 
 	  if (opts.dictionary) {
-	    if (!isBuffer(opts.dictionary)) {
+	    if (!Buffer$1.isBuffer(opts.dictionary)) {
 	      throw new Error('Invalid dictionary: it should be a Buffer instance');
 	    }
 	  }
@@ -13205,7 +13289,7 @@
 	      }
 	    });
 	  } else {
-	    nextTick(callback);
+	    browser$1.nextTick(callback);
 	  }
 	};
 
@@ -13229,7 +13313,7 @@
 
 	  if (ws.ended) {
 	    if (callback)
-	      nextTick(callback);
+	      browser$1.nextTick(callback);
 	  } else if (ws.ending) {
 	    if (callback)
 	      this.once('end', callback);
@@ -13246,7 +13330,7 @@
 
 	Zlib.prototype.close = function(callback) {
 	  if (callback)
-	    nextTick(callback);
+	    browser$1.nextTick(callback);
 
 	  if (this._closed)
 	    return;
@@ -13256,7 +13340,7 @@
 	  this._binding.close();
 
 	  var self = this;
-	  nextTick(function() {
+	  browser$1.nextTick(function() {
 	    self.emit('close');
 	  });
 	};
@@ -13267,7 +13351,7 @@
 	  var ending = ws.ending || ws.ended;
 	  var last = ending && (!chunk || ws.length === chunk.length);
 
-	  if (!chunk === null && !isBuffer(chunk))
+	  if (!chunk === null && !Buffer$1.isBuffer(chunk))
 	    return cb(new Error('invalid input'));
 
 	  // If it's the last chunk, or a final flush, we use the Z_FINISH flush flag.
