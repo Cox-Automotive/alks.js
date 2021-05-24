@@ -330,6 +330,7 @@
 		node: ">=8.0.0"
 	};
 	var dependencies = {
+		buffer: "^6.0.3",
 		"node-fetch": "^2.6.1"
 	};
 	var devDependencies = {
