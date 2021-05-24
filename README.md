@@ -57,7 +57,7 @@ myAlks.getKeys({
 ```
 
 ## Documentation
-View the [API documentation](API.md)
+View the [API documentation](https://cox-automotive.github.io/alks.js/)
 
 To update the API documentation from the source, run `npm run docs`
 

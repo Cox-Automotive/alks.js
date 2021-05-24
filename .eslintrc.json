@@ -24,8 +24,7 @@
             { "allowTemplateLiterals": true }
         ],
         "semi": [
-            "error",
-            "never"
+            "error"
         ],
         "no-console": "off",
         "jsdoc/check-examples": 0,
