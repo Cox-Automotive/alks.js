@@ -1,10 +1,9 @@
 import json from 'rollup-plugin-json';
 import pkg from './package.json';
-import builtins from 'rollup-plugin-node-builtins';
-import globals from 'rollup-plugin-node-globals';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import replace from 'rollup-plugin-replace';
 import commonjs from '@rollup/plugin-commonjs';
+import nodePolyfills from 'rollup-plugin-node-polyfills';
 
 export default [
   {
@@ -23,8 +22,7 @@ export default [
       json(),
       replace({'process.browser': true}),
       commonjs(),
-      builtins(),
-      globals(),
+      nodePolyfills(),
       nodeResolve(),
     ]
   },
@@ -50,8 +48,7 @@ export default [
     },
     plugins: [
       replace({'process.browser': true}),
-      builtins(),
-      globals(),
+      nodePolyfills(),
       nodeResolve(),
       json(),
     ]
