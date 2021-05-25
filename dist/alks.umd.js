@@ -330,6 +330,7 @@
 		node: ">=8.0.0"
 	};
 	var dependencies = {
+		encoding: "^0.1.13",
 		"node-fetch": "^2.6.1"
 	};
 	var devDependencies = {
@@ -342,7 +343,6 @@
 		chai: "^4.3.4",
 		"chai-as-promised": "^7.1.1",
 		coveralls: "^3.0.3",
-		encoding: "^0.1.13",
 		eslint: "^7.25.0",
 		"eslint-plugin-jsdoc": "^4.1.1",
 		"fetch-mock": "^7.3.1",
