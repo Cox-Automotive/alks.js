@@ -76,6 +76,7 @@
 								<li class="tsd-kind-interface"><a href="interfaces/awsaccountrole.html" class="tsd-kind-icon">Aws<wbr>Account<wbr>Role</a></li>
 								<li class="tsd-kind-interface"><a href="interfaces/awsroletype.html" class="tsd-kind-icon">Aws<wbr>Role<wbr>Type</a></li>
 								<li class="tsd-kind-interface"><a href="interfaces/cloudsploitreport.html" class="tsd-kind-icon">Cloudsploit<wbr>Report</a></li>
+								<li class="tsd-kind-interface"><a href="interfaces/costitem.html" class="tsd-kind-icon">Cost<wbr>Item</a></li>
 								<li class="tsd-kind-interface"><a href="interfaces/key.html" class="tsd-kind-icon">Key</a></li>
 								<li class="tsd-kind-interface"><a href="interfaces/longtermkey.html" class="tsd-kind-icon">Long<wbr>Term<wbr>Key</a></li>
 								<li class="tsd-kind-interface"><a href="interfaces/machineidentity.html" class="tsd-kind-icon">Machine<wbr>Identity</a></li>
@@ -103,6 +104,7 @@
 								<li class="tsd-kind-type-alias"><a href="modules.html#getaccountroleprops" class="tsd-kind-icon">Get<wbr>Account<wbr>Role<wbr>Props</a></li>
 								<li class="tsd-kind-type-alias"><a href="modules.html#getaccountsprops" class="tsd-kind-icon">Get<wbr>Accounts<wbr>Props</a></li>
 								<li class="tsd-kind-type-alias"><a href="modules.html#getallawsroletypesprops" class="tsd-kind-icon">Get<wbr>AllAWSRole<wbr>Types<wbr>Props</a></li>
+								<li class="tsd-kind-type-alias"><a href="modules.html#getcostitemsprops" class="tsd-kind-icon">Get<wbr>Cost<wbr>Items<wbr>Props</a></li>
 								<li class="tsd-kind-type-alias"><a href="modules.html#getiamkeysprops" class="tsd-kind-icon">GetIAMKeys<wbr>Props</a></li>
 								<li class="tsd-kind-type-alias"><a href="modules.html#getkeysprops" class="tsd-kind-icon">Get<wbr>Keys<wbr>Props</a></li>
 								<li class="tsd-kind-type-alias"><a href="modules.html#getloginroleprops" class="tsd-kind-icon">Get<wbr>Login<wbr>Role<wbr>Props</a></li>
@@ -129,7 +131,7 @@
 					<div class="tsd-signature tsd-kind-icon">Add<wbr>Role<wbr>Machine<wbr>Identity<wbr>Props<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="modules/export_.html#alksprops" class="tsd-signature-type" data-tsd-kind="Type alias">AlksProps</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-symbol">{ </span>roleARN<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in src/alks.ts:332</li>
+							<li>Defined in src/alks.ts:341</li>
 						</ul>
 					</aside>
 				</section>
@@ -149,7 +151,7 @@
 					<div class="tsd-signature tsd-kind-icon">Aws<wbr>Account<wbr>Roles<wbr>Props<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="modules/export_.html#alksprops" class="tsd-signature-type" data-tsd-kind="Type alias">AlksProps</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-symbol">{ </span>account<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in src/alks.ts:233</li>
+							<li>Defined in src/alks.ts:242</li>
 						</ul>
 					</aside>
 				</section>
@@ -159,7 +161,7 @@
 					<div class="tsd-signature tsd-kind-icon">Create<wbr>Access<wbr>Keys<wbr>Props<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="modules/export_.html#alksprops" class="tsd-signature-type" data-tsd-kind="Type alias">AlksProps</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-symbol">{ </span>account<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>iamUserName<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>role<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in src/alks.ts:293</li>
+							<li>Defined in src/alks.ts:302</li>
 						</ul>
 					</aside>
 				</section>
@@ -169,7 +171,7 @@
 					<div class="tsd-signature tsd-kind-icon">Create<wbr>Non<wbr>Service<wbr>Role<wbr>Props<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="modules/export_.html#alksprops" class="tsd-signature-type" data-tsd-kind="Type alias">AlksProps</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-symbol">{ </span>account<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>enableAlksAccess<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">; </span>externalId<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>includeDefaultPolicy<span class="tsd-signature-symbol">: </span><a href="enums/export_.pseudoboolean.html" class="tsd-signature-type" data-tsd-kind="Enumeration">PseudoBoolean</a><span class="tsd-signature-symbol">; </span>role<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>roleName<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>roleType<span class="tsd-signature-symbol">: </span><a href="enums/export_.trusttype.html" class="tsd-signature-type" data-tsd-kind="Enumeration">TrustType</a><span class="tsd-signature-symbol">; </span>trustArn<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in src/alks.ts:265</li>
+							<li>Defined in src/alks.ts:274</li>
 						</ul>
 					</aside>
 				</section>
@@ -179,7 +181,7 @@
 					<div class="tsd-signature tsd-kind-icon">Create<wbr>Role<wbr>Props<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="modules/export_.html#alksprops" class="tsd-signature-type" data-tsd-kind="Type alias">AlksProps</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-symbol">{ </span>account<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>enableAlksAccess<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">; </span>includeDefaultPolicy<span class="tsd-signature-symbol">: </span><a href="enums/export_.pseudoboolean.html" class="tsd-signature-type" data-tsd-kind="Enumeration">PseudoBoolean</a><span class="tsd-signature-symbol">; </span>role<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>roleName<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>roleType<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>templateFields<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> }</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in src/alks.ts:255</li>
+							<li>Defined in src/alks.ts:264</li>
 						</ul>
 					</aside>
 				</section>
@@ -189,7 +191,7 @@
 					<div class="tsd-signature tsd-kind-icon">DeleteIAMUser<wbr>Props<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="modules/export_.html#alksprops" class="tsd-signature-type" data-tsd-kind="Type alias">AlksProps</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-symbol">{ </span>account<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>iamUserName<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>role<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in src/alks.ts:299</li>
+							<li>Defined in src/alks.ts:308</li>
 						</ul>
 					</aside>
 				</section>
@@ -199,7 +201,7 @@
 					<div class="tsd-signature tsd-kind-icon">Delete<wbr>Role<wbr>Machine<wbr>Identity<wbr>Props<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="modules/export_.html#alksprops" class="tsd-signature-type" data-tsd-kind="Type alias">AlksProps</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-symbol">{ </span>roleARN<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in src/alks.ts:336</li>
+							<li>Defined in src/alks.ts:345</li>
 						</ul>
 					</aside>
 				</section>
@@ -209,7 +211,7 @@
 					<div class="tsd-signature tsd-kind-icon">Delete<wbr>Role<wbr>Props<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="modules/export_.html#alksprops" class="tsd-signature-type" data-tsd-kind="Type alias">AlksProps</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-symbol">{ </span>account<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>role<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>roleName<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in src/alks.ts:287</li>
+							<li>Defined in src/alks.ts:296</li>
 						</ul>
 					</aside>
 				</section>
@@ -219,7 +221,7 @@
 					<div class="tsd-signature tsd-kind-icon">GetAWSRole<wbr>Types<wbr>Props<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="modules/export_.html#alksprops" class="tsd-signature-type" data-tsd-kind="Type alias">AlksProps</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-symbol">{}</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in src/alks.ts:251</li>
+							<li>Defined in src/alks.ts:260</li>
 						</ul>
 					</aside>
 				</section>
@@ -229,7 +231,7 @@
 					<div class="tsd-signature tsd-kind-icon">Get<wbr>Access<wbr>Token<wbr>Props<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="modules/export_.html#alksprops" class="tsd-signature-type" data-tsd-kind="Type alias">AlksProps</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-symbol">{ </span>refreshToken<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in src/alks.ts:312</li>
+							<li>Defined in src/alks.ts:321</li>
 						</ul>
 					</aside>
 				</section>
@@ -239,7 +241,7 @@
 					<div class="tsd-signature tsd-kind-icon">Get<wbr>Account<wbr>Owners<wbr>Props<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="modules/export_.html#alksprops" class="tsd-signature-type" data-tsd-kind="Type alias">AlksProps</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-symbol">{ </span>accountId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in src/alks.ts:353</li>
+							<li>Defined in src/alks.ts:362</li>
 						</ul>
 					</aside>
 				</section>
@@ -249,7 +251,7 @@
 					<div class="tsd-signature tsd-kind-icon">Get<wbr>Account<wbr>Role<wbr>Props<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="modules/export_.html#alksprops" class="tsd-signature-type" data-tsd-kind="Type alias">AlksProps</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-symbol">{ </span>account<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>role<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>roleName<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in src/alks.ts:281</li>
+							<li>Defined in src/alks.ts:290</li>
 						</ul>
 					</aside>
 				</section>
@@ -259,7 +261,7 @@
 					<div class="tsd-signature tsd-kind-icon">Get<wbr>Accounts<wbr>Props<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="modules/export_.html#alksprops" class="tsd-signature-type" data-tsd-kind="Type alias">AlksProps</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-symbol">{}</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in src/alks.ts:237</li>
+							<li>Defined in src/alks.ts:246</li>
 						</ul>
 					</aside>
 				</section>
@@ -269,7 +271,17 @@
 					<div class="tsd-signature tsd-kind-icon">Get<wbr>AllAWSRole<wbr>Types<wbr>Props<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="modules/export_.html#alksprops" class="tsd-signature-type" data-tsd-kind="Type alias">AlksProps</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-symbol">{ </span>getDynamicValues<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> }</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in src/alks.ts:328</li>
+							<li>Defined in src/alks.ts:337</li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias">
+					<a name="getcostitemsprops" class="tsd-anchor"></a>
+					<h3>Get<wbr>Cost<wbr>Items<wbr>Props</h3>
+					<div class="tsd-signature tsd-kind-icon">Get<wbr>Cost<wbr>Items<wbr>Props<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="modules/export_.html#alksprops" class="tsd-signature-type" data-tsd-kind="Type alias">AlksProps</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-symbol">{ </span>accountId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>day<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>month<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>year<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in src/alks.ts:366</li>
 						</ul>
 					</aside>
 				</section>
@@ -279,7 +291,7 @@
 					<div class="tsd-signature tsd-kind-icon">GetIAMKeys<wbr>Props<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="modules/export_.html#alksprops" class="tsd-signature-type" data-tsd-kind="Type alias">AlksProps</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-symbol">{ </span>account<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>role<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>sessionTime<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> }</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in src/alks.ts:245</li>
+							<li>Defined in src/alks.ts:254</li>
 						</ul>
 					</aside>
 				</section>
@@ -289,7 +301,7 @@
 					<div class="tsd-signature tsd-kind-icon">Get<wbr>Keys<wbr>Props<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="modules/export_.html#alksprops" class="tsd-signature-type" data-tsd-kind="Type alias">AlksProps</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-symbol">{ </span>account<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>role<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>sessionTime<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> }</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in src/alks.ts:239</li>
+							<li>Defined in src/alks.ts:248</li>
 						</ul>
 					</aside>
 				</section>
@@ -299,7 +311,7 @@
 					<div class="tsd-signature tsd-kind-icon">Get<wbr>Login<wbr>Role<wbr>Props<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="modules/export_.html#alksprops" class="tsd-signature-type" data-tsd-kind="Type alias">AlksProps</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-symbol">{ </span>accountId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>role<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in src/alks.ts:307</li>
+							<li>Defined in src/alks.ts:316</li>
 						</ul>
 					</aside>
 				</section>
@@ -309,7 +321,7 @@
 					<div class="tsd-signature tsd-kind-icon">Get<wbr>Non<wbr>ServiceAWSRole<wbr>Types<wbr>Props<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="modules/export_.html#alksprops" class="tsd-signature-type" data-tsd-kind="Type alias">AlksProps</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-symbol">{}</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in src/alks.ts:253</li>
+							<li>Defined in src/alks.ts:262</li>
 						</ul>
 					</aside>
 				</section>
@@ -319,7 +331,7 @@
 					<div class="tsd-signature tsd-kind-icon">Get<wbr>Refresh<wbr>Tokens<wbr>Props<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="modules/export_.html#alksprops" class="tsd-signature-type" data-tsd-kind="Type alias">AlksProps</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-symbol">{}</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in src/alks.ts:316</li>
+							<li>Defined in src/alks.ts:325</li>
 						</ul>
 					</aside>
 				</section>
@@ -329,7 +341,7 @@
 					<div class="tsd-signature tsd-kind-icon">Get<wbr>User<wbr>Access<wbr>ByRole<wbr>Props<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="modules/export_.html#alksprops" class="tsd-signature-type" data-tsd-kind="Type alias">AlksProps</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-symbol">{ </span>accountId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in src/alks.ts:349</li>
+							<li>Defined in src/alks.ts:358</li>
 						</ul>
 					</aside>
 				</section>
@@ -339,7 +351,7 @@
 					<div class="tsd-signature tsd-kind-icon">Get<wbr>User<wbr>Access<wbr>Props<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="modules/export_.html#alksprops" class="tsd-signature-type" data-tsd-kind="Type alias">AlksProps</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-symbol">{ </span>accountId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in src/alks.ts:340</li>
+							<li>Defined in src/alks.ts:349</li>
 						</ul>
 					</aside>
 				</section>
@@ -349,7 +361,7 @@
 					<div class="tsd-signature tsd-kind-icon">Get<wbr>User<wbr>Role<wbr>Access<wbr>Props<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="modules/export_.html#alksprops" class="tsd-signature-type" data-tsd-kind="Type alias">AlksProps</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-symbol">{ </span>accountId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>sAMAccountName<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in src/alks.ts:344</li>
+							<li>Defined in src/alks.ts:353</li>
 						</ul>
 					</aside>
 				</section>
@@ -359,7 +371,7 @@
 					<div class="tsd-signature tsd-kind-icon">ListAWSAccount<wbr>Roles<wbr>Props<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="modules/export_.html#alksprops" class="tsd-signature-type" data-tsd-kind="Type alias">AlksProps</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-symbol">{ </span>account<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>role<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in src/alks.ts:276</li>
+							<li>Defined in src/alks.ts:285</li>
 						</ul>
 					</aside>
 				</section>
@@ -369,7 +381,7 @@
 					<div class="tsd-signature tsd-kind-icon">Revoke<wbr>ById<wbr>Props<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="modules/export_.html#alksprops" class="tsd-signature-type" data-tsd-kind="Type alias">AlksProps</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-symbol">{ </span>tokenId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in src/alks.ts:318</li>
+							<li>Defined in src/alks.ts:327</li>
 						</ul>
 					</aside>
 				</section>
@@ -379,7 +391,7 @@
 					<div class="tsd-signature tsd-kind-icon">Revoke<wbr>ByValue<wbr>Props<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="modules/export_.html#alksprops" class="tsd-signature-type" data-tsd-kind="Type alias">AlksProps</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-symbol">{ </span>token<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in src/alks.ts:322</li>
+							<li>Defined in src/alks.ts:331</li>
 						</ul>
 					</aside>
 				</section>
@@ -389,7 +401,7 @@
 					<div class="tsd-signature tsd-kind-icon">Revoke<wbr>Props<span class="tsd-signature-symbol">:</span> <a href="modules/export_.html#revokebyidprops" class="tsd-signature-type" data-tsd-kind="Type alias">RevokeByIdProps</a><span class="tsd-signature-symbol"> | </span><a href="modules/export_.html#revokebyvalueprops" class="tsd-signature-type" data-tsd-kind="Type alias">RevokeByValueProps</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in src/alks.ts:326</li>
+							<li>Defined in src/alks.ts:335</li>
 						</ul>
 					</aside>
 				</section>
@@ -399,7 +411,7 @@
 					<div class="tsd-signature tsd-kind-icon">Version<wbr>Props<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="modules/export_.html#alksprops" class="tsd-signature-type" data-tsd-kind="Type alias">AlksProps</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-symbol">{}</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in src/alks.ts:305</li>
+							<li>Defined in src/alks.ts:314</li>
 						</ul>
 					</aside>
 				</section>
@@ -435,6 +447,9 @@
 					</li>
 					<li class=" tsd-kind-interface">
 						<a href="interfaces/cloudsploitreport.html" class="tsd-kind-icon">Cloudsploit<wbr>Report</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/costitem.html" class="tsd-kind-icon">Cost<wbr>Item</a>
 					</li>
 					<li class=" tsd-kind-interface">
 						<a href="interfaces/key.html" class="tsd-kind-icon">Key</a>
@@ -501,6 +516,9 @@
 					</li>
 					<li class=" tsd-kind-type-alias">
 						<a href="modules.html#getallawsroletypesprops" class="tsd-kind-icon">Get<wbr>AllAWSRole<wbr>Types<wbr>Props</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="modules.html#getcostitemsprops" class="tsd-kind-icon">Get<wbr>Cost<wbr>Items<wbr>Props</a>
 					</li>
 					<li class=" tsd-kind-type-alias">
 						<a href="modules.html#getiamkeysprops" class="tsd-kind-icon">GetIAMKeys<wbr>Props</a>

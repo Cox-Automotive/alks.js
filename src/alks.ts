@@ -220,6 +220,15 @@ namespace ALKS {
     department: string;
   }
 
+  export interface CostItem {
+    awsAccountId: string;
+    usageFamily: string;
+    value: string;
+    productName: string;
+    usageType: string;
+    region: string;
+  }
+
   export enum TrustType {
     CrossAccount = 'Cross Account',
     InnerAccount = 'Inner Account',
@@ -352,6 +361,13 @@ namespace ALKS {
 
   export type GetAccountOwnersProps = Partial<AlksProps> & {
     accountId: string;
+  };
+
+  export type GetCostItemsProps = Partial<AlksProps> & {
+    accountId: string;
+    year: string;
+    month: string;
+    day: string;
   };
 
   /**
@@ -1125,6 +1141,45 @@ namespace ALKS {
       return results.statusMessage == 'Success';
     }
 
+    /**
+     * Returns a list of cost items for the specified account on the specified date
+     *
+     * @param {Object} props - An object containing the following properties
+     * @param {String} props.accountId - the 12-digit AWS account ID to get cost data for
+     * @param {String} props.year - the 4-digit year component of the date to get cost data for
+     * @param {String} props.month - the 2-digit month component of the date to get cost data for
+     * @param {String} props.day - the 2-digit day component of the date to get cost data for
+     * @returns {Array<Object>}
+     * @example
+     * alks.getCostItems({
+     *   accountId: '012345678910',
+     *   year: '1954',
+     *   month: '04',
+     *   day: '11',
+     * }).then((costItems) => {
+     *   // costItems[i].awsAccountId, costItems[i].region, costItems[i].value, etc.
+     * })
+     */
+    async getCostItems(props: GetCostItemsProps): Promise<CostItem[]> {
+      const results = (await this.internalFetch(
+        `costItems/${props.accountId}/${props.year}/${props.month}/${props.day}`,
+        props,
+        'GET'
+      )) as {
+        costItems: CostItem[];
+      };
+      return results.costItems.map((costItem) =>
+        pick(costItem, [
+          'awsAccountId',
+          'usageFamily',
+          'value',
+          'usageType',
+          'productName',
+          'region',
+        ])
+      );
+    }
+
     private async internalFetch(
       path: string,
       args: Partial<AlksProps> = {},
@@ -1277,6 +1332,7 @@ namespace ALKS {
   export const getRefreshTokens =
     Alks.prototype.getRefreshTokens.bind(defaultAlks);
   export const revoke = Alks.prototype.revoke.bind(defaultAlks);
+  export const getCostItems = Alks.prototype.getCostItems.bind(defaultAlks);
 }
 
 export = ALKS;
