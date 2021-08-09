@@ -1174,4 +1174,48 @@ describe('alks.js', function () {
       expect(firstElem).to.deep.equal(dummyOwner);
     });
   });
+
+  describe('getCostItems', () => {
+    it('should return a list of cost items on success', async () => {
+      const baseUrl = 'https://your.alks-host.com';
+      const accountId = '012345678910';
+      const year = '1954';
+      const month = '04';
+      const day = '11';
+
+      const dummyCostItem = {
+        awsAccountId: accountId,
+        usageFamily: 'API Request',
+        value: '0.0096564',
+        productName: 'AmazonCloudWatch',
+        usageType: 'APN1-CW:Requests',
+        region: 'us-east-1',
+      };
+
+      const _fetch = fetchMock.sandbox().mock(
+        `${baseUrl}/costItems/${accountId}/${year}/${month}/${day}`,
+        {
+          body: {
+            costItems: [dummyCostItem],
+          },
+          status: 200,
+        },
+        { method: 'GET' }
+      );
+
+      const myAlks = alks.create({
+        baseUrl,
+        accessToken: 'abc123',
+        _fetch,
+      });
+
+      const result = await myAlks.getCostItems({ accountId, year, month, day });
+
+      expect(result).to.not.be.null;
+      expect(result).to.not.be.empty;
+      const firstElem = result[0];
+      expect(firstElem).to.not.be.null;
+      expect(firstElem).to.deep.equal(dummyCostItem);
+    });
+  });
 });
