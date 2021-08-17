@@ -933,6 +933,43 @@ var ALKS;
                 });
             });
         };
+        /**
+         * Returns cost totals for the specified account for the day, week, month, year, and a breakdown of costs by service for the day and month
+         *
+         * @param {Object} props - An object containing the following properties
+         * @param {String} props.accountId - the 12-digit AWS account ID to get cost data for
+         * @returns {Object}
+         * @example
+         * alks.getCostTotals({
+         *   accountId: '012345678910',
+         * }).then((costTotals) => {
+         *   // costTotals.awsAccountId, costTotals.daily, costTotals.weekly, etc.
+         * })
+         */
+        Alks.prototype.getCostTotals = function (props) {
+            return tslib_1.__awaiter(this, void 0, void 0, function () {
+                var results;
+                return tslib_1.__generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0: return [4 /*yield*/, this.internalFetch("costTotals/" + props.accountId, props, 'GET')];
+                        case 1:
+                            results = (_a.sent());
+                            return [2 /*return*/, pick(results.costTotals, [
+                                    'awsAccountId',
+                                    'yyyy',
+                                    'mm',
+                                    'dd',
+                                    'daily',
+                                    'weekly',
+                                    'monthly',
+                                    'yearly',
+                                    'dailyCostsByService',
+                                    'monthlyCostsByService',
+                                ])];
+                    }
+                });
+            });
+        };
         Alks.prototype.internalFetch = function (path, args, method) {
             if (args === void 0) { args = {}; }
             if (method === void 0) { method = 'POST'; }
@@ -1057,5 +1094,6 @@ var ALKS;
     ALKS.getAccessToken = Alks.prototype.getAccessToken.bind(defaultAlks);
     ALKS.getRefreshTokens = Alks.prototype.getRefreshTokens.bind(defaultAlks);
     ALKS.revoke = Alks.prototype.revoke.bind(defaultAlks);
+    ALKS.getCostTotals = Alks.prototype.getCostTotals.bind(defaultAlks);
 })(ALKS || (ALKS = {}));
 module.exports = ALKS;

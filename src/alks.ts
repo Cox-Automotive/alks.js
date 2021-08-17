@@ -220,6 +220,19 @@ namespace ALKS {
     department: string;
   }
 
+  export interface CostTotal {
+    awsAccountId: string;
+    yyyy: string;
+    mm: string;
+    dd: string;
+    daily: string;
+    weekly: string;
+    monthly: string;
+    yearly: string;
+    dailyCostsByService: Record<string, string>;
+    monthlyCostsByService: Record<string, string>;
+  }
+
   export enum TrustType {
     CrossAccount = 'Cross Account',
     InnerAccount = 'Inner Account',
@@ -351,6 +364,10 @@ namespace ALKS {
   };
 
   export type GetAccountOwnersProps = Partial<AlksProps> & {
+    accountId: string;
+  };
+
+  export type GetCostTotalsProps = Partial<AlksProps> & {
     accountId: string;
   };
 
@@ -1125,6 +1142,41 @@ namespace ALKS {
       return results.statusMessage == 'Success';
     }
 
+    /**
+     * Returns cost totals for the specified account for the day, week, month, year, and a breakdown of costs by service for the day and month
+     *
+     * @param {Object} props - An object containing the following properties
+     * @param {String} props.accountId - the 12-digit AWS account ID to get cost data for
+     * @returns {Object}
+     * @example
+     * alks.getCostTotals({
+     *   accountId: '012345678910',
+     * }).then((costTotals) => {
+     *   // costTotals.awsAccountId, costTotals.daily, costTotals.weekly, etc.
+     * })
+     */
+    async getCostTotals(props: GetCostTotalsProps): Promise<CostTotal> {
+      const results = (await this.internalFetch(
+        `costTotals/${props.accountId}`,
+        props,
+        'GET'
+      )) as {
+        costTotals: CostTotal;
+      };
+      return pick(results.costTotals, [
+        'awsAccountId',
+        'yyyy',
+        'mm',
+        'dd',
+        'daily',
+        'weekly',
+        'monthly',
+        'yearly',
+        'dailyCostsByService',
+        'monthlyCostsByService',
+      ]);
+    }
+
     private async internalFetch(
       path: string,
       args: Partial<AlksProps> = {},
@@ -1277,6 +1329,7 @@ namespace ALKS {
   export const getRefreshTokens =
     Alks.prototype.getRefreshTokens.bind(defaultAlks);
   export const revoke = Alks.prototype.revoke.bind(defaultAlks);
+  export const getCostTotals = Alks.prototype.getCostTotals.bind(defaultAlks);
 }
 
 export = ALKS;

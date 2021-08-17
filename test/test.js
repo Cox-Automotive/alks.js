@@ -1174,4 +1174,54 @@ describe('alks.js', function () {
       expect(firstElem).to.deep.equal(dummyOwner);
     });
   });
+
+  describe('getCostTotals', () => {
+    it('should return cost totals on success', async () => {
+      const baseUrl = 'https://your.alks-host.com';
+      const accountId = '012345678910';
+
+      const dummyCostTotals = {
+        awsAccountId: accountId,
+        yyyy: '1954',
+        mm: '04',
+        dd: '11',
+        daily: '1.01',
+        weekly: '17',
+        monthly: '347.0034',
+        yearly: '1.034e5',
+        dailyCostsByService: {
+          'Amazon EC2': '0.41',
+          'AWS Lambda': '0.6',
+        },
+        monthlyCostsByService: {
+          'Amazon EC2': '200',
+          'AWS Lambda': '147.0001',
+          'AWS Cloudwatch': '3.3e-3',
+        },
+      };
+
+      const _fetch = fetchMock.sandbox().mock(
+        `${baseUrl}/costTotals/${accountId}`,
+        {
+          body: {
+            costTotals: dummyCostTotals,
+          },
+          status: 200,
+        },
+        { method: 'GET' }
+      );
+
+      const myAlks = alks.create({
+        baseUrl,
+        accessToken: 'abc123',
+        _fetch,
+      });
+
+      const result = await myAlks.getCostTotals({ accountId });
+
+      expect(result).to.not.be.null;
+      expect(result).to.not.be.empty;
+      expect(result).to.deep.equal(dummyCostTotals);
+    });
+  });
 });
