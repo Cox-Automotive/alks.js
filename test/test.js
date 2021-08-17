@@ -1228,7 +1228,7 @@ describe('alks.js', function () {
         awsAccountId: accountId,
         yyyy: '1954',
         mm: '04',
-        day: '11',
+        dd: '11',
         daily: '1.01',
         weekly: '17',
         monthly: '347.0034',
@@ -1248,7 +1248,7 @@ describe('alks.js', function () {
         `${baseUrl}/costTotals/${accountId}`,
         {
           body: {
-            costTotals: [dummyCostTotals],
+            costTotals: dummyCostTotals,
           },
           status: 200,
         },
@@ -1265,9 +1265,7 @@ describe('alks.js', function () {
 
       expect(result).to.not.be.null;
       expect(result).to.not.be.empty;
-      const firstElem = result[0];
-      expect(firstElem).to.not.be.null;
-      expect(firstElem).to.deep.equal(dummyCostTotals);
+      expect(result).to.deep.equal(dummyCostTotals);
     });
   });
 });

@@ -16164,8 +16164,8 @@
 	                                    'weekly',
 	                                    'monthly',
 	                                    'yearly',
-	                                    'dailyCostByService',
-	                                    'monthlyCostByService',
+	                                    'dailyCostsByService',
+	                                    'monthlyCostsByService',
 	                                ])];
 	                    }
 	                });

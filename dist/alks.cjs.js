@@ -1004,8 +1004,8 @@ var ALKS;
                                     'weekly',
                                     'monthly',
                                     'yearly',
-                                    'dailyCostByService',
-                                    'monthlyCostByService',
+                                    'dailyCostsByService',
+                                    'monthlyCostsByService',
                                 ])];
                     }
                 });

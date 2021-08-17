@@ -238,8 +238,8 @@ namespace ALKS {
     weekly: string;
     monthly: string;
     yearly: string;
-    dailyCostByService: Record<string, string>;
-    monthlyCostByService: Record<string, string>;
+    dailyCostsByService: Record<string, string>;
+    monthlyCostsByService: Record<string, string>;
   }
 
   export enum TrustType {
@@ -1227,8 +1227,8 @@ namespace ALKS {
         'weekly',
         'monthly',
         'yearly',
-        'dailyCostByService',
-        'monthlyCostByService',
+        'dailyCostsByService',
+        'monthlyCostsByService',
       ]);
     }
 
