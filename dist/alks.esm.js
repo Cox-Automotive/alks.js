@@ -933,47 +933,6 @@ var ALKS;
             });
         };
         /**
-         * Returns a list of cost items for the specified account on the specified date
-         *
-         * @param {Object} props - An object containing the following properties
-         * @param {String} props.accountId - the 12-digit AWS account ID to get cost data for
-         * @param {String} props.year - the 4-digit year component of the date to get cost data for
-         * @param {String} props.month - the 2-digit month component of the date to get cost data for
-         * @param {String} props.day - the 2-digit day component of the date to get cost data for
-         * @returns {Array<Object>}
-         * @example
-         * alks.getCostItems({
-         *   accountId: '012345678910',
-         *   year: '1954',
-         *   month: '04',
-         *   day: '11',
-         * }).then((costItems) => {
-         *   // costItems[i].awsAccountId, costItems[i].region, costItems[i].value, etc.
-         * })
-         */
-        Alks.prototype.getCostItems = function (props) {
-            return tslib_1.__awaiter(this, void 0, void 0, function () {
-                var results;
-                return tslib_1.__generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, this.internalFetch("costItems/" + props.accountId + "/" + props.year + "/" + props.month + "/" + props.day, props, 'GET')];
-                        case 1:
-                            results = (_a.sent());
-                            return [2 /*return*/, results.costItems.map(function (costItem) {
-                                    return pick(costItem, [
-                                        'awsAccountId',
-                                        'usageFamily',
-                                        'value',
-                                        'usageType',
-                                        'productName',
-                                        'region',
-                                    ]);
-                                })];
-                    }
-                });
-            });
-        };
-        /**
          * Returns cost totals for the specified account for the day, week, month, year, and a breakdown of costs by service for the day and month
          *
          * @param {Object} props - An object containing the following properties
@@ -1134,7 +1093,6 @@ var ALKS;
     ALKS.getAccessToken = Alks.prototype.getAccessToken.bind(defaultAlks);
     ALKS.getRefreshTokens = Alks.prototype.getRefreshTokens.bind(defaultAlks);
     ALKS.revoke = Alks.prototype.revoke.bind(defaultAlks);
-    ALKS.getCostItems = Alks.prototype.getCostItems.bind(defaultAlks);
     ALKS.getCostTotals = Alks.prototype.getCostTotals.bind(defaultAlks);
 })(ALKS || (ALKS = {}));
 module.exports = ALKS;
