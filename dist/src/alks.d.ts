@@ -187,6 +187,18 @@ declare namespace ALKS {
         usageType: string;
         region: string;
     }
+    export interface CostTotal {
+        awsAccountId: string;
+        yyyy: string;
+        mm: string;
+        dd: string;
+        daily: string;
+        weekly: string;
+        monthly: string;
+        yearly: string;
+        dailyCostByService: Record<string, string>;
+        monthlyCostByService: Record<string, string>;
+    }
     export enum TrustType {
         CrossAccount = "Cross Account",
         InnerAccount = "Inner Account"
@@ -297,6 +309,9 @@ declare namespace ALKS {
         year: string;
         month: string;
         day: string;
+    };
+    export type GetCostTotalsProps = Partial<AlksProps> & {
+        accountId: string;
     };
     /**
      * ALKS JavaScript API
@@ -867,6 +882,20 @@ declare namespace ALKS {
          * })
          */
         getCostItems(props: GetCostItemsProps): Promise<CostItem[]>;
+        /**
+         * Returns cost totals for the specified account for the day, week, month, year, and a breakdown of costs by service for the day and month
+         *
+         * @param {Object} props - An object containing the following properties
+         * @param {String} props.accountId - the 12-digit AWS account ID to get cost data for
+         * @returns {Object}
+         * @example
+         * alks.getCostTotals({
+         *   accountId: '012345678910',
+         * }).then((costTotals) => {
+         *   // costTotals.awsAccountId, costTotals.daily, costTotals.weekly, etc.
+         * })
+         */
+        getCostTotals(props: GetCostTotalsProps): Promise<CostTotal>;
         private internalFetch;
     }
     export class AlksError extends Error {
@@ -903,6 +932,7 @@ declare namespace ALKS {
     export const getRefreshTokens: (props: GetRefreshTokensProps) => Promise<RefreshToken[]>;
     export const revoke: (props: RevokeProps) => Promise<boolean>;
     export const getCostItems: (props: GetCostItemsProps) => Promise<CostItem[]>;
+    export const getCostTotals: (props: GetCostTotalsProps) => Promise<CostTotal>;
     export {};
 }
 export = ALKS;
