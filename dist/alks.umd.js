@@ -185,10 +185,14 @@
 	    return r;
 	}
 
-	function __spreadArray(to, from) {
-	    for (var i = 0, il = from.length, j = to.length; i < il; i++, j++)
-	        to[j] = from[i];
-	    return to;
+	function __spreadArray(to, from, pack) {
+	    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+	        if (ar || !(i in from)) {
+	            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+	            ar[i] = from[i];
+	        }
+	    }
+	    return to.concat(ar || Array.prototype.slice.call(from));
 	}
 
 	function __await(v) {
@@ -331,7 +335,8 @@
 	};
 	var dependencies = {
 		encoding: "^0.1.13",
-		"node-fetch": "^2.6.1"
+		"node-fetch": "^2.6.1",
+		tslib: "^2.3.1"
 	};
 	var devDependencies = {
 		"@rollup/plugin-commonjs": "^19.0.0",
@@ -363,7 +368,6 @@
 		"rollup-plugin-node-polyfills": "^0.2.1",
 		"rollup-plugin-replace": "^2.2.0",
 		sinon: "^10.0.0",
-		tslib: "^2.2.0",
 		tslint: "^6.1.3",
 		typescript: "^4.2.4",
 		"uglify-js": "^3.13.6",
