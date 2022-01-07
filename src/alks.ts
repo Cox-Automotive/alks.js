@@ -1233,9 +1233,14 @@ namespace ALKS {
         }
       );
 
-      // Swallow any JSON parsing error that occurs (it'll get picked up below)
-      // TODO ^No it won't. We should fix this - Ben W 5/10/21
-      const json: any = await response.json().catch(() => {});
+      let json: any;
+      try {
+        json = await response.json();
+      } catch (err) {
+        json = {
+          errors: [(err as Error).message],
+        };
+      }
 
       if (!response.ok) {
         throw new AlksError(response, json);
