@@ -974,7 +974,7 @@ var ALKS;
             if (args === void 0) { args = {}; }
             if (method === void 0) { method = 'POST'; }
             return tslib_1.__awaiter(this, void 0, void 0, function () {
-                var opts, payload, headers, credentials, response, json;
+                var opts, payload, headers, credentials, response, json, err_1;
                 return tslib_1.__generator(this, function (_a) {
                     switch (_a.label) {
                         case 0:
@@ -1015,9 +1015,20 @@ var ALKS;
                                 })];
                         case 1:
                             response = _a.sent();
-                            return [4 /*yield*/, response.json().catch(function () { })];
+                            _a.label = 2;
                         case 2:
+                            _a.trys.push([2, 4, , 5]);
+                            return [4 /*yield*/, response.json()];
+                        case 3:
                             json = _a.sent();
+                            return [3 /*break*/, 5];
+                        case 4:
+                            err_1 = _a.sent();
+                            json = {
+                                errors: [err_1.message],
+                            };
+                            return [3 /*break*/, 5];
+                        case 5:
                             if (!response.ok) {
                                 throw new AlksError(response, json);
                             }
