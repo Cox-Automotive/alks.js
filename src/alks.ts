@@ -156,9 +156,10 @@ namespace ALKS {
    */
   export interface Role {
     roleArn: string;
-    denyArns: string;
     instanceProfileArn: string;
-    addedRoleToInstanceProfile: boolean;
+    addedRoleToInstanceProfile?: boolean;
+    isMachineIdentity?: boolean;
+    denyArns?: string;
     tags?: Tag[];
   }
 
@@ -786,6 +787,7 @@ namespace ALKS {
         'roleArn',
         'denyArns',
         'instanceProfileArn',
+        'isMachineIdentity',
         'addedRoleToInstanceProfile',
         'tags',
       ]);
