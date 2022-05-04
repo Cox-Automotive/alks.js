@@ -152,7 +152,7 @@ namespace ALKS {
    * @property denyArns - The ARNs for the deny policies associated with this role
    * @property instanceProfileArn - The Instance Profile ARN associated with this role
    * @property addedRoleToInstanceProfile - Whether this role was added to an Instance Profile
-   * @property RoleTags - The tags associated with the IAM account role
+   * @property tags - Resource tags associated with the IAM account role
    */
   export interface Role {
     roleArn: string;
@@ -209,8 +209,8 @@ namespace ALKS {
 
   /**
    * Alks role tags
-   * @property tagKey - The AWS role tag key
-   * @property tagValue - The AWS role tag value
+   * @property key - The AWS role tag key
+   * @property value - The AWS role tag value
    */
   export interface Tag {
     key: string;
