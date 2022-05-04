@@ -41,3 +41,6 @@ jspm_packages
 
 # typescript build artifacts
 lib/
+
+# macOS preference file
+.DS_Store
