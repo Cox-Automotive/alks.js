@@ -783,10 +783,14 @@ namespace ALKS {
           `Role ${props.roleName} does not exist in this account`
         );
       }
-      return {
-        ...pick(results, ['roleArn', 'isMachineIdentity', 'tags']),
-        instanceProfileArn: results.instanceProfileARN,
-      };
+      return pick(results, [
+        'roleArn',
+        'denyArns',
+        'instanceProfileArn',
+        'isMachineIdentity',
+        'addedRoleToInstanceProfile',
+        'tags',
+      ]);
     }
 
     /**
