@@ -453,7 +453,7 @@ describe('alks.js', function () {
             roleName: 'awsRoleName',
             basicAuthUsed: false,
             roleExists: true,
-            instanceProfileArn: 'anInstanceProfileArn',
+            instanceProfileARN: 'anInstanceProfileArn',
             isMachineIdentity: false,
             statusMessage: 'Success',
           },
@@ -474,7 +474,7 @@ describe('alks.js', function () {
         isMachineIdentity: false,
       });
     });
-    it('should return the Role object representation of the https response with with tags', async () => {
+    it('should return the Role object representation of the https response with tags', async () => {
       const _fetch = fetchMock
         .sandbox()
         .mock('https://your.alks-host.com/getAccountRole', {
@@ -484,10 +484,10 @@ describe('alks.js', function () {
             roleName: 'awsRoleName',
             basicAuthUsed: false,
             roleExists: true,
-            instanceProfileArn: 'anInstanceProfileArn',
+            instanceProfileARN: 'anInstanceProfileArn',
             isMachineIdentity: false,
-            statusMessage: 'Success',
             tags: [{ key1: 'test:key1:value1', key2: 'test:key2:value1' }],
+            statusMessage: 'Success',
           },
           status: 200,
         });
