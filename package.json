@@ -19,7 +19,7 @@
     "mocha": "nyc mocha test/test.js",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "karma": "karma start",
-    "docs": "typedoc src/",
+    "docs": "typedoc src/alks.ts",
     "prepare": "husky install",
     "compile": "tsc"
   },
@@ -45,7 +45,8 @@
   "dependencies": {
     "encoding": "^0.1.13",
     "node-fetch": "^2.6.1",
-    "tslib": "^2.3.1"
+    "tslib": "^2.3.1",
+    "typedoc": "^0.22.15"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^19.0.0",

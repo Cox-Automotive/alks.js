@@ -285,6 +285,7 @@ var ALKS;
          * @param {number} props.includeDefaultPolicy - Whether to include the default policy in the new role (1 = yes, 0 = no)
          * @param {boolean} props.enableAlksAccess - Whether the role has a machine identity
          * @param {Object} props.templateFields - An object whose keys are template variable names and values are the value to substitute for those template variables
+         * @param {Array.<Object>} props.tags - A list of tag objects, where each object is in the form {key: "tagKey" value: "tagValue"}
          * @returns {Promise<customRole>}
          * @example
          * alks.createRole({
@@ -297,7 +298,7 @@ var ALKS;
          *   includeDefaultPolicy: 1,
          *   enableAlksAccess: true
          * }).then((role) => {
-         *   // role.roleArn, role.denyArns, role.instanceProfileArn, role.addedRoleToInstanceProfile
+         *   // role.roleArn, role.denyArns, role.instanceProfileArn, role.addedRoleToInstanceProfile, role.tags
          * })
          *
          * @example
@@ -315,8 +316,18 @@ var ALKS;
          *     K8S_NAMESPACE: 'myNamespace',
          *     K8S_SERVICE_ACCOUNT: 'myServiceAccount'
          *   }
+         *   tags: [
+         *      {
+         *        key: "tagkey1",
+         *        value: "tagValue1"
+         *      },
+         *      {
+         *        key: "tagkey1",
+         *        value: "tagvalue2"
+         *      }
+         *   ],
          * }).then((role) => {
-         *   // role.roleArn, role.denyArns, role.instanceProfileArn, role.addedRoleToInstanceProfile
+         *   // role.roleArn, role.denyArns, role.instanceProfileArn, role.addedRoleToInstanceProfile, role.tags
          * })
          */
         Alks.prototype.createRole = function (props) {
@@ -333,6 +344,7 @@ var ALKS;
                                     'denyArns',
                                     'instanceProfileArn',
                                     'addedRoleToInstanceProfile',
+                                    'tags',
                                 ])];
                     }
                 });
@@ -352,6 +364,7 @@ var ALKS;
          * @param {string} props.trustArn - The Arn of the existing role to trust
          * @param {string} props.trustType - Whether the trust is 'Cross Account' or 'Inner Account'
          * @param {boolean} props.enableAlksAccess - Whether the role has a machine identity
+         * @param {Array.<Object>} props.tags - A list of tag objects, where each object is in the form {key: "tagKey" value: "tagValue"}
          * @returns {Promise<customRole>}
          * @example
          * alks.createNonServiceRole({
@@ -366,7 +379,32 @@ var ALKS;
          *   trustType: 'Cross Account',
          *   enableAlksAccess: true
          * }).then((role) => {
-         *   // role.roleArn, role.denyArns, role.instanceProfileArn, role.addedRoleToInstanceProfile
+         *   // role.roleArn, role.denyArns, role.instanceProfileArn, role.addedRoleToInstanceProfile, role.tags
+         * })
+         * @@example
+         *      * alks.createNonServiceRole({
+         *   baseUrl: 'https://your.alks-host.com',
+         *   accessToken: 'abc123',
+         *   account: 'anAccount',
+         *   role: 'IAMAdmin',
+         *   roleName: 'awsRoleName',
+         *   roleType: 'Amazon EC2',
+         *   includeDefaultPolicy: 1,
+         *   trustArn: 'anExistingRoleArn',
+         *   trustType: 'Cross Account',
+         *   enableAlksAccess: true,
+         *   tags: [
+         *      {
+         *        key: "tagkey1",
+         *        value: "tagValue1"
+         *      },
+         *      {
+         *        key: "tagkey1",
+         *        value: "tagvalue2"
+         *      }
+         *   ],
+         * }).then((role) => {
+         *   // role.roleArn, role.denyArns, role.instanceProfileArn, role.addedRoleToInstanceProfile, role.tags
          * })
          */
         Alks.prototype.createNonServiceRole = function (props) {
@@ -383,6 +421,7 @@ var ALKS;
                                     'denyArns',
                                     'instanceProfileArn',
                                     'addedRoleToInstanceProfile',
+                                    'tags',
                                 ])];
                     }
                 });
@@ -460,7 +499,8 @@ var ALKS;
          * @param {string} props.account - The user's account associated with the custom role
          * @param {string} props.role - The user's role associated with the account
          * @param {string} props.roleName - The name of the custom AWS IAM role
-         * @returns {Promise<string>}
+         * @param {Array.<Object>} props.tags - A list of tag objects, where each object is in the form {key: "tagKey" value: "tagValue"}
+         * @returns {Promise<Role>}
          * @example
          * alks.getAccountRole({
          *   baseUrl: 'https://your.alks-host.com',
@@ -468,8 +508,8 @@ var ALKS;
          *   account: 'anAccount',
          *   role: 'IAMAdmin',
          *   roleName: 'awsRoleName'
-         * }).then((roleARN) => {
-         *   // arn:aws:iam::123:role/acct-managed/awsRoleName
+         * }).then((role) => {
+         *    // role.roleArn, role.isMachineIdentity, role.instanceProfileArn, role.tags
          * })
          */
         Alks.prototype.getAccountRole = function (props) {
@@ -483,7 +523,7 @@ var ALKS;
                             if (!results.roleExists) {
                                 throw new Error("Role " + props.roleName + " does not exist in this account");
                             }
-                            return [2 /*return*/, results.roleARN];
+                            return [2 /*return*/, tslib_1.__assign(tslib_1.__assign({}, pick(results, ['roleArn', 'isMachineIdentity', 'tags'])), { instanceProfileArn: results.instanceProfileARN })];
                     }
                 });
             });

@@ -570,6 +570,50 @@ describe('alks.js', function () {
         addedRoleToInstanceProfile: true,
       });
     });
+    it('should return information about the newly created role with tags', async () => {
+      const _fetch = fetchMock
+        .sandbox()
+        .mock('https://your.alks-host.com/createRole', {
+          body: {
+            roleArn: 'aRoleArn',
+            denyArns: 'denyArn1,denyArn2',
+            instanceProfileArn: 'anInstanceProfileArn',
+            addedRoleToInstanceProfile: true,
+            tags: [
+              { key: 'key1', value: 'value1' },
+              { key: 'key2', value: 'value2' },
+            ],
+            statusMessage: 'Success',
+          },
+          status: 200,
+        });
+
+      const result = await alks.createRole({
+        baseUrl: 'https://your.alks-host.com',
+        accessToken: 'abc123',
+        account: 'anAccount',
+        role: 'Admin',
+        roleName: 'awsRoleName',
+        roleType: 'Amazon EC2',
+        includeDefaultPolicy: 1,
+        tags: [
+          { key: 'key1', value: 'value1' },
+          { key: 'key2', value: 'value2' },
+        ],
+        _fetch,
+      });
+
+      expect(result).to.deep.include({
+        roleArn: 'aRoleArn',
+        denyArns: ['denyArn1', 'denyArn2'],
+        instanceProfileArn: 'anInstanceProfileArn',
+        addedRoleToInstanceProfile: true,
+        tags: [
+          { key: 'key1', value: 'value1' },
+          { key: 'key2', value: 'value2' },
+        ],
+      });
+    });
   });
 
   describe('createNonServiceRole', () => {
@@ -605,6 +649,52 @@ describe('alks.js', function () {
         denyArns: ['denyArn1', 'denyArn2'],
         instanceProfileArn: 'anInstanceProfileArn',
         addedRoleToInstanceProfile: true,
+      });
+    });
+    it('should return information about the newly created role with tags', async () => {
+      const _fetch = fetchMock
+        .sandbox()
+        .mock('https://your.alks-host.com/createNonServiceRole', {
+          body: {
+            roleArn: 'aRoleArn',
+            denyArns: 'denyArn1,denyArn2',
+            instanceProfileArn: 'anInstanceProfileArn',
+            addedRoleToInstanceProfile: true,
+            tags: [
+              { key: 'key1', value: 'value1' },
+              { key: 'key2', value: 'value2' },
+            ],
+            statusMessage: 'Success',
+          },
+          status: 200,
+        });
+
+      const result = await alks.createNonServiceRole({
+        baseUrl: 'https://your.alks-host.com',
+        accessToken: 'abc123',
+        account: 'anAccount',
+        role: 'Admin',
+        roleName: 'awsRoleName',
+        roleType: 'Amazon EC2',
+        includeDefaultPolicy: 1,
+        trustArn: 'anExistingRole',
+        trustType: 'Cross Account',
+        tags: [
+          { key: 'key1', value: 'value1' },
+          { key: 'key2', value: 'value2' },
+        ],
+        _fetch,
+      });
+
+      expect(result).to.deep.include({
+        roleArn: 'aRoleArn',
+        denyArns: ['denyArn1', 'denyArn2'],
+        instanceProfileArn: 'anInstanceProfileArn',
+        addedRoleToInstanceProfile: true,
+        tags: [
+          { key: 'key1', value: 'value1' },
+          { key: 'key2', value: 'value2' },
+        ],
       });
     });
   });
