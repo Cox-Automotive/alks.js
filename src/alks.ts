@@ -286,6 +286,7 @@ namespace ALKS {
     enableAlksAccess: boolean;
     includeDefaultPolicy: PseudoBoolean;
     templateFields?: Record<string, string>;
+    tags?: Tag[];
   };
 
   export type CreateNonServiceRoleProps = Partial<AlksProps> & {
@@ -297,6 +298,7 @@ namespace ALKS {
     includeDefaultPolicy: PseudoBoolean;
     trustArn: string;
     externalId?: string;
+    tags?: Tag[];
   };
 
   export type ListAWSAccountRolesProps = Partial<AlksProps> & {
@@ -609,6 +611,7 @@ namespace ALKS {
      * @param {number} props.includeDefaultPolicy - Whether to include the default policy in the new role (1 = yes, 0 = no)
      * @param {boolean} props.enableAlksAccess - Whether the role has a machine identity
      * @param {Object} props.templateFields - An object whose keys are template variable names and values are the value to substitute for those template variables
+     * @param {Array.<Object>} props.tags - A list of tag objects, where each object is in the form {key: "tagKey" value: "tagValue"}
      * @returns {Promise<customRole>}
      * @example
      * alks.createRole({
@@ -621,7 +624,7 @@ namespace ALKS {
      *   includeDefaultPolicy: 1,
      *   enableAlksAccess: true
      * }).then((role) => {
-     *   // role.roleArn, role.denyArns, role.instanceProfileArn, role.addedRoleToInstanceProfile
+     *   // role.roleArn, role.denyArns, role.instanceProfileArn, role.addedRoleToInstanceProfile, role.tags
      * })
      *
      * @example
@@ -639,8 +642,18 @@ namespace ALKS {
      *     K8S_NAMESPACE: 'myNamespace',
      *     K8S_SERVICE_ACCOUNT: 'myServiceAccount'
      *   }
+     *   tags: [
+     *      {
+     *        key: "tagkey1",
+     *        value: "tagValue1"
+     *      },
+     *      {
+     *        key: "tagkey1",
+     *        value: "tagvalue2"
+     *      }
+     *   ],
      * }).then((role) => {
-     *   // role.roleArn, role.denyArns, role.instanceProfileArn, role.addedRoleToInstanceProfile
+     *   // role.roleArn, role.denyArns, role.instanceProfileArn, role.addedRoleToInstanceProfile, role.tags
      * })
      */
     async createRole(props: CreateRoleProps): Promise<Role> {
@@ -651,6 +664,7 @@ namespace ALKS {
         'denyArns',
         'instanceProfileArn',
         'addedRoleToInstanceProfile',
+        'tags',
       ]);
     }
 
@@ -668,6 +682,7 @@ namespace ALKS {
      * @param {string} props.trustArn - The Arn of the existing role to trust
      * @param {string} props.trustType - Whether the trust is 'Cross Account' or 'Inner Account'
      * @param {boolean} props.enableAlksAccess - Whether the role has a machine identity
+     * @param {Array.<Object>} props.tags - A list of tag objects, where each object is in the form {key: "tagKey" value: "tagValue"}
      * @returns {Promise<customRole>}
      * @example
      * alks.createNonServiceRole({
@@ -682,7 +697,32 @@ namespace ALKS {
      *   trustType: 'Cross Account',
      *   enableAlksAccess: true
      * }).then((role) => {
-     *   // role.roleArn, role.denyArns, role.instanceProfileArn, role.addedRoleToInstanceProfile
+     *   // role.roleArn, role.denyArns, role.instanceProfileArn, role.addedRoleToInstanceProfile, role.tags
+     * })
+     * @@example
+     *      * alks.createNonServiceRole({
+     *   baseUrl: 'https://your.alks-host.com',
+     *   accessToken: 'abc123',
+     *   account: 'anAccount',
+     *   role: 'IAMAdmin',
+     *   roleName: 'awsRoleName',
+     *   roleType: 'Amazon EC2',
+     *   includeDefaultPolicy: 1,
+     *   trustArn: 'anExistingRoleArn',
+     *   trustType: 'Cross Account',
+     *   enableAlksAccess: true,
+     *   tags: [
+     *      {
+     *        key: "tagkey1",
+     *        value: "tagValue1"
+     *      },
+     *      {
+     *        key: "tagkey1",
+     *        value: "tagvalue2"
+     *      }
+     *   ],
+     * }).then((role) => {
+     *   // role.roleArn, role.denyArns, role.instanceProfileArn, role.addedRoleToInstanceProfile, role.tags
      * })
      */
     async createNonServiceRole(
@@ -695,6 +735,7 @@ namespace ALKS {
         'denyArns',
         'instanceProfileArn',
         'addedRoleToInstanceProfile',
+        'tags',
       ]);
     }
 
