@@ -486,7 +486,10 @@ describe('alks.js', function () {
             roleExists: true,
             instanceProfileARN: 'anInstanceProfileArn',
             isMachineIdentity: false,
-            tags: [{ key1: 'test:key1:value1', key2: 'test:key2:value1' }],
+            tags: [
+              { key: 'key1', value: 'test:key1:value1' },
+              { key: 'key2', value: 'test:key2:value1' },
+            ],
             statusMessage: 'Success',
           },
           status: 200,
@@ -504,7 +507,10 @@ describe('alks.js', function () {
         roleArn: 'arn:aws:iam::12391238912383:role/acct-managed/awsRoleName',
         instanceProfileArn: 'anInstanceProfileArn',
         isMachineIdentity: false,
-        tags: [{ key1: 'test:key1:value1', key2: 'test:key2:value1' }],
+        tags: [
+          { key: 'key1', value: 'test:key1:value1' },
+          { key: 'key2', value: 'test:key2:value1' },
+        ],
       });
     });
 
