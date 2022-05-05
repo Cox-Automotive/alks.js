@@ -19,7 +19,7 @@
     "mocha": "nyc mocha test/test.js",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "karma": "karma start",
-    "docs": "typedoc src/",
+    "docs": "typedoc src/alks.ts",
     "prepare": "husky install",
     "compile": "tsc"
   },

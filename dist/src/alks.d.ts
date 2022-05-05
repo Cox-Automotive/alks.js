@@ -118,12 +118,15 @@ declare namespace ALKS {
      * @property denyArns - The ARNs for the deny policies associated with this role
      * @property instanceProfileArn - The Instance Profile ARN associated with this role
      * @property addedRoleToInstanceProfile - Whether this role was added to an Instance Profile
+     * @property tags - Resource tags associated with the IAM account role
      */
     export interface Role {
         roleArn: string;
-        denyArns: string;
         instanceProfileArn: string;
-        addedRoleToInstanceProfile: boolean;
+        addedRoleToInstanceProfile?: boolean;
+        isMachineIdentity?: boolean;
+        denyArns?: string;
+        tags?: Tag[];
     }
     export interface AccessToken {
         accessToken: string;
@@ -163,6 +166,15 @@ declare namespace ALKS {
     }
     export interface MachineIdentity {
         machineIdentityArn: string;
+    }
+    /**
+     * Alks role tags
+     * @property key - The AWS role tag key
+     * @property value - The AWS role tag value
+     */
+    export interface Tag {
+        key: string;
+        value: string;
     }
     /**
      * ALKS User representation
@@ -223,6 +235,7 @@ declare namespace ALKS {
         enableAlksAccess: boolean;
         includeDefaultPolicy: PseudoBoolean;
         templateFields?: Record<string, string>;
+        tags?: Tag[];
     };
     export type CreateNonServiceRoleProps = Partial<AlksProps> & {
         account: string;
@@ -233,6 +246,7 @@ declare namespace ALKS {
         includeDefaultPolicy: PseudoBoolean;
         trustArn: string;
         externalId?: string;
+        tags?: Tag[];
     };
     export type ListAWSAccountRolesProps = Partial<AlksProps> & {
         account: string;
@@ -462,6 +476,7 @@ declare namespace ALKS {
          * @param {number} props.includeDefaultPolicy - Whether to include the default policy in the new role (1 = yes, 0 = no)
          * @param {boolean} props.enableAlksAccess - Whether the role has a machine identity
          * @param {Object} props.templateFields - An object whose keys are template variable names and values are the value to substitute for those template variables
+         * @param {Array.<Object>} props.tags - A list of tag objects, where each object is in the form {key: "tagKey" value: "tagValue"}
          * @returns {Promise<customRole>}
          * @example
          * alks.createRole({
@@ -474,7 +489,7 @@ declare namespace ALKS {
          *   includeDefaultPolicy: 1,
          *   enableAlksAccess: true
          * }).then((role) => {
-         *   // role.roleArn, role.denyArns, role.instanceProfileArn, role.addedRoleToInstanceProfile
+         *   // role.roleArn, role.denyArns, role.instanceProfileArn, role.addedRoleToInstanceProfile, role.tags
          * })
          *
          * @example
@@ -492,8 +507,18 @@ declare namespace ALKS {
          *     K8S_NAMESPACE: 'myNamespace',
          *     K8S_SERVICE_ACCOUNT: 'myServiceAccount'
          *   }
+         *   tags: [
+         *      {
+         *        key: "tagkey1",
+         *        value: "tagValue1"
+         *      },
+         *      {
+         *        key: "tagkey1",
+         *        value: "tagvalue2"
+         *      }
+         *   ],
          * }).then((role) => {
-         *   // role.roleArn, role.denyArns, role.instanceProfileArn, role.addedRoleToInstanceProfile
+         *   // role.roleArn, role.denyArns, role.instanceProfileArn, role.addedRoleToInstanceProfile, role.tags
          * })
          */
         createRole(props: CreateRoleProps): Promise<Role>;
@@ -511,6 +536,7 @@ declare namespace ALKS {
          * @param {string} props.trustArn - The Arn of the existing role to trust
          * @param {string} props.trustType - Whether the trust is 'Cross Account' or 'Inner Account'
          * @param {boolean} props.enableAlksAccess - Whether the role has a machine identity
+         * @param {Array.<Object>} props.tags - A list of tag objects, where each object is in the form {key: "tagKey" value: "tagValue"}
          * @returns {Promise<customRole>}
          * @example
          * alks.createNonServiceRole({
@@ -525,7 +551,32 @@ declare namespace ALKS {
          *   trustType: 'Cross Account',
          *   enableAlksAccess: true
          * }).then((role) => {
-         *   // role.roleArn, role.denyArns, role.instanceProfileArn, role.addedRoleToInstanceProfile
+         *   // role.roleArn, role.denyArns, role.instanceProfileArn, role.addedRoleToInstanceProfile, role.tags
+         * })
+         * @@example
+         *      * alks.createNonServiceRole({
+         *   baseUrl: 'https://your.alks-host.com',
+         *   accessToken: 'abc123',
+         *   account: 'anAccount',
+         *   role: 'IAMAdmin',
+         *   roleName: 'awsRoleName',
+         *   roleType: 'Amazon EC2',
+         *   includeDefaultPolicy: 1,
+         *   trustArn: 'anExistingRoleArn',
+         *   trustType: 'Cross Account',
+         *   enableAlksAccess: true,
+         *   tags: [
+         *      {
+         *        key: "tagkey1",
+         *        value: "tagValue1"
+         *      },
+         *      {
+         *        key: "tagkey1",
+         *        value: "tagvalue2"
+         *      }
+         *   ],
+         * }).then((role) => {
+         *   // role.roleArn, role.denyArns, role.instanceProfileArn, role.addedRoleToInstanceProfile, role.tags
          * })
          */
         createNonServiceRole(props: CreateNonServiceRoleProps): Promise<Role>;
@@ -589,7 +640,7 @@ declare namespace ALKS {
          *   // arn:aws:iam::123:role/acct-managed/awsRoleName
          * })
          */
-        getAccountRole(props: GetAccountRoleProps): Promise<string>;
+        getAccountRole(props: GetAccountRoleProps): Promise<Role>;
         /**
          * Returns a Promise for a boolean "true" indicating the role was deleted
          *
@@ -880,7 +931,7 @@ declare namespace ALKS {
     export const createNonServiceRole: (props: CreateNonServiceRoleProps) => Promise<Role>;
     export const awsAccountRoles: (props: AwsAccountRolesProps) => Promise<AwsAccountRole[]>;
     export const listAWSAccountRoles: (props: ListAWSAccountRolesProps) => Promise<string[]>;
-    export const getAccountRole: (props: GetAccountRoleProps) => Promise<string>;
+    export const getAccountRole: (props: GetAccountRoleProps) => Promise<Role>;
     export const deleteRole: (props: DeleteRoleProps) => Promise<boolean>;
     export const addRoleMachineIdentity: (props: AddRoleMachineIdentityProps) => Promise<MachineIdentity>;
     export const deleteRoleMachineIdentity: (props: DeleteRoleMachineIdentityProps) => Promise<MachineIdentity>;
