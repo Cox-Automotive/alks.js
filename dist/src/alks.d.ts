@@ -628,7 +628,8 @@ declare namespace ALKS {
          * @param {string} props.account - The user's account associated with the custom role
          * @param {string} props.role - The user's role associated with the account
          * @param {string} props.roleName - The name of the custom AWS IAM role
-         * @returns {Promise<string>}
+         * @param {Array.<Object>} props.tags - A list of tag objects, where each object is in the form {key: "tagKey" value: "tagValue"}
+         * @returns {Promise<Role>}
          * @example
          * alks.getAccountRole({
          *   baseUrl: 'https://your.alks-host.com',
@@ -636,8 +637,8 @@ declare namespace ALKS {
          *   account: 'anAccount',
          *   role: 'IAMAdmin',
          *   roleName: 'awsRoleName'
-         * }).then((roleARN) => {
-         *   // arn:aws:iam::123:role/acct-managed/awsRoleName
+         * }).then((role) => {
+         *    // role.roleArn, role.isMachineIdentity, role.instanceProfileArn, role.tags
          * })
          */
         getAccountRole(props: GetAccountRoleProps): Promise<Role>;
