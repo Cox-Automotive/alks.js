@@ -152,12 +152,15 @@ namespace ALKS {
    * @property denyArns - The ARNs for the deny policies associated with this role
    * @property instanceProfileArn - The Instance Profile ARN associated with this role
    * @property addedRoleToInstanceProfile - Whether this role was added to an Instance Profile
+   * @property tags - Resource tags associated with the IAM account role
    */
   export interface Role {
     roleArn: string;
-    denyArns: string;
     instanceProfileArn: string;
-    addedRoleToInstanceProfile: boolean;
+    addedRoleToInstanceProfile?: boolean;
+    isMachineIdentity?: boolean;
+    denyArns?: string;
+    tags?: Tag[];
   }
 
   export interface AccessToken {
@@ -202,6 +205,16 @@ namespace ALKS {
 
   export interface MachineIdentity {
     machineIdentityArn: string;
+  }
+
+  /**
+   * Alks role tags
+   * @property key - The AWS role tag key
+   * @property value - The AWS role tag value
+   */
+  export interface Tag {
+    key: string;
+    value: string;
   }
 
   /**
@@ -763,14 +776,17 @@ namespace ALKS {
      *   // arn:aws:iam::123:role/acct-managed/awsRoleName
      * })
      */
-    async getAccountRole(props: GetAccountRoleProps): Promise<string> {
+    async getAccountRole(props: GetAccountRoleProps): Promise<Role> {
       const results = await this.internalFetch('getAccountRole', props);
       if (!results.roleExists) {
         throw new Error(
           `Role ${props.roleName} does not exist in this account`
         );
       }
-      return results.roleARN;
+      return {
+        ...pick(results, ['roleArn', 'isMachineIdentity', 'tags']),
+        instanceProfileArn: results.instanceProfileARN,
+      };
     }
 
     /**

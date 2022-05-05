@@ -443,14 +443,18 @@ describe('alks.js', function () {
   });
 
   describe('getAccountRole', () => {
-    it('should return the ARN of the account role', async () => {
+    it('should return the Role object representation of the https response', async () => {
       const _fetch = fetchMock
         .sandbox()
         .mock('https://your.alks-host.com/getAccountRole', {
           body: {
-            roleARN:
+            roleArn:
               'arn:aws:iam::12391238912383:role/acct-managed/awsRoleName',
+            roleName: 'awsRoleName',
+            basicAuthUsed: false,
             roleExists: true,
+            instanceProfileARN: 'anInstanceProfileArn',
+            isMachineIdentity: false,
             statusMessage: 'Success',
           },
           status: 200,
@@ -464,10 +468,50 @@ describe('alks.js', function () {
         roleName: 'awsRoleName',
         _fetch,
       });
+      expect(result).to.deep.include({
+        roleArn: 'arn:aws:iam::12391238912383:role/acct-managed/awsRoleName',
+        instanceProfileArn: 'anInstanceProfileArn',
+        isMachineIdentity: false,
+      });
+    });
+    it('should return the Role object representation of the https response with tags', async () => {
+      const _fetch = fetchMock
+        .sandbox()
+        .mock('https://your.alks-host.com/getAccountRole', {
+          body: {
+            roleArn:
+              'arn:aws:iam::12391238912383:role/acct-managed/awsRoleName',
+            roleName: 'awsRoleName',
+            basicAuthUsed: false,
+            roleExists: true,
+            instanceProfileARN: 'anInstanceProfileArn',
+            isMachineIdentity: false,
+            tags: [
+              { key: 'key1', value: 'test:key1:value1' },
+              { key: 'key2', value: 'test:key2:value1' },
+            ],
+            statusMessage: 'Success',
+          },
+          status: 200,
+        });
 
-      expect(result).to.equal(
-        'arn:aws:iam::12391238912383:role/acct-managed/awsRoleName'
-      );
+      const result = await alks.getAccountRole({
+        baseUrl: 'https://your.alks-host.com',
+        accessToken: 'abc123',
+        account: 'anAccount',
+        role: 'Admin',
+        roleName: 'awsRoleName',
+        _fetch,
+      });
+      expect(result).to.deep.include({
+        roleArn: 'arn:aws:iam::12391238912383:role/acct-managed/awsRoleName',
+        instanceProfileArn: 'anInstanceProfileArn',
+        isMachineIdentity: false,
+        tags: [
+          { key: 'key1', value: 'test:key1:value1' },
+          { key: 'key2', value: 'test:key2:value1' },
+        ],
+      });
     });
 
     it('should reject with an error message when the role is not found', async () => {
