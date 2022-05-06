@@ -1,8 +1,5 @@
 # Changelog
-All breaking changes to ALKS.js will be noted here
+All changes to ALKS.js for this version will be noted here
 
-
-## [unreleased]
-
-### Changed
-- getAccountRole API return type changed from the role ARN of type string to an object of type Role
+## Changed
+- adds updateRole method for modifying roles (currently only supports setting tags on roles)
