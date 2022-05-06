@@ -528,6 +528,44 @@ var ALKS;
             });
         };
         /**
+         * Returns a Promise for the Amazon Resource Name (ARN) of a custom AWS IAM account role
+         *
+         * @param {Object} props - An object containing the following properties
+         * @param {string} props.baseUrl - The base URL of the ALKS service
+         * @param {string} props.accessToken - The OAuth2 access token used to authorize the request
+         * @param {string} props.account - The user's account associated with the custom role
+         * @param {string} props.role - The user's role associated with the account
+         * @param {string} props.roleName - The name of the custom AWS IAM role
+         * @param {Array.<Object>} props.tags - A list of tag objects, where each object is in the form {key: "tagKey" value: "tagValue"}
+         * @returns {Promise<Role>}
+         * @example
+         * alks.updateRole({
+         *   baseUrl: 'https://your.alks-host.com',
+         *   accessToken: 'abc123',
+         *   account: 'anAccount',
+         *   role: 'IAMAdmin',
+         *   roleName: 'awsRoleName'
+         * }).then((role) => {
+         *    // role.roleArn, role.isMachineIdentity, role.instanceProfileArn, role.tags
+         * })
+         */
+        Alks.prototype.updateRole = function (props) {
+            return tslib_1.__awaiter(this, void 0, void 0, function () {
+                var results;
+                return tslib_1.__generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0: return [4 /*yield*/, this.internalFetch('role', props, 'PATCH')];
+                        case 1:
+                            results = _a.sent();
+                            if (!results.roleExists) {
+                                throw new Error("Role " + props.roleName + " does not exist in this account");
+                            }
+                            return [2 /*return*/, tslib_1.__assign(tslib_1.__assign({}, pick(results, ['roleArn', 'isMachineIdentity', 'tags'])), { instanceProfileArn: results.instanceProfileARN })];
+                    }
+                });
+            });
+        };
+        /**
          * Returns a Promise for a boolean "true" indicating the role was deleted
          *
          * @param {Object} props - An object containing the following properties
@@ -1130,6 +1168,7 @@ var ALKS;
     ALKS.awsAccountRoles = Alks.prototype.awsAccountRoles.bind(defaultAlks);
     ALKS.listAWSAccountRoles = Alks.prototype.listAWSAccountRoles.bind(defaultAlks);
     ALKS.getAccountRole = Alks.prototype.getAccountRole.bind(defaultAlks);
+    ALKS.updateRole = Alks.prototype.updateRole.bind(defaultAlks);
     ALKS.deleteRole = Alks.prototype.deleteRole.bind(defaultAlks);
     ALKS.addRoleMachineIdentity = Alks.prototype.addRoleMachineIdentity.bind(defaultAlks);
     ALKS.deleteRoleMachineIdentity = Alks.prototype.deleteRoleMachineIdentity.bind(defaultAlks);
