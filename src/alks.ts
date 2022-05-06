@@ -312,6 +312,13 @@ namespace ALKS {
     roleName: string;
   };
 
+  export type UpdateRoleProps = Partial<AlksProps> & {
+    account: string;
+    role: string;
+    roleName: string;
+    tags: Tag[];
+  };
+
   export type DeleteRoleProps = Partial<AlksProps> & {
     account: string;
     role: string;
@@ -820,6 +827,41 @@ namespace ALKS {
      */
     async getAccountRole(props: GetAccountRoleProps): Promise<Role> {
       const results = await this.internalFetch('getAccountRole', props);
+      if (!results.roleExists) {
+        throw new Error(
+          `Role ${props.roleName} does not exist in this account`
+        );
+      }
+      return {
+        ...pick(results, ['roleArn', 'isMachineIdentity', 'tags']),
+        instanceProfileArn: results.instanceProfileARN,
+      };
+    }
+
+    /**
+     * Returns a Promise for the Amazon Resource Name (ARN) of a custom AWS IAM account role
+     *
+     * @param {Object} props - An object containing the following properties
+     * @param {string} props.baseUrl - The base URL of the ALKS service
+     * @param {string} props.accessToken - The OAuth2 access token used to authorize the request
+     * @param {string} props.account - The user's account associated with the custom role
+     * @param {string} props.role - The user's role associated with the account
+     * @param {string} props.roleName - The name of the custom AWS IAM role
+     * @param {Array.<Object>} props.tags - A list of tag objects, where each object is in the form {key: "tagKey" value: "tagValue"}
+     * @returns {Promise<Role>}
+     * @example
+     * alks.updateRole({
+     *   baseUrl: 'https://your.alks-host.com',
+     *   accessToken: 'abc123',
+     *   account: 'anAccount',
+     *   role: 'IAMAdmin',
+     *   roleName: 'awsRoleName'
+     * }).then((role) => {
+     *    // role.roleArn, role.isMachineIdentity, role.instanceProfileArn, role.tags
+     * })
+     */
+    async updateRole(props: UpdateRoleProps): Promise<Role> {
+      const results = await this.internalFetch('role', props, 'PATCH');
       if (!results.roleExists) {
         throw new Error(
           `Role ${props.roleName} does not exist in this account`
