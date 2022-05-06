@@ -1413,6 +1413,7 @@ namespace ALKS {
   export const listAWSAccountRoles =
     Alks.prototype.listAWSAccountRoles.bind(defaultAlks);
   export const getAccountRole = Alks.prototype.getAccountRole.bind(defaultAlks);
+  export const updateRole = Alks.prototype.updateRole.bind(defaultAlks);
   export const deleteRole = Alks.prototype.deleteRole.bind(defaultAlks);
   export const addRoleMachineIdentity =
     Alks.prototype.addRoleMachineIdentity.bind(defaultAlks);
