@@ -962,6 +962,7 @@ declare namespace ALKS {
     export const awsAccountRoles: (props: AwsAccountRolesProps) => Promise<AwsAccountRole[]>;
     export const listAWSAccountRoles: (props: ListAWSAccountRolesProps) => Promise<string[]>;
     export const getAccountRole: (props: GetAccountRoleProps) => Promise<Role>;
+    export const updateRole: (props: UpdateRoleProps) => Promise<Role>;
     export const deleteRole: (props: DeleteRoleProps) => Promise<boolean>;
     export const addRoleMachineIdentity: (props: AddRoleMachineIdentityProps) => Promise<MachineIdentity>;
     export const deleteRoleMachineIdentity: (props: DeleteRoleMachineIdentityProps) => Promise<MachineIdentity>;

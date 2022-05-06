@@ -1168,6 +1168,7 @@ var ALKS;
     ALKS.awsAccountRoles = Alks.prototype.awsAccountRoles.bind(defaultAlks);
     ALKS.listAWSAccountRoles = Alks.prototype.listAWSAccountRoles.bind(defaultAlks);
     ALKS.getAccountRole = Alks.prototype.getAccountRole.bind(defaultAlks);
+    ALKS.updateRole = Alks.prototype.updateRole.bind(defaultAlks);
     ALKS.deleteRole = Alks.prototype.deleteRole.bind(defaultAlks);
     ALKS.addRoleMachineIdentity = Alks.prototype.addRoleMachineIdentity.bind(defaultAlks);
     ALKS.deleteRoleMachineIdentity = Alks.prototype.deleteRoleMachineIdentity.bind(defaultAlks);
