@@ -331,10 +331,15 @@ var ALKS;
          */
         Alks.prototype.createRole = function (props) {
             return tslib_1.__awaiter(this, void 0, void 0, function () {
-                var results;
+                var roleTypeExists, trustPolicyExists, results;
                 return tslib_1.__generator(this, function (_a) {
                     switch (_a.label) {
-                        case 0: return [4 /*yield*/, this.internalFetch('createRole', props)];
+                        case 0:
+                            roleTypeExists = props.roleType != null;
+                            trustPolicyExists = props.trustPolicy != null;
+                            if (!((roleTypeExists && !trustPolicyExists) ||
+                                (!roleTypeExists && trustPolicyExists))) return [3 /*break*/, 2];
+                            return [4 /*yield*/, this.internalFetch('createRole', props)];
                         case 1:
                             results = _a.sent();
                             results.denyArns = results.denyArns.split(',');
@@ -345,6 +350,7 @@ var ALKS;
                                     'addedRoleToInstanceProfile',
                                     'tags',
                                 ])];
+                        case 2: throw new Error("Must include roleType or trustPolicy, but not both.");
                     }
                 });
             });

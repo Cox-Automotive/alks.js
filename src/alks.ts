@@ -282,7 +282,8 @@ namespace ALKS {
     account: string;
     role: string;
     roleName: string;
-    roleType: string;
+    roleType?: string;
+    trustPolicy?: Record<string, unknown>;
     enableAlksAccess: boolean;
     includeDefaultPolicy: PseudoBoolean;
     templateFields?: Record<string, string>;
@@ -664,15 +665,24 @@ namespace ALKS {
      * })
      */
     async createRole(props: CreateRoleProps): Promise<Role> {
-      const results = await this.internalFetch('createRole', props);
-      results.denyArns = results.denyArns.split(',');
-      return pick(results, [
-        'roleArn',
-        'denyArns',
-        'instanceProfileArn',
-        'addedRoleToInstanceProfile',
-        'tags',
-      ]);
+      let roleTypeExists = props.roleType != null;
+      let trustPolicyExists = props.trustPolicy != null;
+      if (
+        (roleTypeExists && !trustPolicyExists) ||
+        (!roleTypeExists && trustPolicyExists)
+      ) {
+        const results = await this.internalFetch('createRole', props);
+        results.denyArns = results.denyArns.split(',');
+        return pick(results, [
+          'roleArn',
+          'denyArns',
+          'instanceProfileArn',
+          'addedRoleToInstanceProfile',
+          'tags',
+        ]);
+      } else {
+        throw new Error(`Must include roleType or trustPolicy, but not both.`);
+      }
     }
 
     /**

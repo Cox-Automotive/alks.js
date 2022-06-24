@@ -231,7 +231,8 @@ declare namespace ALKS {
         account: string;
         role: string;
         roleName: string;
-        roleType: string;
+        roleType?: string;
+        trustPolicy?: Record<string, unknown>;
         enableAlksAccess: boolean;
         includeDefaultPolicy: PseudoBoolean;
         templateFields?: Record<string, string>;
