@@ -480,6 +480,7 @@ declare namespace ALKS {
          * @param {string} props.role - The user's role associated with the account
          * @param {string} props.roleName - The name of the custom AWS IAM role to create
          * @param {string} props.roleType - The type of AWS role to use when creating the new role
+         * @param {Object} props.trustPolicy
          * @param {number} props.includeDefaultPolicy - Whether to include the default policy in the new role (1 = yes, 0 = no)
          * @param {boolean} props.enableAlksAccess - Whether the role has a machine identity
          * @param {Object} props.templateFields - An object whose keys are template variable names and values are the value to substitute for those template variables
@@ -498,7 +499,30 @@ declare namespace ALKS {
          * }).then((role) => {
          *   // role.roleArn, role.denyArns, role.instanceProfileArn, role.addedRoleToInstanceProfile, role.tags
          * })
-         *
+         * @example
+         * alks.createRole({
+         *   baseUrl: 'https://your.alks-host.com',
+         *   accessToken: 'abc123',
+         *   account: 'anAccount',
+         *   role: 'IAMAdmin',
+         *   roleName: 'awsRoleName',
+         *   trustPolicy: {
+         *      "Version": "2012-10-17",
+         *       "Statement": [
+         *           {
+         *               "Action": "sts:AssumeRole",
+         *               "Effect": "Allow",
+         *               "Principal": {
+         *                   "Service": "ec2.amazonaws.com"
+         *               }
+         *           }
+         *       ]
+         *   },
+         *   includeDefaultPolicy: 1,
+         *   enableAlksAccess: true
+         * }).then((role) => {
+         *   // role.roleArn, role.denyArns, role.instanceProfileArn, role.addedRoleToInstanceProfile, role.tags
+         * })
          * @example
          * alks.createRole({
          *   baseUrl: 'https://your.alks-host.com',
