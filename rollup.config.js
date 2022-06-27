@@ -16,7 +16,8 @@ export default [
       // without this line, karma tests complain that `global` isn't defined
       intro: 'var global = global || window || this;',
       // without this, you have to add `.default` to your require(...) like `const alks = require('alks').default`
-      outro: 'Object.assign(exports, alks);'
+      outro: 'Object.assign(exports, alks);',
+      inlineDynamicImports: true,
     },
     plugins: [
       json(),
