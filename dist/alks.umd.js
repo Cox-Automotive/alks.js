@@ -331,7 +331,7 @@
 	};
 	var license = "MIT";
 	var engines = {
-		node: ">=8.0.0"
+		node: ">=14.0.0"
 	};
 	var dependencies = {
 		encoding: "^0.1.13",
