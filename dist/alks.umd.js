@@ -331,7 +331,7 @@
 	};
 	var license = "MIT";
 	var engines = {
-		node: ">=8.0.0"
+		node: ">=14.0.0"
 	};
 	var dependencies = {
 		encoding: "^0.1.13",
@@ -360,7 +360,7 @@
 		"karma-mocha-reporter": "^2.2.5",
 		"lint-staged": "^11.0.0",
 		mkdirp: "^1.0.4",
-		mocha: "^8.3.2",
+		mocha: "^10.0.0",
 		nyc: "^15.1.0",
 		prettier: "^2.3.0",
 		rimraf: "^3.0.2",
@@ -371,8 +371,7 @@
 		sinon: "^10.0.0",
 		tslint: "^6.1.3",
 		typescript: "^4.2.4",
-		"uglify-js": "^3.13.6",
-		watchify: "^3.11.1"
+		"uglify-js": "^3.13.6"
 	};
 	var prettier = {
 		singleQuote: true,
