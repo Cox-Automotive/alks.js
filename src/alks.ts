@@ -691,10 +691,7 @@ namespace ALKS {
     async createRole(props: CreateRoleProps): Promise<Role> {
       let roleTypeExists = props.roleType != null;
       let trustPolicyExists = props.trustPolicy != null;
-      if (
-        (roleTypeExists && !trustPolicyExists) ||
-        (!roleTypeExists && trustPolicyExists)
-      ) {
+      if (!(roleTypeExists ^ trustPolicyExists)) {
         const results = await this.internalFetch('createRole', props);
         results.denyArns = results.denyArns.split(',');
         return pick(results, [
