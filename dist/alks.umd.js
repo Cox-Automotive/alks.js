@@ -15527,8 +15527,7 @@
 	                        case 0:
 	                            roleTypeExists = props.roleType != null;
 	                            trustPolicyExists = props.trustPolicy != null;
-	                            if (!((roleTypeExists && !trustPolicyExists) ||
-	                                (!roleTypeExists && trustPolicyExists))) return [3 /*break*/, 2];
+	                            if (!(roleTypeExists !== trustPolicyExists)) return [3 /*break*/, 2];
 	                            return [4 /*yield*/, this.internalFetch('createRole', props)];
 	                        case 1:
 	                            results = _a.sent();
