@@ -719,6 +719,82 @@ describe('alks.js', function () {
         ],
       });
     });
+    it('should return information about the newly created role with trust policy', async () => {
+      const _fetch = fetchMock
+        .sandbox()
+        .mock('https://your.alks-host.com/createRole', {
+          body: {
+            roleArn: 'aRoleArn',
+            denyArns: 'denyArn1,denyArn2',
+            instanceProfileArn: 'anInstanceProfileArn',
+            addedRoleToInstanceProfile: true,
+            statusMessage: 'Success',
+          },
+          status: 200,
+        });
+
+      const result = await alks.createRole({
+        baseUrl: 'https://your.alks-host.com',
+        accessToken: 'abc123',
+        account: 'anAccount',
+        role: 'Admin',
+        roleName: 'awsRoleName',
+        trustPolicy: { key: 'foo' },
+        includeDefaultPolicy: 1,
+        _fetch,
+      });
+
+      expect(result).to.deep.include({
+        roleArn: 'aRoleArn',
+        denyArns: ['denyArn1', 'denyArn2'],
+        instanceProfileArn: 'anInstanceProfileArn',
+        addedRoleToInstanceProfile: true,
+      });
+    });
+
+    it('should throw error if both trustPolicy and roleType provided', async () => {
+      const _fetch = fetchMock
+        .sandbox()
+        .mock('https://your.alks-host.com/createRole', {
+          body: {},
+        });
+      const result = alks.createRole({
+        baseUrl: 'https://your.alks-host.com',
+        accessToken: 'abc123',
+        account: 'anAccount',
+        role: 'Admin',
+        roleName: 'awsRoleName',
+        roleType: 'Amazon EC2',
+        trustPolicy: { key: 'foo' },
+        includeDefaultPolicy: 1,
+        _fetch,
+      });
+
+      expect(result).to.be.rejectedWith(
+        `Must include roleType or trustPolicy, but not both.`
+      );
+    });
+    it('should throw error if neither trustPolicy or roleType provided', async () => {
+      const _fetch = fetchMock
+        .sandbox()
+        .mock('https://your.alks-host.com/createRole', {
+          body: {},
+        });
+
+      const result = alks.createRole({
+        baseUrl: 'https://your.alks-host.com',
+        accessToken: 'abc123',
+        account: 'anAccount',
+        role: 'Admin',
+        roleName: 'awsRoleName',
+        includeDefaultPolicy: 1,
+        _fetch,
+      });
+
+      expect(result).to.be.rejectedWith(
+        `Must include roleType or trustPolicy, but not both.`
+      );
+    });
   });
 
   describe('createNonServiceRole', () => {

@@ -281,6 +281,7 @@ var ALKS;
          * @param {string} props.role - The user's role associated with the account
          * @param {string} props.roleName - The name of the custom AWS IAM role to create
          * @param {string} props.roleType - The type of AWS role to use when creating the new role
+         * @param {Object} props.trustPolicy
          * @param {number} props.includeDefaultPolicy - Whether to include the default policy in the new role (1 = yes, 0 = no)
          * @param {boolean} props.enableAlksAccess - Whether the role has a machine identity
          * @param {Object} props.templateFields - An object whose keys are template variable names and values are the value to substitute for those template variables
@@ -299,7 +300,30 @@ var ALKS;
          * }).then((role) => {
          *   // role.roleArn, role.denyArns, role.instanceProfileArn, role.addedRoleToInstanceProfile, role.tags
          * })
-         *
+         * @example
+         * alks.createRole({
+         *   baseUrl: 'https://your.alks-host.com',
+         *   accessToken: 'abc123',
+         *   account: 'anAccount',
+         *   role: 'IAMAdmin',
+         *   roleName: 'awsRoleName',
+         *   trustPolicy: {
+         *      "Version": "2012-10-17",
+         *       "Statement": [
+         *           {
+         *               "Action": "sts:AssumeRole",
+         *               "Effect": "Allow",
+         *               "Principal": {
+         *                   "Service": "ec2.amazonaws.com"
+         *               }
+         *           }
+         *       ]
+         *   },
+         *   includeDefaultPolicy: 1,
+         *   enableAlksAccess: true
+         * }).then((role) => {
+         *   // role.roleArn, role.denyArns, role.instanceProfileArn, role.addedRoleToInstanceProfile, role.tags
+         * })
          * @example
          * alks.createRole({
          *   baseUrl: 'https://your.alks-host.com',
@@ -331,10 +355,14 @@ var ALKS;
          */
         Alks.prototype.createRole = function (props) {
             return tslib_1.__awaiter(this, void 0, void 0, function () {
-                var results;
+                var roleTypeExists, trustPolicyExists, results;
                 return tslib_1.__generator(this, function (_a) {
                     switch (_a.label) {
-                        case 0: return [4 /*yield*/, this.internalFetch('createRole', props)];
+                        case 0:
+                            roleTypeExists = props.roleType != null;
+                            trustPolicyExists = props.trustPolicy != null;
+                            if (!(roleTypeExists !== trustPolicyExists)) return [3 /*break*/, 2];
+                            return [4 /*yield*/, this.internalFetch('createRole', props)];
                         case 1:
                             results = _a.sent();
                             results.denyArns = results.denyArns.split(',');
@@ -345,6 +373,7 @@ var ALKS;
                                     'addedRoleToInstanceProfile',
                                     'tags',
                                 ])];
+                        case 2: throw new Error("Must include roleType or trustPolicy, but not both.");
                     }
                 });
             });
