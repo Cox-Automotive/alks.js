@@ -2,4 +2,8 @@
 All changes to ALKS.js for this version will be noted here
 
 ## Changed
-- adds updateRole method for modifying roles (currently only supports setting tags on roles)
+- Removes dev dependency on Watchify
+- Updates dev dependency on Mocha
+- Updates package lock to pin newer dependency versions containing patches for recent vulnerabilities
+- Updates github actions to build against current node lts versions
+- Updates package.json to indicate support for only current node lts version
