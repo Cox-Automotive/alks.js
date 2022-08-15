@@ -2,4 +2,5 @@
 All changes to ALKS.js for this version will be noted here
 
 ## Changed
-- adds optional trustPolicy field to createRole.  Either trustPolicy or roleType must be specified. 
+- Includes the security level in the result of the getAccounts function
+- Includes the security level in the result of the getLoginRole function
