@@ -23,6 +23,7 @@ describe('alks.js', function () {
                   role: 'role1',
                   iamKeyActive: true,
                   maxKeyDuration: 2,
+                  securityLevel: '1',
                   skypieaAccount: null,
                 },
               ],
@@ -32,6 +33,7 @@ describe('alks.js', function () {
                   role: 'role2',
                   iamKeyActive: false,
                   maxKeyDuration: 36,
+                  securityLevel: '1',
                   skypieaAccount: { label: '2345-label' },
                 },
               ],
@@ -51,6 +53,7 @@ describe('alks.js', function () {
         role: 'role1',
         iamKeyActive: true,
         maxKeyDuration: 2,
+        securityLevel: '1',
         skypieaAccount: null,
       });
 
@@ -59,6 +62,7 @@ describe('alks.js', function () {
         role: 'role2',
         iamKeyActive: false,
         maxKeyDuration: 36,
+        securityLevel: '1',
         skypieaAccount: {
           label: '2345-label',
         },
@@ -1084,6 +1088,7 @@ describe('alks.js', function () {
                   role: 'role1',
                   iamKeyActive: true,
                   maxKeyDuration: 2,
+                  securityLevel: '1',
                   skypieaAccount: null,
                 },
               ],
@@ -1093,6 +1098,7 @@ describe('alks.js', function () {
                   role: 'role2',
                   iamKeyActive: false,
                   maxKeyDuration: 36,
+                  securityLevel: '1',
                   skypieaAccount: null,
                 },
               ],
@@ -1113,6 +1119,7 @@ describe('alks.js', function () {
         role: 'role2',
         iamKeyActive: false,
         maxKeyDuration: 36,
+        securityLevel: '1',
         skypieaAccount: null,
       });
     });
