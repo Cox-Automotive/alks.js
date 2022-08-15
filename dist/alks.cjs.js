@@ -88,6 +88,7 @@ var ALKS;
                                     role: results.accountListRole[key][0].role,
                                     iamKeyActive: results.accountListRole[key][0].iamKeyActive,
                                     maxKeyDuration: results.accountListRole[key][0].maxKeyDuration,
+                                    securityLevel: results.accountListRole[key][0].securityLevel,
                                     skypieaAccount: results.accountListRole[key][0].skypieaAccount,
                                 }); })];
                     }
@@ -945,6 +946,7 @@ var ALKS;
                                     'role',
                                     'iamKeyActive',
                                     'maxKeyDuration',
+                                    'securityLevel',
                                 ])];
                     }
                 });
