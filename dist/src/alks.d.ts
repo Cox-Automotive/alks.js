@@ -1,9 +1,9 @@
 import nodeFetch, { Response } from 'node-fetch';
-declare const fetch: typeof nodeFetch;
+declare type Fetch = typeof nodeFetch;
 declare namespace ALKS {
     interface BaseConfig {
         baseUrl: string;
-        _fetch?: typeof fetch;
+        _fetch?: Fetch;
         userAgent?: string;
     }
     interface StsAuth {

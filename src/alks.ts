@@ -1,19 +1,21 @@
 import * as packageJson from '../package.json';
 import { Buffer } from 'buffer';
 import nodeFetch, { Response } from 'node-fetch';
+import { RequestInit } from 'node-fetch';
 
 declare const window: any;
 
 // Let it be known that it is incredibly stupid that we still have to do this - Ben W 5/12/21
-// @ts-ignore
-const fetch: typeof nodeFetch = process.browser
+type Fetch = typeof nodeFetch;
+
+const fetch: Fetch = (process as any).browser
   ? window.fetch.bind(window)
   : nodeFetch;
 
 namespace ALKS {
   interface BaseConfig {
     baseUrl: string;
-    _fetch?: typeof fetch;
+    _fetch?: Fetch;
     userAgent?: string;
   }
 
@@ -1358,14 +1360,12 @@ namespace ALKS {
         delete payload.userAgent;
       }
 
-      const response = await (opts._fetch as typeof fetch)(
-        `${opts.baseUrl}/${path}`,
-        {
-          method,
-          headers,
-          body: method == 'GET' ? undefined : JSON.stringify(payload),
-        }
-      );
+      const response = await (opts._fetch as Fetch)(`${opts.baseUrl}/${path}`, {
+        method,
+        headers,
+        credentials: 'omit',
+        body: method == 'GET' ? undefined : JSON.stringify(payload),
+      } as RequestInit);
 
       let json: any;
       try {
