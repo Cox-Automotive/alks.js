@@ -128,6 +128,7 @@ declare namespace ALKS {
         isMachineIdentity?: boolean;
         denyArns?: string;
         tags?: Tag[];
+        maxSessionDurationInSeconds?: number;
     }
     export interface AccessToken {
         accessToken: string;
@@ -670,7 +671,7 @@ declare namespace ALKS {
          *   role: 'IAMAdmin',
          *   roleName: 'awsRoleName'
          * }).then((role) => {
-         *    // role.roleArn, role.isMachineIdentity, role.instanceProfileArn, role.tags
+         *    // role.roleArn, role.isMachineIdentity, role.instanceProfileArn, role.tags, role.maxSessionDurationInSeconds
          * })
          */
         getAccountRole(props: GetAccountRoleProps): Promise<Role>;

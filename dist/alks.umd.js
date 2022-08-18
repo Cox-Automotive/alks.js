@@ -18067,7 +18067,7 @@
 	         *   role: 'IAMAdmin',
 	         *   roleName: 'awsRoleName'
 	         * }).then((role) => {
-	         *    // role.roleArn, role.isMachineIdentity, role.instanceProfileArn, role.tags
+	         *    // role.roleArn, role.isMachineIdentity, role.instanceProfileArn, role.tags, role.maxSessionDurationInSeconds
 	         * })
 	         */
 	        Alks.prototype.getAccountRole = function (props) {
@@ -18081,7 +18081,12 @@
 	                            if (!results.roleExists) {
 	                                throw new Error("Role " + props.roleName + " does not exist in this account");
 	                            }
-	                            return [2 /*return*/, tslib_1.__assign(tslib_1.__assign({}, pick(results, ['roleArn', 'isMachineIdentity', 'tags'])), { instanceProfileArn: results.instanceProfileARN })];
+	                            return [2 /*return*/, tslib_1.__assign(tslib_1.__assign({}, pick(results, [
+	                                    'roleArn',
+	                                    'isMachineIdentity',
+	                                    'tags',
+	                                    'maxSessionDurationInSeconds',
+	                                ])), { instanceProfileArn: results.instanceProfileARN })];
 	                    }
 	                });
 	            });
