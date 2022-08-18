@@ -2,8 +2,6 @@ var tslib_1 = require("tslib");
 var packageJson = tslib_1.__importStar(require("../package.json"));
 var buffer_1 = require("buffer");
 tslib_1.__importDefault(require("node-fetch"));
-// Let it be known that it is incredibly stupid that we still have to do this - Ben W 5/12/21
-// @ts-ignore
 var fetch = window.fetch.bind(window)
     ;
 var ALKS;
@@ -1119,6 +1117,7 @@ var ALKS;
                             return [4 /*yield*/, opts._fetch(opts.baseUrl + "/" + path, {
                                     method: method,
                                     headers: headers,
+                                    credentials: 'omit',
                                     body: method == 'GET' ? undefined : JSON.stringify(payload),
                                 })];
                         case 1:

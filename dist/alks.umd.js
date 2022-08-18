@@ -17533,8 +17533,6 @@
 	var packageJson = tslib_1.__importStar(require$$1$1);
 	var buffer_1 = require$$2;
 	tslib_1.__importDefault(require$$3);
-	// Let it be known that it is incredibly stupid that we still have to do this - Ben W 5/12/21
-	// @ts-ignore
 	var fetch = window.fetch.bind(window)
 	    ;
 	var ALKS;
@@ -18650,6 +18648,7 @@
 	                            return [4 /*yield*/, opts._fetch(opts.baseUrl + "/" + path, {
 	                                    method: method,
 	                                    headers: headers,
+	                                    credentials: 'omit',
 	                                    body: method == 'GET' ? undefined : JSON.stringify(payload),
 	                                })];
 	                        case 1:
