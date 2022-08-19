@@ -460,6 +460,7 @@ describe('alks.js', function () {
             instanceProfileARN: 'anInstanceProfileArn',
             isMachineIdentity: false,
             statusMessage: 'Success',
+            maxSessionDurationInSeconds: '3600',
           },
           status: 200,
         });
@@ -476,6 +477,7 @@ describe('alks.js', function () {
         roleArn: 'arn:aws:iam::12391238912383:role/acct-managed/awsRoleName',
         instanceProfileArn: 'anInstanceProfileArn',
         isMachineIdentity: false,
+        maxSessionDurationInSeconds: '3600',
       });
     });
     it('should return the Role object representation of the https response with tags', async () => {
@@ -494,6 +496,7 @@ describe('alks.js', function () {
               { key: 'key1', value: 'test:key1:value1' },
               { key: 'key2', value: 'test:key2:value1' },
             ],
+            maxSessionDurationInSeconds: '3600',
             statusMessage: 'Success',
           },
           status: 200,
@@ -515,6 +518,7 @@ describe('alks.js', function () {
           { key: 'key1', value: 'test:key1:value1' },
           { key: 'key2', value: 'test:key2:value1' },
         ],
+        maxSessionDurationInSeconds: '3600',
       });
     });
 
