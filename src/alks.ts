@@ -237,6 +237,14 @@ namespace ALKS {
     department: string;
   }
 
+  export interface IamUser {
+    arn: string;
+    accountId: string;
+    userName: string;
+    accessKey: string;
+    tags: Tag[];
+  }
+
   export interface CostTotal {
     awsAccountId: string;
     yyyy: string;
@@ -337,9 +345,18 @@ namespace ALKS {
     tags?: Tag[];
   };
 
-  export type UpdateIamUserProps = Partial<AlksProps> & {
-    accountId: string;
+  export type GetIamUserProps = Partial<AlksProps> & {
+    account: string;
     iamUserName: string;
+  };
+
+  export type UpdateIamUserProps = Partial<AlksProps> & {
+    account: string;
+    iamUserName: string;
+    tags?: Tag[];
+  };
+
+  export type UpdateIamUserRequestProps = Partial<AlksProps> & {
     user: {
       tags: Tag[];
     };
@@ -1165,31 +1182,63 @@ namespace ALKS {
     }
 
     /**
-     * Returns a Promise for the results of creating new IAM user and long-term access keys
+     * Returns a Promise for an IamUser
      *
      * @param {Object} props - An object containing the following properties
      * @param {string} props.baseUrl - The base URL of the ALKS service
      * @param {string} props.accessToken - The OAuth2 access token used to authorize the request
      * @param {string} props.account - The user's account associated with the custom role
-     * @param {string} props.role - The user's role associated with the account
-     * @param {string} props.iamUserName - The name of the IAM user to create
-     * @returns {Promise<AccessKeys>}
+     * @param {string} props.iamUserName - The name of the custom AWS IAM user
+     * @returns {Promise<User>}
+     * @example
+     * alks.getIamUser({
+     *   baseUrl: 'https://your.alks-host.com',
+     *   accessToken: 'abc123',
+     *   account: 'anAccount',
+     *   iamUserName: 'iamUserName'
+     * }).then((role) => {
+     *   user.iamUserArn, user.AccountId, user.userName, user.accessKey, user.tags
+     * })
+     */
+    async getIamUser(props: GetIamUserProps): Promise<IamUser> {
+      const results = await this.internalFetch(
+        `iam-users/id/${props.account}/${props.iamUserName}`,
+        props,
+        'GET'
+      );
+      return pick(results.item, [
+        'arn',
+        'accountId',
+        'userName',
+        'accessKey',
+        'tags',
+      ]);
+    }
+
+    /**
+     * Returns a Promise for the results of updating an IAM user
+     *
+     * @param {Object} props - An object containing the following properties
+     * @param {string} props.baseUrl - The base URL of the ALKS service
+     * @param {string} props.accessToken - The OAuth2 access token used to authorize the request
+     * @param {string} props.account - The user's account associated with the custom role
+     * @param {string} props.iamUserName - The name of the IAM user to update
+     * @param {Array.<Object>} props.tags - A list of tag objects, where each object is in the form {key: "tagKey" value: "tagValue"}
+     * @returns {Promise<IamUser>}
      * @example
      * alks.updateIamUser({
      *   baseUrl: 'https://your.alks-host.com',
      *   accessToken: 'abc123',
-     *   account: 'anAccount',
-     *   role: 'IAMAdmin',
-     *   iamUserName: 'iamUserName'
+     *   accountId: 'anAccount',
+     *   iamUserName: 'iamUserName',
      * }).then((user) => {
-     *   // user.iamUserArn, user.accessKey, user.secretKey, user.addedIAMUserToGroup
+     *   // user.iamUserArn, user.AccountId, user.userName, user.accessKey, user.tags
      * })
      * @example
      * alks.updateIamUser({
      *   baseUrl: 'https://your.alks-host.com',
      *   accessToken: 'abc123',
      *   account: 'anAccount',
-     *   role: 'IAMAdmin',
      *   iamUserName: 'iamUserName'
      *   tags: [
      *      {
@@ -1202,22 +1251,28 @@ namespace ALKS {
      *      }
      *   ],
      * }).then((user) => {
-     *   // user.iamUserArn, user.accessKey, user.secretKey, user.addedIAMUserToGroup
+     *   // user.iamUserArn, user.AccountId, user.userName, user.accessKey, user.tags
      * })
      */
-    async UpdateIamUser(props: UpdateIamUserProps): Promise<LongTermKey> {
-      const accountId = props.accountId;
-      const userName = props.iamUserName;
+    async updateIamUser(props: UpdateIamUserProps): Promise<IamUser> {
+      const internalFetchProps = {
+        ...props,
+        user: {
+          tags: props.tags,
+        },
+      };
+      delete internalFetchProps.tags;
       const results = await this.internalFetch(
-        'iam-users/id/${accountId}/${userName}',
-        props.user,
+        `iam-users/id/${props.account}/${props.iamUserName}`,
+        internalFetchProps,
         'PATCH'
       );
-      return pick(results, [
-        'iamUserArn',
+
+      return pick(results.item, [
+        'arn',
+        'accountId',
+        'userName',
         'accessKey',
-        'secretKey',
-        'addedIAMUserToGroup',
         'tags',
       ]);
     }
@@ -1556,6 +1611,8 @@ namespace ALKS {
     Alks.prototype.getAccountOwners.bind(defaultAlks);
   export const createAccessKeys =
     Alks.prototype.createAccessKeys.bind(defaultAlks);
+  export const getIamUser = Alks.prototype.getIamUser.bind(defaultAlks);
+  export const updateIamUser = Alks.prototype.updateIamUser.bind(defaultAlks);
   export const deleteIAMUser = Alks.prototype.deleteIAMUser.bind(defaultAlks);
   export const version = Alks.prototype.version.bind(defaultAlks);
   export const getLoginRole = Alks.prototype.getLoginRole.bind(defaultAlks);
