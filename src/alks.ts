@@ -356,12 +356,6 @@ namespace ALKS {
     tags?: Tag[];
   };
 
-  export type UpdateIamUserRequestProps = Partial<AlksProps> & {
-    user: {
-      tags: Tag[];
-    };
-  };
-
   export type DeleteIAMUserProps = Partial<AlksProps> & {
     account: string;
     role: string;
