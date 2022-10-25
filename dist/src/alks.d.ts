@@ -193,6 +193,13 @@ declare namespace ALKS {
         title: string;
         department: string;
     }
+    export interface IamUser {
+        arn: string;
+        accountId: string;
+        userName: string;
+        accessKey: string;
+        tags: Tag[];
+    }
     export interface CostTotal {
         awsAccountId: string;
         yyyy: string;
@@ -275,6 +282,16 @@ declare namespace ALKS {
         account: string;
         role: string;
         iamUserName: string;
+        tags?: Tag[];
+    };
+    export type GetIamUserProps = Partial<AlksProps> & {
+        account: string;
+        iamUserName: string;
+    };
+    export type UpdateIamUserProps = Partial<AlksProps> & {
+        account: string;
+        iamUserName: string;
+        tags?: Tag[];
     };
     export type DeleteIAMUserProps = Partial<AlksProps> & {
         account: string;
@@ -850,8 +867,88 @@ declare namespace ALKS {
          * }).then((user) => {
          *   // user.iamUserArn, user.accessKey, user.secretKey, user.addedIAMUserToGroup
          * })
+         * @example
+         * alks.createAccessKeys({
+         *   baseUrl: 'https://your.alks-host.com',
+         *   accessToken: 'abc123',
+         *   account: 'anAccount',
+         *   role: 'IAMAdmin',
+         *   iamUserName: 'iamUserName'
+         *   tags: [
+         *      {
+         *        key: "tagkey1",
+         *        value: "tagValue1"
+         *      },
+         *      {
+         *        key: "tagkey1",
+         *        value: "tagvalue2"
+         *      }
+         *   ],
+         * }).then((user) => {
+         *   // user.iamUserArn, user.accessKey, user.secretKey, user.addedIAMUserToGroup
+         * })
          */
         createAccessKeys(props: CreateAccessKeysProps): Promise<LongTermKey>;
+        /**
+         * Returns a Promise for an IamUser
+         *
+         * @param {Object} props - An object containing the following properties
+         * @param {string} props.baseUrl - The base URL of the ALKS service
+         * @param {string} props.accessToken - The OAuth2 access token used to authorize the request
+         * @param {string} props.account - The user's account associated with the custom role
+         * @param {string} props.iamUserName - The name of the custom AWS IAM user
+         * @returns {Promise<User>}
+         * @example
+         * alks.getIamUser({
+         *   baseUrl: 'https://your.alks-host.com',
+         *   accessToken: 'abc123',
+         *   account: 'anAccount',
+         *   iamUserName: 'iamUserName'
+         * }).then((role) => {
+         *   user.iamUserArn, user.AccountId, user.userName, user.accessKey, user.tags
+         * })
+         */
+        getIamUser(props: GetIamUserProps): Promise<IamUser>;
+        /**
+         * Returns a Promise for the results of updating an IAM user
+         *
+         * @param {Object} props - An object containing the following properties
+         * @param {string} props.baseUrl - The base URL of the ALKS service
+         * @param {string} props.accessToken - The OAuth2 access token used to authorize the request
+         * @param {string} props.account - The user's account associated with the custom role
+         * @param {string} props.iamUserName - The name of the IAM user to update
+         * @param {Array.<Object>} props.tags - A list of tag objects, where each object is in the form {key: "tagKey" value: "tagValue"}
+         * @returns {Promise<IamUser>}
+         * @example
+         * alks.updateIamUser({
+         *   baseUrl: 'https://your.alks-host.com',
+         *   accessToken: 'abc123',
+         *   account: 'anAccount',
+         *   iamUserName: 'iamUserName',
+         * }).then((user) => {
+         *   // user.iamUserArn, user.AccountId, user.userName, user.accessKey, user.tags
+         * })
+         * @example
+         * alks.updateIamUser({
+         *   baseUrl: 'https://your.alks-host.com',
+         *   accessToken: 'abc123',
+         *   account: 'anAccount',
+         *   iamUserName: 'iamUserName'
+         *   tags: [
+         *      {
+         *        key: "tagkey1",
+         *        value: "tagValue1"
+         *      },
+         *      {
+         *        key: "tagkey1",
+         *        value: "tagvalue2"
+         *      }
+         *   ],
+         * }).then((user) => {
+         *   // user.iamUserArn, user.AccountId, user.userName, user.accessKey, user.tags
+         * })
+         */
+        updateIamUser(props: UpdateIamUserProps): Promise<IamUser>;
         /**
          * Returns a Promise for a boolean "true" indicating the IAM user and long-term access keys were deleted
          *
@@ -998,6 +1095,8 @@ declare namespace ALKS {
     export const getUserRoleAccess: (props: GetUserRoleAccessProps) => Promise<string[]>;
     export const getAccountOwners: (props: GetAccountOwnersProps) => Promise<User[]>;
     export const createAccessKeys: (props: CreateAccessKeysProps) => Promise<LongTermKey>;
+    export const getIamUser: (props: GetIamUserProps) => Promise<IamUser>;
+    export const updateIamUser: (props: UpdateIamUserProps) => Promise<IamUser>;
     export const deleteIAMUser: (props: DeleteIAMUserProps) => Promise<boolean>;
     export const version: (props: VersionProps) => Promise<{
         version: string;

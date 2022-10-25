@@ -842,6 +842,26 @@ var ALKS;
          * }).then((user) => {
          *   // user.iamUserArn, user.accessKey, user.secretKey, user.addedIAMUserToGroup
          * })
+         * @example
+         * alks.createAccessKeys({
+         *   baseUrl: 'https://your.alks-host.com',
+         *   accessToken: 'abc123',
+         *   account: 'anAccount',
+         *   role: 'IAMAdmin',
+         *   iamUserName: 'iamUserName'
+         *   tags: [
+         *      {
+         *        key: "tagkey1",
+         *        value: "tagValue1"
+         *      },
+         *      {
+         *        key: "tagkey1",
+         *        value: "tagvalue2"
+         *      }
+         *   ],
+         * }).then((user) => {
+         *   // user.iamUserArn, user.accessKey, user.secretKey, user.addedIAMUserToGroup
+         * })
          */
         Alks.prototype.createAccessKeys = function (props) {
             return tslib_1.__awaiter(this, void 0, void 0, function () {
@@ -856,6 +876,108 @@ var ALKS;
                                     'accessKey',
                                     'secretKey',
                                     'addedIAMUserToGroup',
+                                    'tags',
+                                ])];
+                    }
+                });
+            });
+        };
+        /**
+         * Returns a Promise for an IamUser
+         *
+         * @param {Object} props - An object containing the following properties
+         * @param {string} props.baseUrl - The base URL of the ALKS service
+         * @param {string} props.accessToken - The OAuth2 access token used to authorize the request
+         * @param {string} props.account - The user's account associated with the custom role
+         * @param {string} props.iamUserName - The name of the custom AWS IAM user
+         * @returns {Promise<User>}
+         * @example
+         * alks.getIamUser({
+         *   baseUrl: 'https://your.alks-host.com',
+         *   accessToken: 'abc123',
+         *   account: 'anAccount',
+         *   iamUserName: 'iamUserName'
+         * }).then((role) => {
+         *   user.iamUserArn, user.AccountId, user.userName, user.accessKey, user.tags
+         * })
+         */
+        Alks.prototype.getIamUser = function (props) {
+            return tslib_1.__awaiter(this, void 0, void 0, function () {
+                var results;
+                return tslib_1.__generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0: return [4 /*yield*/, this.internalFetch("iam-users/id/" + props.account + "/" + props.iamUserName, props, 'GET')];
+                        case 1:
+                            results = _a.sent();
+                            return [2 /*return*/, pick(results.item, [
+                                    'arn',
+                                    'accountId',
+                                    'userName',
+                                    'accessKey',
+                                    'tags',
+                                ])];
+                    }
+                });
+            });
+        };
+        /**
+         * Returns a Promise for the results of updating an IAM user
+         *
+         * @param {Object} props - An object containing the following properties
+         * @param {string} props.baseUrl - The base URL of the ALKS service
+         * @param {string} props.accessToken - The OAuth2 access token used to authorize the request
+         * @param {string} props.account - The user's account associated with the custom role
+         * @param {string} props.iamUserName - The name of the IAM user to update
+         * @param {Array.<Object>} props.tags - A list of tag objects, where each object is in the form {key: "tagKey" value: "tagValue"}
+         * @returns {Promise<IamUser>}
+         * @example
+         * alks.updateIamUser({
+         *   baseUrl: 'https://your.alks-host.com',
+         *   accessToken: 'abc123',
+         *   account: 'anAccount',
+         *   iamUserName: 'iamUserName',
+         * }).then((user) => {
+         *   // user.iamUserArn, user.AccountId, user.userName, user.accessKey, user.tags
+         * })
+         * @example
+         * alks.updateIamUser({
+         *   baseUrl: 'https://your.alks-host.com',
+         *   accessToken: 'abc123',
+         *   account: 'anAccount',
+         *   iamUserName: 'iamUserName'
+         *   tags: [
+         *      {
+         *        key: "tagkey1",
+         *        value: "tagValue1"
+         *      },
+         *      {
+         *        key: "tagkey1",
+         *        value: "tagvalue2"
+         *      }
+         *   ],
+         * }).then((user) => {
+         *   // user.iamUserArn, user.AccountId, user.userName, user.accessKey, user.tags
+         * })
+         */
+        Alks.prototype.updateIamUser = function (props) {
+            return tslib_1.__awaiter(this, void 0, void 0, function () {
+                var internalFetchProps, results;
+                return tslib_1.__generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            internalFetchProps = tslib_1.__assign(tslib_1.__assign({}, props), { user: {
+                                    tags: props.tags,
+                                } });
+                            delete internalFetchProps.tags;
+                            return [4 /*yield*/, this.internalFetch("iam-users/id/" + props.account + "/" + props.iamUserName, internalFetchProps, 'PATCH')];
+                        case 1:
+                            results = _a.sent();
+                            return [2 /*return*/, pick(results.item, [
+                                    'arn',
+                                    'accountId',
+                                    'userName',
+                                    'accessKey',
+                                    'tags',
                                 ])];
                     }
                 });
@@ -1213,6 +1335,8 @@ var ALKS;
     ALKS.getUserRoleAccess = Alks.prototype.getUserRoleAccess.bind(defaultAlks);
     ALKS.getAccountOwners = Alks.prototype.getAccountOwners.bind(defaultAlks);
     ALKS.createAccessKeys = Alks.prototype.createAccessKeys.bind(defaultAlks);
+    ALKS.getIamUser = Alks.prototype.getIamUser.bind(defaultAlks);
+    ALKS.updateIamUser = Alks.prototype.updateIamUser.bind(defaultAlks);
     ALKS.deleteIAMUser = Alks.prototype.deleteIAMUser.bind(defaultAlks);
     ALKS.version = Alks.prototype.version.bind(defaultAlks);
     ALKS.getLoginRole = Alks.prototype.getLoginRole.bind(defaultAlks);

@@ -1026,6 +1026,168 @@ describe('alks.js', function () {
     });
   });
 
+  describe('getIamUser', () => {
+    it('should return accessKey and info about the user, including tags', async () => {
+      const _fetch = fetchMock.sandbox().mock(
+        'https://your.alks-host.com/iam-users/id/anAccountId/anIamUserName',
+        {
+          body: {
+            item: {
+              arn: 'anIAMUserArn',
+              accountId: 'anAccountId',
+              userName: 'anIamUserName',
+              accessKey: 'anAccessKey',
+              tags: [
+                { key: 'key1', value: 'value1' },
+                { key: 'key2', value: 'value2' },
+              ],
+            },
+          },
+          status: 200,
+        },
+        { method: 'GET' }
+      );
+
+      const result = await alks.getIamUser({
+        baseUrl: 'https://your.alks-host.com',
+        accessToken: 'anAccessKey',
+        account: 'anAccountId',
+        iamUserName: 'anIamUserName',
+        _fetch,
+      });
+
+      expect(result).to.deep.include({
+        arn: 'anIAMUserArn',
+        accessKey: 'anAccessKey',
+        userName: 'anIamUserName',
+        accountId: 'anAccountId',
+        tags: [
+          { key: 'key1', value: 'value1' },
+          { key: 'key2', value: 'value2' },
+        ],
+      });
+    });
+    it('should return keys and information about the user even when no tags present', async () => {
+      const _fetch = fetchMock.sandbox().mock(
+        'https://your.alks-host.com/iam-users/id/anAccountId/anIamUserName',
+        {
+          body: {
+            item: {
+              arn: 'anIAMUserArn',
+              accountId: 'anAccountId',
+              userName: 'anIamUserName',
+              accessKey: 'anAccessKey',
+            },
+          },
+          status: 200,
+        },
+        { method: 'GET' }
+      );
+
+      const result = await alks.getIamUser({
+        baseUrl: 'https://your.alks-host.com',
+        accessToken: 'anAccessKey',
+        account: 'anAccountId',
+        iamUserName: 'anIamUserName',
+        _fetch,
+      });
+
+      expect(result).to.deep.include({
+        arn: 'anIAMUserArn',
+        accessKey: 'anAccessKey',
+        userName: 'anIamUserName',
+        accountId: 'anAccountId',
+      });
+    });
+  });
+
+  describe('updateIamUser', () => {
+    it('should return keys and information about the updated user', async () => {
+      const _fetch = fetchMock.sandbox().mock(
+        'https://your.alks-host.com/iam-users/id/anAccountId/anIamUserName',
+        {
+          body: {
+            item: {
+              arn: 'anIAMUserArn',
+              accountId: 'anAccountId',
+              userName: 'anIamUserName',
+              accessKey: 'anAccessKey',
+              tags: [
+                { key: 'key1', value: 'value1' },
+                { key: 'key2', value: 'value2' },
+              ],
+            },
+          },
+          status: 200,
+        },
+        { method: 'PATCH' }
+      );
+
+      const result = await alks.updateIamUser({
+        baseUrl: 'https://your.alks-host.com',
+        accessToken: 'anAccessKey',
+        account: 'anAccountId',
+        iamUserName: 'anIamUserName',
+        tags: [
+          { key: 'key1', value: 'value1' },
+          { key: 'key2', value: 'value2' },
+        ],
+        _fetch,
+      });
+
+      expect(result).to.deep.include({
+        arn: 'anIAMUserArn',
+        accessKey: 'anAccessKey',
+        userName: 'anIamUserName',
+        accountId: 'anAccountId',
+        tags: [
+          { key: 'key1', value: 'value1' },
+          { key: 'key2', value: 'value2' },
+        ],
+      });
+    });
+    it('should return keys and information about the updated user when no tags included in request', async () => {
+      const _fetch = fetchMock.sandbox().mock(
+        'https://your.alks-host.com/iam-users/id/anAccountId/anIamUserName',
+        {
+          body: {
+            item: {
+              arn: 'anIAMUserArn',
+              accountId: 'anAccountId',
+              userName: 'anIamUserName',
+              accessKey: 'anAccessKey',
+              tags: [
+                { key: 'key1', value: 'value1' },
+                { key: 'key2', value: 'value2' },
+              ],
+            },
+          },
+          status: 200,
+        },
+        { method: 'PATCH' }
+      );
+
+      const result = await alks.updateIamUser({
+        baseUrl: 'https://your.alks-host.com',
+        accessToken: 'anAccessKey',
+        account: 'anAccountId',
+        iamUserName: 'anIamUserName',
+        _fetch,
+      });
+
+      expect(result).to.deep.include({
+        arn: 'anIAMUserArn',
+        accessKey: 'anAccessKey',
+        userName: 'anIamUserName',
+        accountId: 'anAccountId',
+        tags: [
+          { key: 'key1', value: 'value1' },
+          { key: 'key2', value: 'value2' },
+        ],
+      });
+    });
+  });
+
   describe('deleteIAMUser', () => {
     it('should return true if successful', async () => {
       const _fetch = fetchMock.sandbox().mock(
