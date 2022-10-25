@@ -291,7 +291,7 @@
 	var require$$0$1 = /*@__PURE__*/getAugmentedNamespace(tslib_es6);
 
 	var name = "alks.js";
-	var version$2 = "2.4.0";
+	var version$2 = "2.5.0";
 	var description = "JavaScript client for the ALKS API, usable in both modern browsers and node.js";
 	var main = "dist/alks.cjs.js";
 	var types = "dist/src/alks.d.ts";
