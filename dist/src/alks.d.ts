@@ -923,7 +923,7 @@ declare namespace ALKS {
          * alks.updateIamUser({
          *   baseUrl: 'https://your.alks-host.com',
          *   accessToken: 'abc123',
-         *   accountId: 'anAccount',
+         *   account: 'anAccount',
          *   iamUserName: 'iamUserName',
          * }).then((user) => {
          *   // user.iamUserArn, user.AccountId, user.userName, user.accessKey, user.tags
