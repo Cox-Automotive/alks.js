@@ -336,8 +336,7 @@
 	var dependencies = {
 		encoding: "^0.1.13",
 		"node-fetch": "^2.6.1",
-		tslib: "^2.3.1",
-		typedoc: "^0.22.15"
+		tslib: "^2.3.1"
 	};
 	var devDependencies = {
 		"@rollup/plugin-commonjs": "^19.0.0",
@@ -370,6 +369,7 @@
 		"rollup-plugin-replace": "^2.2.0",
 		sinon: "^10.0.0",
 		tslint: "^6.1.3",
+		typedoc: "^0.22.15",
 		typescript: "^4.2.4",
 		"uglify-js": "^3.13.6"
 	};
