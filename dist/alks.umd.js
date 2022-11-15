@@ -17632,7 +17632,7 @@
 	         * @param {string} props.account - The AWS account to use when provisioning the credentials
 	         * @param {string} props.role - The ALKS role to use when provisioning the credentials
 	         * @param {string} props.sessionTime - The session length for the credentials
-	         * @returns {Promise<credentials>}
+	         * @returns {Promise<Key>}
 	         * @example
 	         * alks.getKeys({
 	         *   baseUrl: 'https://your.alks-host.com',
@@ -17657,6 +17657,7 @@
 	                                    'secretKey',
 	                                    'sessionToken',
 	                                    'consoleURL',
+	                                    'sessionTime'
 	                                ])];
 	                    }
 	                });
@@ -17670,7 +17671,7 @@
 	         * @param {string} props.accessToken - The OAuth2 access token used to authorize the request
 	         * @param {string} props.account - The AWS account to use when provisioning the credentials
 	         * @param {string} props.role - The ALKS role to use when provisioning the credentials
-	         * @param {number} props.sessionTime - The session length for the credentials
+	         * @param {number} props.sessionTime - The session length for the credentials, in hours
 	         * @returns {Promise<credentials>}
 	         * @example
 	         * alks.getIAMKeys({
@@ -17696,6 +17697,7 @@
 	                                    'secretKey',
 	                                    'sessionToken',
 	                                    'consoleURL',
+	                                    'sessionTime'
 	                                ])];
 	                    }
 	                });
