@@ -90,6 +90,7 @@ describe('alks.js', function () {
             secretKey: 'bar',
             sessionToken: 'baz',
             consoleURL: 'https://foo.com',
+            sessionTime: 1,
             statusMessage: 'Success',
           },
           status: 200,
@@ -108,7 +109,8 @@ describe('alks.js', function () {
         'accessKey',
         'secretKey',
         'sessionToken',
-        'consoleURL'
+        'consoleURL',
+        'sessionTime'
       );
     });
 
@@ -275,6 +277,7 @@ describe('alks.js', function () {
             secretKey: 'bar',
             sessionToken: 'baz',
             consoleURL: 'https://foo.com',
+            sessionTime: 1,
             statusMessage: 'Success',
           },
           status: 200,
@@ -293,7 +296,8 @@ describe('alks.js', function () {
         'accessKey',
         'secretKey',
         'sessionToken',
-        'consoleURL'
+        'consoleURL',
+        'sessionTime'
       );
     });
   });
