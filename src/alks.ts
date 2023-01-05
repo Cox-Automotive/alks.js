@@ -71,7 +71,7 @@ namespace ALKS {
    * Skypiea Account
    * @property label - the friendly name of the account
    * @property accountOwners - the samAccountNames of the account owners
-   * @property cloudsploitTrend - the cloudsploit trends
+   * @property cloudsploitTrend - the CloudSploit trends
    */
   export interface SkypieaAccount {
     label: string;
@@ -127,12 +127,14 @@ namespace ALKS {
    * @property secretKey - AWS secret key
    * @property sessionToken - AWS STS session token
    * @property consoleURL - a URL to the AWS console using these keys
+   * @property sessionTime - the number of hours until the key expires
    */
   export interface Key {
     accessKey: string;
     secretKey: string;
     sessionToken: string;
     consoleURL: string;
+    sessionTime: number;
   }
 
   /**
@@ -140,7 +142,7 @@ namespace ALKS {
    * @property iamUserArn - the arn of the IAM user owning the long term access keys
    * @property accessKey - the long term access key
    * @property secretKey - the secret key for the long term access key
-   * @property addedIAMUserToGroup - whether the user was successfuly added to the deny policy group
+   * @property addedIAMUserToGroup - whether the user was successfully added to the deny policy group
    */
   export interface LongTermKey {
     iamUserArn: string;
@@ -466,7 +468,7 @@ namespace ALKS {
      * @param {Object} props - An object containing the following properties
      * @param {string} props.baseUrl - The base URL of the ALKS service
      * @param {string} props.accessToken - The OAuth2 access token used to authorize the request
-     * @returns {Promise<account[]>}
+     * @returns {Promise<Account[]>}
      * @example
      * alks.getAccounts({
      *   baseUrl: 'https://your.alks-host.com',
@@ -495,8 +497,8 @@ namespace ALKS {
      * @param {string} props.accessToken - The OAuth2 access token used to authorize the request
      * @param {string} props.account - The AWS account to use when provisioning the credentials
      * @param {string} props.role - The ALKS role to use when provisioning the credentials
-     * @param {string} props.sessionTime - The session length for the credentials
-     * @returns {Promise<credentials>}
+     * @param {string} props.sessionTime - The session length for the credentials, in hours
+     * @returns {Promise<Key>}
      * @example
      * alks.getKeys({
      *   baseUrl: 'https://your.alks-host.com',
@@ -515,6 +517,7 @@ namespace ALKS {
         'secretKey',
         'sessionToken',
         'consoleURL',
+        'sessionTime',
       ]);
     }
 
@@ -526,8 +529,8 @@ namespace ALKS {
      * @param {string} props.accessToken - The OAuth2 access token used to authorize the request
      * @param {string} props.account - The AWS account to use when provisioning the credentials
      * @param {string} props.role - The ALKS role to use when provisioning the credentials
-     * @param {number} props.sessionTime - The session length for the credentials
-     * @returns {Promise<credentials>}
+     * @param {number} props.sessionTime - The session length for the credentials, in hours
+     * @returns {Promise<Key>}
      * @example
      * alks.getIAMKeys({
      *   baseUrl: 'https://your.alks-host.com',
@@ -546,6 +549,7 @@ namespace ALKS {
         'secretKey',
         'sessionToken',
         'consoleURL',
+        'sessionTime',
       ]);
     }
 
@@ -646,7 +650,7 @@ namespace ALKS {
      * @param {boolean} props.enableAlksAccess - Whether the role has a machine identity
      * @param {Object} props.templateFields - An object whose keys are template variable names and values are the value to substitute for those template variables
      * @param {Array.<Object>} props.tags - A list of tag objects, where each object is in the form {key: "tagKey" value: "tagValue"}
-     * @returns {Promise<customRole>}
+     * @returns {Promise<Role>}
      * @example
      * alks.createRole({
      *   baseUrl: 'https://your.alks-host.com',
@@ -746,7 +750,7 @@ namespace ALKS {
      * @param {string} props.trustType - Whether the trust is 'Cross Account' or 'Inner Account'
      * @param {boolean} props.enableAlksAccess - Whether the role has a machine identity
      * @param {Array.<Object>} props.tags - A list of tag objects, where each object is in the form {key: "tagKey" value: "tagValue"}
-     * @returns {Promise<customRole>}
+     * @returns {Promise<Role>}
      * @example
      * alks.createNonServiceRole({
      *   baseUrl: 'https://your.alks-host.com',
@@ -809,7 +813,7 @@ namespace ALKS {
      * @param {string} props.baseUrl - The base URL of the ALKS service
      * @param {string} props.accessToken - The OAuth2 access token used to authorize the request
      * @param {string} props.account - The account number to get AWS roles for
-     * @returns {Promise<awsAccountRole[]>}
+     * @returns {Promise<AwsAccountRole[]>}
      * @example
      * alks.awsAccountRoles({
      *   baseUrl: 'https://your.alks-host.com',
@@ -1019,7 +1023,7 @@ namespace ALKS {
      * @param {string} props.baseUrl - The base URL of the ALKS service
      * @param {string} props.accessToken - The OAuth2 access token used to authorize the request
      * @param {string} props.accountId - The accountId used to find which users have access to the account
-     * @returns {Promise<alksUser[]>}
+     * @returns {Promise<User[]>}
      * @example
      * alks.getUserAccess({
      *    baseUrl: 'https://your.alks-host.com',
