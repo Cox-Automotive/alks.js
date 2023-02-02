@@ -1,5 +1,4 @@
 # Changelog
 
-- Fix documented method return types
-- Adding sessionTime property to getKeys/getIAMKeys response
+- Updates types the getAccounts response to include alias and account ID 
 
