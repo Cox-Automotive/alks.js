@@ -77,6 +77,8 @@ namespace ALKS {
     label: string;
     accountOwners: AccountUserDetails[];
     cloudsploitTrend: CloudsploitReport[];
+    alias: string;
+    awsAccountId: string;
   }
 
   /**
