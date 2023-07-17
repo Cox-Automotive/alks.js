@@ -333,7 +333,8 @@ namespace ALKS {
     account: string;
     role: string;
     roleName: string;
-    tags: Tag[];
+    tags?: Tag[];
+    trustPolicy?: Record<string, unknown>;
   };
 
   export type DeleteRoleProps = Partial<AlksProps> & {
@@ -914,7 +915,8 @@ namespace ALKS {
      * @param {string} props.account - The user's account associated with the custom role
      * @param {string} props.role - The user's role associated with the account
      * @param {string} props.roleName - The name of the custom AWS IAM role
-     * @param {Array.<Object>} props.tags - A list of tag objects, where each object is in the form {key: "tagKey" value: "tagValue"}
+     * @param {Array.<Object>} [props.tags] - A list of tag objects, where each object is in the form {key: "tagKey", value: "tagValue"}
+     * @param {Object} [props.trustPolicy] - A trust policy object
      * @returns {Promise<Role>}
      * @example
      * alks.updateRole({

@@ -625,6 +625,53 @@ describe('alks.js', function () {
       });
     });
 
+    it('should return success when a trust policy is updated', async () => {
+      const _fetch = fetchMock.sandbox().mock(
+        'https://your.alks-host.com/role',
+        {
+          body: {
+            roleArn:
+              'arn:aws:iam::12391238912383:role/acct-managed/awsRoleName',
+            roleName: 'awsRoleName',
+            basicAuthUsed: false,
+            roleExists: true,
+            instanceProfileARN: 'anInstanceProfileArn',
+            isMachineIdentity: false,
+            tags: [
+              { key: 'key1', value: 'test:key1:value1' },
+              { key: 'key2', value: 'test:key2:value1' },
+            ],
+            statusMessage: 'Success',
+          },
+          status: 200,
+        },
+        { method: 'PATCH' }
+      );
+
+      const result = await alks.updateRole({
+        baseUrl: 'https://your.alks-host.com',
+        accessToken: 'abc123',
+        account: 'anAccount',
+        role: 'Admin',
+        roleName: 'awsRoleName',
+        tags: [
+          { key: 'key1', value: 'test:key1:value1' },
+          { key: 'key2', value: 'test:key2:value1' },
+        ],
+        trustPolicy: { key: 'foo', value: 'bar' },
+        _fetch,
+      });
+      expect(result).to.deep.include({
+        roleArn: 'arn:aws:iam::12391238912383:role/acct-managed/awsRoleName',
+        instanceProfileArn: 'anInstanceProfileArn',
+        isMachineIdentity: false,
+        tags: [
+          { key: 'key1', value: 'test:key1:value1' },
+          { key: 'key2', value: 'test:key2:value1' },
+        ],
+      });
+    });
+
     it('should reject with an error message when the role is not found', async () => {
       const _fetch = fetchMock.sandbox().mock(
         'https://your.alks-host.com/role',
