@@ -12,7 +12,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    # checkout the master branch to compare CHANGELOG.md
+    # checkout the master branch to compare CHANGELOG.md  
     - uses: actions/checkout@v2
       with:
         ref: master
