@@ -84,7 +84,7 @@ jobs:
           tags: true
 
       - name: Enable "include administrators" branch protection
-        uses: benjefferies/branch-protection-bot@76b8a9d745a68c6a6e9b4bf745d4b32ad805e9a1
+        uses: benjefferies/branch-protection-bot@1.0.9
         if: always()  # Force to always run this step to ensure "include administrators" is always turned back on
         with:
           access_token: ${{ secrets._GITHUB_TOKEN }}
