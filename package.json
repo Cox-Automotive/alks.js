@@ -56,7 +56,6 @@
     "browserify": "^17.0.0",
     "chai": "^4.3.4",
     "chai-as-promised": "^7.1.1",
-    "coveralls": "^3.0.3",
     "eslint": "^7.25.0",
     "eslint-plugin-jsdoc": "^4.1.1",
     "fetch-mock": "^7.3.1",
