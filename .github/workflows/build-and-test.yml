@@ -29,9 +29,3 @@ jobs:
     - run: npm run build --if-present
     - name: Run tests
       run: npm test
-    - name: Build Coverage Report
-      run: npm run coverage
-    - name: Send report to Coveralls
-      run: |
-        curl -L https://coveralls.io/coveralls-linux.tar.gz | tar -xz
-        ./coveralls report
