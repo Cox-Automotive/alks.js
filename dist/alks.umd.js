@@ -308,7 +308,7 @@
 		lint: "prettier --write --no-error-on-unmatched-pattern {src,test}/**/*.{ts,js,json,md}",
 		test: "npm run build && npm run lint && npm run mocha && npm run karma",
 		mocha: "nyc mocha test/test.js",
-		coverage: "nyc report --reporter=text-lcov | coveralls",
+		coverage: "nyc report --reporter=lcov --reporter=text",
 		karma: "karma start",
 		docs: "typedoc src/alks.ts",
 		prepare: "husky install",
