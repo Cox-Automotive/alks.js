@@ -27,5 +27,25 @@ jobs:
     - name: Install dependencies
       run: npm ci
     - run: npm run build --if-present
-    - name: Run tests
+    - name: Run tests ${{ matrix.node-version }}
       run: npm test
+    - name: Build Coverage Report
+      run: npm run coverage
+    - name: Coveralls Parallel
+      uses: coverallsapp/github-actions@v2
+      with:
+        flag-name: run-${{ join(matrix.*, '-') }}
+        parallel: true
+    outputs:
+      carryfoward-string: run-${{ join(matrix.*, '-') }}
+      
+  finish:
+    needs: build-and-test
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    steps:
+    - name: Coveralls Finished
+      uses: coverallsapp/github-action@v2
+      with:
+        parallel-finished: true
+        carryforward: ${{ needs.build-and-test.outputs.carryfoward-string }}
