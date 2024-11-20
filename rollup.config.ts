@@ -34,7 +34,8 @@ export default [
   {
     input: 'lib/src/alks.js',
     output: {
-      dir: 'dist/cjs',
+      dir: 'dist',
+      entryFileNames: pkg.main,
       format: 'cjs',
       exports: 'named',
     },

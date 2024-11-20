@@ -8,12 +8,14 @@ declare const _default: ({
         intro: string;
         outro: string;
         dir?: undefined;
+        entryFileNames?: undefined;
     };
     plugins: import("rollup").Plugin<any>[];
 } | {
     input: string;
     output: {
         dir: string;
+        entryFileNames: any;
         format: string;
         exports: string;
         file?: undefined;
@@ -32,6 +34,7 @@ declare const _default: ({
         intro?: undefined;
         outro?: undefined;
         dir?: undefined;
+        entryFileNames?: undefined;
     };
     plugins: import("rollup").Plugin<any>[];
 })[];
