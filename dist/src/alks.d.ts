@@ -1,5 +1,5 @@
 import nodeFetch, { Response } from 'node-fetch';
-declare type Fetch = typeof nodeFetch;
+type Fetch = typeof nodeFetch;
 declare namespace ALKS {
     interface BaseConfig {
         baseUrl: string;
@@ -1081,7 +1081,7 @@ declare namespace ALKS {
         constructor(response: Response, json: any);
     }
     export const create: (props: AlksProps) => Alks;
-    export const getAccounts: (props?: GetAccountsProps | undefined) => Promise<Account[]>;
+    export const getAccounts: (props?: GetAccountsProps) => Promise<Account[]>;
     export const getKeys: (props: GetKeysProps) => Promise<Key>;
     export const getIAMKeys: (props: GetIAMKeysProps) => Promise<Key>;
     export const getAllAWSRoleTypes: (props: GetAllAWSRoleTypesProps) => Promise<AwsRoleType[]>;
@@ -1107,11 +1107,11 @@ declare namespace ALKS {
     export const version: (props: VersionProps) => Promise<{
         version: string;
     }>;
-    export const getLoginRole: (props: GetLoginRoleProps) => Promise<Omit<Account, 'skypieaAccount'>>;
+    export const getLoginRole: (props: GetLoginRoleProps) => Promise<Omit<Account, "skypieaAccount">>;
     export const getAccessToken: (props: GetAccessTokenProps) => Promise<AccessToken>;
     export const getRefreshTokens: (props: GetRefreshTokensProps) => Promise<RefreshToken[]>;
     export const revoke: (props: RevokeProps) => Promise<boolean>;
     export const getCostTotals: (props: GetCostTotalsProps) => Promise<CostTotal>;
     export {};
 }
-export = ALKS;
+export default ALKS;

@@ -1,7 +1,9 @@
-import * as packageJson from '../package.json';
 import { Buffer } from 'buffer';
 import nodeFetch, { Response } from 'node-fetch';
 import { RequestInit } from 'node-fetch';
+import createRequire from 'create-require';
+const legacyRequire = createRequire(import.meta.url);
+const packageJson = legacyRequire('../package.json');
 
 declare const window: any;
 
@@ -1625,4 +1627,4 @@ namespace ALKS {
   export const getCostTotals = Alks.prototype.getCostTotals.bind(defaultAlks);
 }
 
-export = ALKS;
+export default ALKS;
