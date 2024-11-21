@@ -5530,7 +5530,7 @@ class Body {
 			return formData;
 		}
 
-		const {toFormData} = await Promise.resolve().then(function () { return require('./multipart-parser-BzgnNaGc.js'); });
+		const {toFormData} = await Promise.resolve().then(function () { return require('./multipart-parser-BBzkj8xZ.js'); });
 		return toFormData(this.body, ct);
 	}
 
@@ -7379,7 +7379,7 @@ function requireCreateRequire () {
 var createRequireExports = requireCreateRequire();
 var createRequire = /*@__PURE__*/getDefaultExportFromCjs(createRequireExports);
 
-var legacyRequire = createRequire((typeof document === 'undefined' ? require('u' + 'rl').pathToFileURL(__filename).href : (_documentCurrentScript && _documentCurrentScript.tagName.toUpperCase() === 'SCRIPT' && _documentCurrentScript.src || new URL('alks-BdelsiTG.js', document.baseURI).href)));
+var legacyRequire = createRequire((typeof document === 'undefined' ? require('u' + 'rl').pathToFileURL(__filename).href : (_documentCurrentScript && _documentCurrentScript.tagName.toUpperCase() === 'SCRIPT' && _documentCurrentScript.src || new URL('alks-C9GNYZZK.js', document.baseURI).href)));
 var packageJson = legacyRequire('../package.json');
 var fetch = fetch$1;
 var ALKS;
@@ -8586,7 +8586,7 @@ var ALKS;
         };
         Alks.prototype.internalFetch = function (path_1) {
             return __awaiter(this, arguments, void 0, function (path, args, method) {
-                var opts, payload, headers, credentials, response, json, err_1;
+                var opts, payload, headers, credentials, url, response, json, err_1;
                 if (args === void 0) { args = {}; }
                 if (method === void 0) { method = 'POST'; }
                 return __generator(this, function (_a) {
@@ -8622,7 +8622,8 @@ var ALKS;
                                 headers['User-Agent'] += " ".concat(opts.userAgent);
                                 delete payload.userAgent;
                             }
-                            return [4 /*yield*/, opts._fetch("".concat(opts.baseUrl, "/").concat(path), {
+                            url = "".concat(opts.baseUrl, "/").concat(path);
+                            return [4 /*yield*/, opts._fetch(url, {
                                     method: method,
                                     headers: headers,
                                     credentials: 'omit',
@@ -8644,6 +8645,20 @@ var ALKS;
                             };
                             return [3 /*break*/, 5];
                         case 5:
+                            if (this.config.requestLogger) {
+                                try {
+                                    this.config.requestLogger({
+                                        method: method,
+                                        url: url,
+                                        statusCode: response.status,
+                                        statusMessage: json.statusMessage,
+                                        requestId: json.requestId,
+                                    });
+                                }
+                                catch (err) {
+                                    // swallow errors if the request logger isn't set up correctly
+                                }
+                            }
                             if (!response.ok) {
                                 throw new AlksError(response, json);
                             }

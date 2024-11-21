@@ -19,6 +19,15 @@ namespace ALKS {
     baseUrl: string;
     _fetch?: Fetch;
     userAgent?: string;
+    requestLogger?: (details: RequestDetails) => void;
+  }
+
+  interface RequestDetails {
+    url: string;
+    method: string;
+    statusCode: number;
+    statusMessage: string;
+    requestId: string;
   }
 
   function isStsAuth(a: Auth): a is StsAuth {
@@ -1513,7 +1522,8 @@ namespace ALKS {
         delete payload.userAgent;
       }
 
-      const response = await (opts._fetch as Fetch)(`${opts.baseUrl}/${path}`, {
+      const url = `${opts.baseUrl}/${path}`;
+      const response = await (opts._fetch as Fetch)(url, {
         method,
         headers,
         credentials: 'omit',
@@ -1527,6 +1537,20 @@ namespace ALKS {
         json = {
           errors: [(err as Error).message],
         };
+      }
+
+      if (this.config.requestLogger) {
+        try {
+          this.config.requestLogger({
+            method,
+            url,
+            statusCode: response.status,
+            statusMessage: json.statusMessage,
+            requestId: json.requestId,
+          });
+        } catch (err) {
+          // swallow errors if the request logger isn't set up correctly
+        }
       }
 
       if (!response.ok) {

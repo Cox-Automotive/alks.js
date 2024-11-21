@@ -3861,7 +3861,7 @@
           };
           Alks.prototype.internalFetch = function (path_1) {
               return __awaiter(this, arguments, void 0, function (path, args, method) {
-                  var opts, payload, headers, credentials, response, json, err_1;
+                  var opts, payload, headers, credentials, url, response, json, err_1;
                   if (args === void 0) { args = {}; }
                   if (method === void 0) { method = 'POST'; }
                   return __generator(this, function (_a) {
@@ -3897,7 +3897,8 @@
                                   headers['User-Agent'] += " ".concat(opts.userAgent);
                                   delete payload.userAgent;
                               }
-                              return [4 /*yield*/, opts._fetch("".concat(opts.baseUrl, "/").concat(path), {
+                              url = "".concat(opts.baseUrl, "/").concat(path);
+                              return [4 /*yield*/, opts._fetch(url, {
                                       method: method,
                                       headers: headers,
                                       credentials: 'omit',
@@ -3919,6 +3920,20 @@
                               };
                               return [3 /*break*/, 5];
                           case 5:
+                              if (this.config.requestLogger) {
+                                  try {
+                                      this.config.requestLogger({
+                                          method: method,
+                                          url: url,
+                                          statusCode: response.status,
+                                          statusMessage: json.statusMessage,
+                                          requestId: json.requestId,
+                                      });
+                                  }
+                                  catch (err) {
+                                      // swallow errors if the request logger isn't set up correctly
+                                  }
+                              }
                               if (!response.ok) {
                                   throw new AlksError(response, json);
                               }

@@ -5,6 +5,14 @@ declare namespace ALKS {
         baseUrl: string;
         _fetch?: Fetch;
         userAgent?: string;
+        requestLogger?: (details: RequestDetails) => void;
+    }
+    interface RequestDetails {
+        url: string;
+        method: string;
+        statusCode: number;
+        statusMessage: string;
+        requestId: string;
     }
     interface StsAuth {
         accessKey: string;

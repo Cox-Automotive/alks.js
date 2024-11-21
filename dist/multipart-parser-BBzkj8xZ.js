@@ -2,7 +2,7 @@
 
 require('node:fs');
 require('node:path');
-var alks = require('./alks-BdelsiTG.js');
+var alks = require('./alks-C9GNYZZK.js');
 require('buffer');
 require('node:http');
 require('node:https');
