@@ -9,7 +9,7 @@ const pkg = legacyRequire('./package.json');
 
 export default [
   {
-    input: 'lib/src/alks.js',
+    input: 'lib/src/main.js',
     output: {
       file: pkg.browser,
       format: 'umd',
@@ -32,10 +32,10 @@ export default [
     ]
   },
   {
-    input: 'lib/src/alks.js',
+    input: 'lib/src/main.js',
     output: {
       dir: 'dist',
-      entryFileNames: pkg.main,
+      entryFileNames: pkg.commonjs,
       format: 'cjs',
       exports: 'named',
     },
@@ -50,7 +50,7 @@ export default [
     ]
   },
   {
-    input: 'lib/src/alks.js',
+    input: 'lib/src/main.js',
     output: {
       file: pkg.module,
       format: 'es',

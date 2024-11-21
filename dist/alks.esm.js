@@ -2202,7 +2202,7 @@ var platform = 'browser';
 var browser = true;
 var env = {};
 var argv = [];
-var version = ''; // empty string to avoid regexp issues
+var version$1 = ''; // empty string to avoid regexp issues
 var versions = {};
 var release = {};
 var config = {};
@@ -2266,7 +2266,7 @@ var browser$1 = {
   browser: browser,
   env: env,
   argv: argv,
-  version: version,
+  version: version$1,
   versions: versions,
   on: on,
   addListener: addListener,
@@ -2648,1364 +2648,1400 @@ var legacyRequire = createRequire(import.meta.url);
 var packageJson = legacyRequire('../package.json');
 var fetch = window.fetch.bind(window)
     ;
-var ALKS;
-(function (ALKS) {
-    function isStsAuth(a) {
-        return a.accessKey !== undefined;
+function isStsAuth(a) {
+    return a.accessKey !== undefined;
+}
+function isPasswordAuth(a) {
+    return a.userid !== undefined;
+}
+function isTokenAuth(a) {
+    return a.accessToken !== undefined;
+}
+var TrustType;
+(function (TrustType) {
+    TrustType["CrossAccount"] = "Cross Account";
+    TrustType["InnerAccount"] = "Inner Account";
+})(TrustType || (TrustType = {}));
+var PseudoBoolean;
+(function (PseudoBoolean) {
+    PseudoBoolean[PseudoBoolean["True"] = 1] = "True";
+    PseudoBoolean[PseudoBoolean["False"] = 0] = "False";
+})(PseudoBoolean || (PseudoBoolean = {}));
+/**
+ * ALKS JavaScript API
+ */
+var Alks = /** @class */ (function () {
+    function Alks(config) {
+        this.config = config;
     }
-    function isPasswordAuth(a) {
-        return a.userid !== undefined;
-    }
-    function isTokenAuth(a) {
-        return a.accessToken !== undefined;
-    }
-    (function (TrustType) {
-        TrustType["CrossAccount"] = "Cross Account";
-        TrustType["InnerAccount"] = "Inner Account";
-    })(ALKS.TrustType || (ALKS.TrustType = {}));
-    (function (PseudoBoolean) {
-        PseudoBoolean[PseudoBoolean["True"] = 1] = "True";
-        PseudoBoolean[PseudoBoolean["False"] = 0] = "False";
-    })(ALKS.PseudoBoolean || (ALKS.PseudoBoolean = {}));
     /**
-     * ALKS JavaScript API
-     */
-    var Alks = /** @class */ (function () {
-        function Alks(config) {
-            this.config = config;
-        }
-        /**
-         * Returns a new instance of alks with pre-defined properties (which don't need to be supplied to every method).
-         *
-         * Any of the properties required by other methods can be specified here.
-         *
-         * Properties present on the current object are carried through to the newly created one.
-         *
-         * @param {Object} props - An object containing settings for the new ALKS object
-         * @returns {alks}
-         * @example
-         * var myAlks = alks.create({
-         *   baseUrl: 'https://your.alks-host.com',
-         *   accessToken: 'abc123',
-         * })
-         *
-         * myAlks.getKeys({
-         *   account: 'anAccount',
-         *   role: 'PowerUser',
-         *   sessionTime: 2
-         * }).then((creds) => {
-         *   // creds.accessKey, creds.secretKey, creds.sessionToken
-         * })
-         */
-        Alks.prototype.create = function (props) {
-            var config = __assign(__assign({}, this.config), props);
-            return new Alks(config);
-        };
-        /**
-         * Returns a Promise for an array of AWS accounts (and roles) accessible by the user
-         *
-         * @param {Object} props - An object containing the following properties
-         * @param {string} props.baseUrl - The base URL of the ALKS service
-         * @param {string} props.accessToken - The OAuth2 access token used to authorize the request
-         * @returns {Promise<Account[]>}
-         * @example
-         * alks.getAccounts({
-         *   baseUrl: 'https://your.alks-host.com',
-         *   accessToken: 'abc123',
-         * }).then((accounts) => {
-         *   // accounts[0].account, accounts[0].role, accounts[0].iamKeyActive, accounts[0].maxKeyDuration, accounts[0].skypieaAccount
-         * })
-         */
-        Alks.prototype.getAccounts = function (props) {
-            return __awaiter(this, void 0, void 0, function () {
-                var results;
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, this.internalFetch('getAccounts', props)];
-                        case 1:
-                            results = _a.sent();
-                            return [2 /*return*/, Object.keys(results.accountListRole).map(function (key) { return ({
-                                    account: key,
-                                    role: results.accountListRole[key][0].role,
-                                    iamKeyActive: results.accountListRole[key][0].iamKeyActive,
-                                    maxKeyDuration: results.accountListRole[key][0].maxKeyDuration,
-                                    securityLevel: results.accountListRole[key][0].securityLevel,
-                                    skypieaAccount: results.accountListRole[key][0].skypieaAccount,
-                                }); })];
-                    }
-                });
-            });
-        };
-        /**
-         * Returns a Promise for AWS STS credentials from ALKS.
-         *
-         * @param {Object} props - An object containing the following properties
-         * @param {string} props.baseUrl - The base URL of the ALKS service
-         * @param {string} props.accessToken - The OAuth2 access token used to authorize the request
-         * @param {string} props.account - The AWS account to use when provisioning the credentials
-         * @param {string} props.role - The ALKS role to use when provisioning the credentials
-         * @param {string} props.sessionTime - The session length for the credentials, in hours
-         * @returns {Promise<Key>}
-         * @example
-         * alks.getKeys({
-         *   baseUrl: 'https://your.alks-host.com',
-         *   accessToken: 'abc123',
-         *   account: 'anAccount',
-         *   role: 'PowerUser',
-         *   sessionTime: 2
-         * }).then((creds) => {
-         *   // creds.accessKey, creds.secretKey, creds.sessionToken, creds.consoleURL
-         * })
-         */
-        Alks.prototype.getKeys = function (props) {
-            return __awaiter(this, void 0, void 0, function () {
-                var results;
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, this.internalFetch('getKeys', props)];
-                        case 1:
-                            results = _a.sent();
-                            return [2 /*return*/, pick(results, [
-                                    'accessKey',
-                                    'secretKey',
-                                    'sessionToken',
-                                    'consoleURL',
-                                    'sessionTime',
-                                ])];
-                    }
-                });
-            });
-        };
-        /**
-         * Returns a Promise for AWS STS credentials with IAM permissions from ALKS.
-         *
-         * @param {Object} props - An object containing the following properties
-         * @param {string} props.baseUrl - The base URL of the ALKS service
-         * @param {string} props.accessToken - The OAuth2 access token used to authorize the request
-         * @param {string} props.account - The AWS account to use when provisioning the credentials
-         * @param {string} props.role - The ALKS role to use when provisioning the credentials
-         * @param {number} props.sessionTime - The session length for the credentials, in hours
-         * @returns {Promise<Key>}
-         * @example
-         * alks.getIAMKeys({
-         *   baseUrl: 'https://your.alks-host.com',
-         *   accessToken: 'abc123',
-         *   account: 'anAccount',
-         *   role: 'IAMAdmin',
-         *   sessionTime: 1
-         * }).then((creds) => {
-         *   // creds.accessKey, creds.secretKey, creds.sessionToken, creds.consoleURL
-         * })
-         */
-        Alks.prototype.getIAMKeys = function (props) {
-            return __awaiter(this, void 0, void 0, function () {
-                var results;
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, this.internalFetch('getIAMKeys', props)];
-                        case 1:
-                            results = _a.sent();
-                            return [2 /*return*/, pick(results, [
-                                    'accessKey',
-                                    'secretKey',
-                                    'sessionToken',
-                                    'consoleURL',
-                                    'sessionTime',
-                                ])];
-                    }
-                });
-            });
-        };
-        /**
-         * Returns a Promise for an array of all available role types (AWS IAM role types, custom role types) and their details
-         *
-         * @param {Object} props - An object containing the following properties
-         * @param {string} props.baseUrl - The base URL of the ALKS service
-         * @param {string} props.accessToken - The OAuth2 access token used to authorize the request
-         * @param {boolean} [props.getDynamicValues] - Whether to include the names of any template variables in the response (defaults to false)
-         * @returns {Promise<Array<awsRoleType>>}
-         * @example
-         * alks.getAllAWSRoleTypes({
-         *   baseUrl: 'https://your.alks-host.com',
-         *   accessToken: 'abc123',
-         * }).then((roleTypes) {
-         *   // roleTypes[i].roleTypeName, roleTypes[i].defaultArns, roleTypes[i].trustRelationship
-         * })
-         *
-         * @example
-         * alks.getAllAWSRoleTypes({
-         *   baseUrl: 'https://your.alks-host.com',
-         *   accessToken: 'abc123',
-         *   getDynamicValues: true,
-         * }).then((roleTypes) {
-         *   // roleTypes[i].roleTypeName, roleTypes[i].defaultArns, roleTypes[i].trustRelationship, roleTypes[i].templateVariables[i]
-         * })
-         */
-        Alks.prototype.getAllAWSRoleTypes = function (props) {
-            return __awaiter(this, void 0, void 0, function () {
-                var url, results;
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0:
-                            url = props.getDynamicValues
-                                ? 'allAwsRoleTypes?getDynamicValues=true'
-                                : 'allAwsRoleTypes';
-                            return [4 /*yield*/, this.internalFetch(url, props, 'GET')];
-                        case 1:
-                            results = _a.sent();
-                            return [2 /*return*/, results.roleTypes];
-                    }
-                });
-            });
-        };
-        /**
-         * Returns a Promise for an array of available AWS IAM role types
-         *
-         * @deprecated Replaced by getAllAWSRoleTypes which includes all AWS role types and their details
-         * @param {Object} props - An object containing the following properties
-         * @param {string} props.baseUrl - The base URL of the ALKS service
-         * @param {string} props.accessToken - The OAuth2 access token used to authorize the request
-         * @returns {Promise<Array<string>>}
-         * @example
-         * alks.getAWSRoleTypes({
-         *   baseUrl: 'https://your.alks-host.com',
-         *   accessToken: 'abc123',
-         * }).then((roleTypes) {
-         *   // ['AWS Lambda', 'Amazon EC2', ... ]
-         * })
-         */
-        Alks.prototype.getAWSRoleTypes = function (props) {
-            return __awaiter(this, void 0, void 0, function () {
-                var results;
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, this.internalFetch('getAWSRoleTypes', props)];
-                        case 1:
-                            results = _a.sent();
-                            return [2 /*return*/, JSON.parse(results.roleTypes)];
-                    }
-                });
-            });
-        };
-        /**
-         * Returns a Promise for an array of available custom role types
-         *
-         * @deprecated Replaced by getAllAWSRoleTypes which includes all AWS role types and their details
-         * @param {Object} props - An object containing the following properties
-         * @param {string} props.baseUrl - The base URL of the ALKS service
-         * @param {string} props.accessToken - The OAuth2 access token used to authorize the request
-         * @returns {Promise<Array<string>>}
-         * @example
-         * alks.getNonServiceAWSRoleTypes({
-         *   baseUrl: 'https://your.alks-host.com',
-         *   accessToken: 'abc123',
-         * }).then((roleTypes) => {
-         *   // ['AWS Lambda', 'Amazon EC2', ...]
-         * })
-         */
-        Alks.prototype.getNonServiceAWSRoleTypes = function (props) {
-            return __awaiter(this, void 0, void 0, function () {
-                var results;
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, this.internalFetch('getNonServiceAWSRoleTypes', props)];
-                        case 1:
-                            results = _a.sent();
-                            return [2 /*return*/, JSON.parse(results.roleTypes)];
-                    }
-                });
-            });
-        };
-        /**
-         * Returns a Promise for the results of creating a new custom AWS IAM account role
-         *
-         * @param {Object} props - An object containing the following properties
-         * @param {string} props.baseUrl - The base URL of the ALKS service
-         * @param {string} props.accessToken - The OAuth2 access token used to authorize the request
-         * @param {string} props.account - The user's account associated with the custom role
-         * @param {string} props.role - The user's role associated with the account
-         * @param {string} props.roleName - The name of the custom AWS IAM role to create
-         * @param {string} props.roleType - The type of AWS role to use when creating the new role
-         * @param {Object} props.trustPolicy
-         * @param {number} props.includeDefaultPolicy - Whether to include the default policy in the new role (1 = yes, 0 = no)
-         * @param {boolean} props.enableAlksAccess - Whether the role has a machine identity
-         * @param {Object} props.templateFields - An object whose keys are template variable names and values are the value to substitute for those template variables
-         * @param {Array.<Object>} props.tags - A list of tag objects, where each object is in the form {key: "tagKey" value: "tagValue"}
-         * @returns {Promise<Role>}
-         * @example
-         * alks.createRole({
-         *   baseUrl: 'https://your.alks-host.com',
-         *   accessToken: 'abc123',
-         *   account: 'anAccount',
-         *   role: 'IAMAdmin',
-         *   roleName: 'awsRoleName',
-         *   roleType: 'Amazon EC2',
-         *   includeDefaultPolicy: 1,
-         *   enableAlksAccess: true
-         * }).then((role) => {
-         *   // role.roleArn, role.denyArns, role.instanceProfileArn, role.addedRoleToInstanceProfile, role.tags
-         * })
-         * @example
-         * alks.createRole({
-         *   baseUrl: 'https://your.alks-host.com',
-         *   accessToken: 'abc123',
-         *   account: 'anAccount',
-         *   role: 'IAMAdmin',
-         *   roleName: 'awsRoleName',
-         *   trustPolicy: {
-         *      "Version": "2012-10-17",
-         *       "Statement": [
-         *           {
-         *               "Action": "sts:AssumeRole",
-         *               "Effect": "Allow",
-         *               "Principal": {
-         *                   "Service": "ec2.amazonaws.com"
-         *               }
-         *           }
-         *       ]
-         *   },
-         *   includeDefaultPolicy: 1,
-         *   enableAlksAccess: true
-         * }).then((role) => {
-         *   // role.roleArn, role.denyArns, role.instanceProfileArn, role.addedRoleToInstanceProfile, role.tags
-         * })
-         * @example
-         * alks.createRole({
-         *   baseUrl: 'https://your.alks-host.com',
-         *   accessToken: 'abc123',
-         *   account: 'anAccount',
-         *   role: 'IAMAdmin',
-         *   roleName: 'awsRoleName',
-         *   roleType: 'Amazon EKS IRSA',
-         *   includeDefaultPolicy: 1,
-         *   enableAlksAccess: false,
-         *   templateFields: {
-         *     OIDC_PROVIDER: 'oidc.eks.us-east-1.amazonaws.com/id/88G998884RBAD6687HBE3GETY67FQE04',
-         *     K8S_NAMESPACE: 'myNamespace',
-         *     K8S_SERVICE_ACCOUNT: 'myServiceAccount'
-         *   }
-         *   tags: [
-         *      {
-         *        key: "tagkey1",
-         *        value: "tagValue1"
-         *      },
-         *      {
-         *        key: "tagkey1",
-         *        value: "tagvalue2"
-         *      }
-         *   ],
-         * }).then((role) => {
-         *   // role.roleArn, role.denyArns, role.instanceProfileArn, role.addedRoleToInstanceProfile, role.tags
-         * })
-         */
-        Alks.prototype.createRole = function (props) {
-            return __awaiter(this, void 0, void 0, function () {
-                var roleTypeExists, trustPolicyExists, results;
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0:
-                            roleTypeExists = props.roleType != null;
-                            trustPolicyExists = props.trustPolicy != null;
-                            if (!(roleTypeExists !== trustPolicyExists)) return [3 /*break*/, 2];
-                            return [4 /*yield*/, this.internalFetch('createRole', props)];
-                        case 1:
-                            results = _a.sent();
-                            results.denyArns = results.denyArns.split(',');
-                            return [2 /*return*/, pick(results, [
-                                    'roleArn',
-                                    'denyArns',
-                                    'instanceProfileArn',
-                                    'addedRoleToInstanceProfile',
-                                    'tags',
-                                ])];
-                        case 2: throw new Error("Must include roleType or trustPolicy, but not both.");
-                    }
-                });
-            });
-        };
-        /**
-         * Returns a Promise for the results of creating a new custom AWS IAM trust role
-         *
-         * @param {Object} props - An object containing the following properties
-         * @param {string} props.baseUrl - The base URL of the ALKS service
-         * @param {string} props.accessToken - The OAuth2 access token used to authorize the request
-         * @param {string} props.account - The user's account associated with the custom role
-         * @param {string} props.role - The user's role associated with the account
-         * @param {string} props.roleName - The name of the custom AWS IAM role to create
-         * @param {string} props.roleType - The type of AWS role to use when creating the new role
-         * @param {number} props.includeDefaultPolicy - Whether to include the default policy in the new role (1 = yes, 0 = no)
-         * @param {string} props.trustArn - The Arn of the existing role to trust
-         * @param {string} props.trustType - Whether the trust is 'Cross Account' or 'Inner Account'
-         * @param {boolean} props.enableAlksAccess - Whether the role has a machine identity
-         * @param {Array.<Object>} props.tags - A list of tag objects, where each object is in the form {key: "tagKey" value: "tagValue"}
-         * @returns {Promise<Role>}
-         * @example
-         * alks.createNonServiceRole({
-         *   baseUrl: 'https://your.alks-host.com',
-         *   accessToken: 'abc123',
-         *   account: 'anAccount',
-         *   role: 'IAMAdmin',
-         *   roleName: 'awsRoleName',
-         *   roleType: 'Amazon EC2',
-         *   includeDefaultPolicy: 1,
-         *   trustArn: 'anExistingRoleArn',
-         *   trustType: 'Cross Account',
-         *   enableAlksAccess: true
-         * }).then((role) => {
-         *   // role.roleArn, role.denyArns, role.instanceProfileArn, role.addedRoleToInstanceProfile, role.tags
-         * })
-         * @@example
-         *      * alks.createNonServiceRole({
-         *   baseUrl: 'https://your.alks-host.com',
-         *   accessToken: 'abc123',
-         *   account: 'anAccount',
-         *   role: 'IAMAdmin',
-         *   roleName: 'awsRoleName',
-         *   roleType: 'Amazon EC2',
-         *   includeDefaultPolicy: 1,
-         *   trustArn: 'anExistingRoleArn',
-         *   trustType: 'Cross Account',
-         *   enableAlksAccess: true,
-         *   tags: [
-         *      {
-         *        key: "tagkey1",
-         *        value: "tagValue1"
-         *      },
-         *      {
-         *        key: "tagkey1",
-         *        value: "tagvalue2"
-         *      }
-         *   ],
-         * }).then((role) => {
-         *   // role.roleArn, role.denyArns, role.instanceProfileArn, role.addedRoleToInstanceProfile, role.tags
-         * })
-         */
-        Alks.prototype.createNonServiceRole = function (props) {
-            return __awaiter(this, void 0, void 0, function () {
-                var results;
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, this.internalFetch('createNonServiceRole', props)];
-                        case 1:
-                            results = _a.sent();
-                            results.denyArns = results.denyArns.split(',');
-                            return [2 /*return*/, pick(results, [
-                                    'roleArn',
-                                    'denyArns',
-                                    'instanceProfileArn',
-                                    'addedRoleToInstanceProfile',
-                                    'tags',
-                                ])];
-                    }
-                });
-            });
-        };
-        /**
-         * Returns a Promise for an array of AWS account roles
-         *
-         * @param {Object} props - An object containing the following properties
-         * @param {string} props.baseUrl - The base URL of the ALKS service
-         * @param {string} props.accessToken - The OAuth2 access token used to authorize the request
-         * @param {string} props.account - The account number to get AWS roles for
-         * @returns {Promise<AwsAccountRole[]>}
-         * @example
-         * alks.awsAccountRoles({
-         *   baseUrl: 'https://your.alks-host.com',
-         *   accessToken: 'abc123',
-         *   account: '1234567890',
-         * }).then((roles) => {
-         *   // roles[i].roleArn, roles[i].isMachineIdentity, roles[i].assumeRolePolicyDocument
-         * })
-         */
-        Alks.prototype.awsAccountRoles = function (props) {
-            return __awaiter(this, void 0, void 0, function () {
-                var results;
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, this.internalFetch("awsAccountRoles?account=".concat(props.account), props, 'GET')];
-                        case 1:
-                            results = _a.sent();
-                            return [2 /*return*/, results.awsRoleList];
-                    }
-                });
-            });
-        };
-        /**
-         * Returns a Promise for an array of AWS custom AWS IAM account roles
-         *
-         * @deprecated Replaced by awsAccountRoles which includes AWS account roles and their details
-         * @param {Object} props - An object containing the following properties
-         * @param {string} props.baseUrl - The base URL of the ALKS service
-         * @param {string} props.accessToken - The OAuth2 access token used to authorize the request
-         * @param {string} props.account - The user's account associated with the custom role
-         * @param {string} props.role - The user's role associated with the account
-         * @returns {Promise<string[]>}
-         * @example
-         * alks.listAWSAccountRoles({
-         *   baseUrl: 'https://your.alks-host.com',
-         *   accessToken: 'abc123',
-         *   account: 'anAccount',
-         *   role: 'IAMAdmin',
-         * }).then((roleNames) => {
-         *   // ['customRole1', 'customRole2', ...]
-         * })
-         */
-        Alks.prototype.listAWSAccountRoles = function (props) {
-            return __awaiter(this, void 0, void 0, function () {
-                var results;
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, this.internalFetch('listAWSAccountRoles', props)];
-                        case 1:
-                            results = _a.sent();
-                            return [2 /*return*/, JSON.parse(results.jsonAWSRoleList).map(function (r) { return r.split('/').slice(-1)[0]; })];
-                    }
-                });
-            });
-        };
-        /**
-         * Returns a Promise for the Amazon Resource Name (ARN) of a custom AWS IAM account role
-         *
-         * @param {Object} props - An object containing the following properties
-         * @param {string} props.baseUrl - The base URL of the ALKS service
-         * @param {string} props.accessToken - The OAuth2 access token used to authorize the request
-         * @param {string} props.account - The user's account associated with the custom role
-         * @param {string} props.role - The user's role associated with the account
-         * @param {string} props.roleName - The name of the custom AWS IAM role
-         * @param {Array.<Object>} props.tags - A list of tag objects, where each object is in the form {key: "tagKey" value: "tagValue"}
-         * @returns {Promise<Role>}
-         * @example
-         * alks.getAccountRole({
-         *   baseUrl: 'https://your.alks-host.com',
-         *   accessToken: 'abc123',
-         *   account: 'anAccount',
-         *   role: 'IAMAdmin',
-         *   roleName: 'awsRoleName'
-         * }).then((role) => {
-         *    // role.roleArn, role.isMachineIdentity, role.instanceProfileArn, role.tags, role.maxSessionDurationInSeconds
-         * })
-         */
-        Alks.prototype.getAccountRole = function (props) {
-            return __awaiter(this, void 0, void 0, function () {
-                var results;
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, this.internalFetch('getAccountRole', props)];
-                        case 1:
-                            results = _a.sent();
-                            if (!results.roleExists) {
-                                throw new Error("Role ".concat(props.roleName, " does not exist in this account"));
-                            }
-                            return [2 /*return*/, __assign(__assign({}, pick(results, [
-                                    'roleArn',
-                                    'isMachineIdentity',
-                                    'tags',
-                                    'maxSessionDurationInSeconds',
-                                ])), { instanceProfileArn: results.instanceProfileARN })];
-                    }
-                });
-            });
-        };
-        /**
-         * Returns a Promise for the Amazon Resource Name (ARN) of a custom AWS IAM account role
-         *
-         * @param {Object} props - An object containing the following properties
-         * @param {string} props.baseUrl - The base URL of the ALKS service
-         * @param {string} props.accessToken - The OAuth2 access token used to authorize the request
-         * @param {string} props.account - The user's account associated with the custom role
-         * @param {string} props.role - The user's role associated with the account
-         * @param {string} props.roleName - The name of the custom AWS IAM role
-         * @param {Array.<Object>} [props.tags] - A list of tag objects, where each object is in the form {key: "tagKey", value: "tagValue"}
-         * @param {Object} [props.trustPolicy] - A trust policy object
-         * @returns {Promise<Role>}
-         * @example
-         * alks.updateRole({
-         *   baseUrl: 'https://your.alks-host.com',
-         *   accessToken: 'abc123',
-         *   account: 'anAccount',
-         *   role: 'IAMAdmin',
-         *   roleName: 'awsRoleName'
-         * }).then((role) => {
-         *    // role.roleArn, role.isMachineIdentity, role.instanceProfileArn, role.tags
-         * })
-         */
-        Alks.prototype.updateRole = function (props) {
-            return __awaiter(this, void 0, void 0, function () {
-                var results;
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, this.internalFetch('role', props, 'PATCH')];
-                        case 1:
-                            results = _a.sent();
-                            if (!results.roleExists) {
-                                throw new Error("Role ".concat(props.roleName, " does not exist in this account"));
-                            }
-                            return [2 /*return*/, __assign(__assign({}, pick(results, ['roleArn', 'isMachineIdentity', 'tags'])), { instanceProfileArn: results.instanceProfileARN })];
-                    }
-                });
-            });
-        };
-        /**
-         * Returns a Promise for a boolean "true" indicating the role was deleted
-         *
-         * @param {Object} props - An object containing the following properties
-         * @param {string} props.baseUrl - The base URL of the ALKS service
-         * @param {string} props.accessToken - The OAuth2 access token used to authorize the request
-         * @param {string} props.account - The user's account associated with the custom role
-         * @param {string} props.role - The user's role associated with the account
-         * @param {string} props.roleName - The name of the custom AWS IAM role
-         * @returns {Promise<boolean>}
-         * @example
-         * alks.deleteRole({
-         *   baseUrl: 'https://your.alks-host.com',
-         *   accessToken: 'abc123',
-         *   account: 'anAccount',
-         *   role: 'IAMAdmin',
-         *   roleName: 'awsRoleName'
-         * }).then(() => {
-         *   // success!
-         * })
-         */
-        Alks.prototype.deleteRole = function (props) {
-            return __awaiter(this, void 0, void 0, function () {
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, this.internalFetch('deleteRole', props)];
-                        case 1:
-                            _a.sent();
-                            return [2 /*return*/, true];
-                    }
-                });
-            });
-        };
-        /**
-         * Returns a Promise for a string arn indicating the role was enabled for machine identity
-         *
-         * @param {Object} props - An object containing the following properties
-         * @param {string} props.baseUrl - The base URL of the ALKS service
-         * @param {string} props.accessToken - The OAuth2 access token used to authorize the request
-         * @param {string} props.roleArn - The Amazon Resource Name (ARN) associated with the role
-         * @returns {Promise<string>}
-         * @example
-         * alks.addRoleMachineIdentity({
-         *   baseUrl: 'https://your.alks-host.com',
-         *   accessToken: 'abc123',
-         *   roleARN: 'arn:aws:iam::123:role/acct-managed/awsRoleName'
-         * }).then((roleARN) => {
-         *   // arn:aws:iam::123:role/acct-managed/awsRoleName
-         * })
-         */
-        Alks.prototype.addRoleMachineIdentity = function (props) {
-            return __awaiter(this, void 0, void 0, function () {
-                var results;
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, this.internalFetch('roleMachineIdentity', props)];
-                        case 1:
-                            results = _a.sent();
-                            return [2 /*return*/, pick(results, ['machineIdentityArn'])];
-                    }
-                });
-            });
-        };
-        /**
-         * Returns a Promise for a string arn indicating the role was disabled for machine identity
-         *
-         * @param {Object} props - An object containing the following properties
-         * @param {string} props.baseUrl - The base URL of the ALKS service
-         * @param {string} props.accessToken - The OAuth2 access token used to authorize the request
-         * @param {string} props.roleArn - The Amazon Resource Name (ARN) associated with the role
-         * @returns {Promise<string>}
-         * @example
-         * alks.deleteRoleMachineIdentity({
-         *   baseUrl: 'https://your.alks-host.com',
-         *   accessToken: 'abc123',
-         *   roleARN: 'arn:aws:iam::123:role/acct-managed/awsRoleName'
-         * }).then((roleARN) => {
-         *   // arn:aws:iam::123:role/acct-managed/awsRoleName
-         * })
-         */
-        Alks.prototype.deleteRoleMachineIdentity = function (props) {
-            return __awaiter(this, void 0, void 0, function () {
-                var results;
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, this.internalFetch('roleMachineIdentity', props, 'DELETE')];
-                        case 1:
-                            results = _a.sent();
-                            return [2 /*return*/, pick(results, ['machineIdentityArn'])];
-                    }
-                });
-            });
-        };
-        /**
-         * Returns a Promise for a list of users who have access to the given account
-         *
-         * @param {Object} props  - An object containing the following properties
-         * @param {string} props.baseUrl - The base URL of the ALKS service
-         * @param {string} props.accessToken - The OAuth2 access token used to authorize the request
-         * @param {string} props.accountId - The accountId used to find which users have access to the account
-         * @returns {Promise<User[]>}
-         * @example
-         * alks.getUserAccess({
-         *    baseUrl: 'https://your.alks-host.com',
-         *    accessToken: 'abc123',
-         *    accountId: '012345678910',
-         * }).then((users) => {
-         *    // users[i].sAMAccountName, users[i].displayName, users[i].email, users[i].title, users[i].department
-         * })
-         */
-        Alks.prototype.getUserAccess = function (props) {
-            return __awaiter(this, void 0, void 0, function () {
-                var accountId, results;
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0:
-                            accountId = props.accountId;
-                            return [4 /*yield*/, this.internalFetch("userAccess/".concat(accountId), props, 'GET')];
-                        case 1:
-                            results = _a.sent();
-                            return [2 /*return*/, results.users];
-                    }
-                });
-            });
-        };
-        /**
-         * Returns a Promise for a map of role names to the list of users with that role for a given account
-         *
-         * @param {Object} props  - An object containing the following properties
-         * @param {string} props.baseUrl - The base URL of the ALKS service
-         * @param {string} props.accessToken - The OAuth2 access token used to authorize the request
-         * @param {string} props.accountId - The accountId used to find which users have access to the account
-         * @returns {Promise<Object>}
-         * @example
-         * alks.getUserAccess({
-         *    baseUrl: 'https://your.alks-host.com',
-         *    accessToken: 'abc123',
-         *    accountId: '012345678910',
-         * }).then((users) => {
-         *    // users['Admin'].sAMAccountName, users['Admin'].displayName, users['Admin'].email, users['Admin'].title, users['Admin'].department
-         * })
-         */
-        Alks.prototype.getUserAccessByRole = function (props) {
-            return __awaiter(this, void 0, void 0, function () {
-                var accountId, results;
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0:
-                            accountId = props.accountId;
-                            return [4 /*yield*/, this.internalFetch("reports/users-by-role?accountId=".concat(accountId), props, 'GET')];
-                        case 1:
-                            results = _a.sent();
-                            return [2 /*return*/, results.users];
-                    }
-                });
-            });
-        };
-        /**
-         * Returns a Promise for a list of roles a user has for a given account
-         *
-         * @param {Object} props - An object containing the following properties
-         * @param {string} props.baseUrl - The base URL of the ALKS service
-         * @param {string} props.accessToken - The OAuth2 access token used to authorize the request
-         * @param {string} props.accountId - The accountId used to find which users have access to the account
-         * @param {string} props.sAMAccountName - The network id of the user to lookup
-         * @returns {Promise<string[]>}
-         * @example
-         * alks.getUserRoleAccess({
-         *    baseUrl: 'https://your.alks-host.com',
-         *    accessToken: 'abc123',
-         *    accountId: '012345678910',
-         *    sAMAccountName: 'bob1',
-         * }).then((roles) => {
-         *    // ['Admin', 'LabAdmin', ...]
-         * })
-         */
-        Alks.prototype.getUserRoleAccess = function (props) {
-            return __awaiter(this, void 0, void 0, function () {
-                var accountId, results;
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0:
-                            accountId = props.accountId;
-                            return [4 /*yield*/, this.internalFetch("userAccess/roles/".concat(accountId), props)];
-                        case 1:
-                            results = _a.sent();
-                            return [2 /*return*/, results.roles];
-                    }
-                });
-            });
-        };
-        /**
-         * Returns a Promise containing a list of the account owners for an account
-         *
-         * @param {Object} props - An object containing the following properties
-         * @param {string} props.baseUrl - The base URL of the ALKS service
-         * @param {string} props.accessToken - The OAuth2 access token used to authorize the request
-         * @param {string} props.accountId - The accountId used to find which users have access to the account
-         * @returns {Promise<Object[]>}
-         * @example
-         * alks.getAccountOwners({
-         *    baseUrl: 'https://your.alks-host.com',
-         *    accessToken: 'abc123',
-         *    accountId: '012345678910',
-         * }).then((owners) => {
-         *    // owners[0].sAMAccountName, owners[0].displayName, owners[0].email, owners[0].title, owners[0].department
-         * })
-         */
-        Alks.prototype.getAccountOwners = function (props) {
-            return __awaiter(this, void 0, void 0, function () {
-                var accountId, results;
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0:
-                            accountId = props.accountId;
-                            return [4 /*yield*/, this.internalFetch("userAccess/owners/".concat(accountId), props, 'GET')];
-                        case 1:
-                            results = _a.sent();
-                            return [2 /*return*/, results.accountOwners];
-                    }
-                });
-            });
-        };
-        /**
-         * Returns a Promise for the results of creating new IAM user and long-term access keys
-         *
-         * @param {Object} props - An object containing the following properties
-         * @param {string} props.baseUrl - The base URL of the ALKS service
-         * @param {string} props.accessToken - The OAuth2 access token used to authorize the request
-         * @param {string} props.account - The user's account associated with the custom role
-         * @param {string} props.role - The user's role associated with the account
-         * @param {string} props.iamUserName - The name of the IAM user to create
-         * @returns {Promise<AccessKeys>}
-         * @example
-         * alks.createAccessKeys({
-         *   baseUrl: 'https://your.alks-host.com',
-         *   accessToken: 'abc123',
-         *   account: 'anAccount',
-         *   role: 'IAMAdmin',
-         *   iamUserName: 'iamUserName'
-         * }).then((user) => {
-         *   // user.iamUserArn, user.accessKey, user.secretKey, user.addedIAMUserToGroup
-         * })
-         * @example
-         * alks.createAccessKeys({
-         *   baseUrl: 'https://your.alks-host.com',
-         *   accessToken: 'abc123',
-         *   account: 'anAccount',
-         *   role: 'IAMAdmin',
-         *   iamUserName: 'iamUserName'
-         *   tags: [
-         *      {
-         *        key: "tagkey1",
-         *        value: "tagValue1"
-         *      },
-         *      {
-         *        key: "tagkey1",
-         *        value: "tagvalue2"
-         *      }
-         *   ],
-         * }).then((user) => {
-         *   // user.iamUserArn, user.accessKey, user.secretKey, user.addedIAMUserToGroup
-         * })
-         */
-        Alks.prototype.createAccessKeys = function (props) {
-            return __awaiter(this, void 0, void 0, function () {
-                var results;
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, this.internalFetch('accessKeys', props)];
-                        case 1:
-                            results = _a.sent();
-                            return [2 /*return*/, pick(results, [
-                                    'iamUserArn',
-                                    'accessKey',
-                                    'secretKey',
-                                    'addedIAMUserToGroup',
-                                    'tags',
-                                ])];
-                    }
-                });
-            });
-        };
-        /**
-         * Returns a Promise for an IamUser
-         *
-         * @param {Object} props - An object containing the following properties
-         * @param {string} props.baseUrl - The base URL of the ALKS service
-         * @param {string} props.accessToken - The OAuth2 access token used to authorize the request
-         * @param {string} props.account - The user's account associated with the custom role
-         * @param {string} props.iamUserName - The name of the custom AWS IAM user
-         * @returns {Promise<User>}
-         * @example
-         * alks.getIamUser({
-         *   baseUrl: 'https://your.alks-host.com',
-         *   accessToken: 'abc123',
-         *   account: 'anAccount',
-         *   iamUserName: 'iamUserName'
-         * }).then((role) => {
-         *   user.iamUserArn, user.AccountId, user.userName, user.accessKey, user.tags
-         * })
-         */
-        Alks.prototype.getIamUser = function (props) {
-            return __awaiter(this, void 0, void 0, function () {
-                var results;
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, this.internalFetch("iam-users/id/".concat(props.account, "/").concat(props.iamUserName), props, 'GET')];
-                        case 1:
-                            results = _a.sent();
-                            return [2 /*return*/, pick(results.item, [
-                                    'arn',
-                                    'accountId',
-                                    'userName',
-                                    'accessKey',
-                                    'tags',
-                                ])];
-                    }
-                });
-            });
-        };
-        /**
-         * Returns a Promise for the results of updating an IAM user
-         *
-         * @param {Object} props - An object containing the following properties
-         * @param {string} props.baseUrl - The base URL of the ALKS service
-         * @param {string} props.accessToken - The OAuth2 access token used to authorize the request
-         * @param {string} props.account - The user's account associated with the custom role
-         * @param {string} props.iamUserName - The name of the IAM user to update
-         * @param {Array.<Object>} props.tags - A list of tag objects, where each object is in the form {key: "tagKey" value: "tagValue"}
-         * @returns {Promise<IamUser>}
-         * @example
-         * alks.updateIamUser({
-         *   baseUrl: 'https://your.alks-host.com',
-         *   accessToken: 'abc123',
-         *   account: 'anAccount',
-         *   iamUserName: 'iamUserName',
-         * }).then((user) => {
-         *   // user.iamUserArn, user.AccountId, user.userName, user.accessKey, user.tags
-         * })
-         * @example
-         * alks.updateIamUser({
-         *   baseUrl: 'https://your.alks-host.com',
-         *   accessToken: 'abc123',
-         *   account: 'anAccount',
-         *   iamUserName: 'iamUserName'
-         *   tags: [
-         *      {
-         *        key: "tagkey1",
-         *        value: "tagValue1"
-         *      },
-         *      {
-         *        key: "tagkey1",
-         *        value: "tagvalue2"
-         *      }
-         *   ],
-         * }).then((user) => {
-         *   // user.iamUserArn, user.AccountId, user.userName, user.accessKey, user.tags
-         * })
-         */
-        Alks.prototype.updateIamUser = function (props) {
-            return __awaiter(this, void 0, void 0, function () {
-                var internalFetchProps, results;
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0:
-                            internalFetchProps = __assign(__assign({}, props), { user: {
-                                    tags: props.tags,
-                                } });
-                            delete internalFetchProps.tags;
-                            return [4 /*yield*/, this.internalFetch("iam-users/id/".concat(props.account, "/").concat(props.iamUserName), internalFetchProps, 'PATCH')];
-                        case 1:
-                            results = _a.sent();
-                            return [2 /*return*/, pick(results.item, [
-                                    'arn',
-                                    'accountId',
-                                    'userName',
-                                    'accessKey',
-                                    'tags',
-                                ])];
-                    }
-                });
-            });
-        };
-        /**
-         * Returns a Promise for a boolean "true" indicating the IAM user and long-term access keys were deleted
-         *
-         * @param {Object} props - An object containing the following properties
-         * @param {string} props.baseUrl - The base URL of the ALKS service
-         * @param {string} props.accessToken - The OAuth2 access token used to authorize the request
-         * @param {string} props.account - The user's account associated with the custom role
-         * @param {string} props.role - The user's role associated with the account
-         * @param {string} props.iamUserName - The name of the IAM user to delete
-         * @returns {Promise<boolean>}
-         * @example
-         * alks.deleteIAMUser({
-         *   baseUrl: 'https://your.alks-host.com',
-         *   accessToken: 'abc123',
-         *   account: 'anAccount',
-         *   role: 'IAMAdmin',
-         *   iamUserName: 'iamUserName'
-         * }).then(() => {
-         *   // success!
-         * })
-         */
-        Alks.prototype.deleteIAMUser = function (props) {
-            return __awaiter(this, void 0, void 0, function () {
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, this.internalFetch('IAMUser', props, 'DELETE')];
-                        case 1:
-                            _a.sent();
-                            return [2 /*return*/, true];
-                    }
-                });
-            });
-        };
-        /**
-         * Returns the version of the ALKS Rest API
-         *
-         * @param {Object} props - An object containing the following properties
-         * @returns {Promise<Object>}
-         * @example
-         * alks.version({
-         *   ...
-         * }).then((data) => {
-         *   // data.version
-         * })
-         */
-        Alks.prototype.version = function (props) {
-            return __awaiter(this, void 0, void 0, function () {
-                var results;
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, this.internalFetch('version', props, 'GET')];
-                        case 1:
-                            results = _a.sent();
-                            return [2 /*return*/, pick(results, ['version'])];
-                    }
-                });
-            });
-        };
-        /**
-         * Returns information about one of the roles used to generate keys
-         *
-         * @param {Object} props - An object containing the following properties
-         * @param {string} props.accountId - The 12-digit account ID associated with the custom role
-         * @param {string} props.role - The user's role associated with the account
-         * @returns {Promise<Object>}
-         * @example
-         * alks.getLoginRole({
-         *   ...
-         * }).then((loginRole) => {
-         *   // loginRole.account, loginRole.role, loginRole.iamKeyActive, loginRole.maxKeyDuration
-         * })
-         */
-        Alks.prototype.getLoginRole = function (props) {
-            return __awaiter(this, void 0, void 0, function () {
-                var accountId, role, results;
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0:
-                            accountId = props.accountId, role = props.role;
-                            return [4 /*yield*/, this.internalFetch("loginRoles/id/".concat(accountId, "/").concat(role), props, 'GET')];
-                        case 1:
-                            results = (_a.sent());
-                            // TODO we should probably update this function to include skypieaAccount in the result since it's already being fetched - Ben W 5/10/21
-                            return [2 /*return*/, pick(results.loginRole, [
-                                    'account',
-                                    'role',
-                                    'iamKeyActive',
-                                    'maxKeyDuration',
-                                    'securityLevel',
-                                ])];
-                    }
-                });
-            });
-        };
-        /**
-         * Exchanges a refresh token for an access token
-         *
-         * @param {Object} props - An object containing the following properties
-         * @param {string} props.refreshToken - the refresh token to exchange
-         * @returns {Promise<Object>}
-         * @example
-         * alks.getAccessToken({
-         *   ...
-         * }).then((data) => {
-         *   // data.accessToken, data.expiresIn
-         * })
-         */
-        Alks.prototype.getAccessToken = function (props) {
-            return __awaiter(this, void 0, void 0, function () {
-                var results;
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, this.internalFetch('accessToken', props)];
-                        case 1:
-                            results = _a.sent();
-                            return [2 /*return*/, pick(results, ['accessToken', 'expiresIn'])];
-                    }
-                });
-            });
-        };
-        /**
-         * Returns a list of a user's refresh tokens (Does not return the full token)
-         *
-         * @param {Object} props - An object containing the following properties
-         * @returns {Array<Object>}
-         * @example
-         * alks.getRefreshTokens({
-         *   ...
-         * }).then((tokens) => {
-         *   // token[i].clientId, token[i].id, token[i].userId, token[i].value
-         * })
-         */
-        Alks.prototype.getRefreshTokens = function (props) {
-            return __awaiter(this, void 0, void 0, function () {
-                var results;
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, this.internalFetch('refreshTokens', props, 'GET')];
-                        case 1:
-                            results = (_a.sent());
-                            return [2 /*return*/, results.refreshTokens.map(function (token) {
-                                    return pick(token, ['clientId', 'id', 'userId', 'value']);
-                                })];
-                    }
-                });
-            });
-        };
-        /**
-         * Revokes a refresh or access token
-         *
-         * @param {Object} props - An object containing the following properties
-         * @param {string} [props.token] - the access or refresh token to revoke (Required if tokenId not specified)
-         * @param {string} [props.tokenId] - the ID of the refresh token to revoke (Required if token not specified)
-         * @returns {boolean}
-         * @example
-         * alks.revoke({
-         *   token: '...',
-         *   ...
-         * }).then((success) => {
-         *   // success == true
-         * })
-         *
-         * // or
-         *
-         * alks.revoke({
-         *   tokenId: '...',
-         *   ...
-         * }).then((success) => {
-         *   // success == true
-         * })
-         */
-        Alks.prototype.revoke = function (props) {
-            return __awaiter(this, void 0, void 0, function () {
-                var results;
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, this.internalFetch('revoke', props)];
-                        case 1:
-                            results = _a.sent();
-                            return [2 /*return*/, results.statusMessage == 'Success'];
-                    }
-                });
-            });
-        };
-        /**
-         * Returns cost totals for the specified account for the day, week, month, year, and a breakdown of costs by service for the day and month
-         *
-         * @param {Object} props - An object containing the following properties
-         * @param {String} props.accountId - the 12-digit AWS account ID to get cost data for
-         * @returns {Object}
-         * @example
-         * alks.getCostTotals({
-         *   accountId: '012345678910',
-         * }).then((costTotals) => {
-         *   // costTotals.awsAccountId, costTotals.daily, costTotals.weekly, etc.
-         * })
-         */
-        Alks.prototype.getCostTotals = function (props) {
-            return __awaiter(this, void 0, void 0, function () {
-                var results;
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, this.internalFetch("costTotals/".concat(props.accountId), props, 'GET')];
-                        case 1:
-                            results = (_a.sent());
-                            return [2 /*return*/, pick(results.costTotals, [
-                                    'awsAccountId',
-                                    'yyyy',
-                                    'mm',
-                                    'dd',
-                                    'daily',
-                                    'weekly',
-                                    'monthly',
-                                    'yearly',
-                                    'dailyCostsByService',
-                                    'monthlyCostsByService',
-                                ])];
-                    }
-                });
-            });
-        };
-        Alks.prototype.internalFetch = function (path_1) {
-            return __awaiter(this, arguments, void 0, function (path, args, method) {
-                var opts, payload, headers, credentials, url, response, json, err_1;
-                if (args === void 0) { args = {}; }
-                if (method === void 0) { method = 'POST'; }
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0:
-                            opts = __assign(__assign({}, this.config), args);
-                            payload = __assign({}, opts);
-                            headers = {
-                                'Content-Type': 'application/json',
-                                'User-Agent': "AlksJS/".concat(packageJson.version),
-                            };
-                            if (isTokenAuth(opts)) {
-                                headers['Authorization'] = "Bearer ".concat(opts.accessToken);
-                                delete payload.accessToken;
-                            }
-                            else if (isStsAuth(opts)) {
-                                headers['ALKS-STS-Access-Key'] = opts.accessKey;
-                                headers['ALKS-STS-Secret-Key'] = opts.secretKey;
-                                headers['ALKS-STS-Session-Token'] = opts.sessionToken;
-                                delete payload.accessKey;
-                                delete payload.secretKey;
-                                delete payload.sessionToken;
-                            }
-                            else if (isPasswordAuth(opts)) {
-                                console.error('The userid and password properties are deprecated and should be replaced with an access token');
-                                credentials = base64Encode("".concat(opts.userid, ":").concat(opts.password));
-                                headers['Authorization'] = "Basic ".concat(credentials);
-                                delete payload.userid;
-                                delete payload.password;
-                            }
-                            else ;
-                            if (opts.userAgent) {
-                                headers['User-Agent'] += " ".concat(opts.userAgent);
-                                delete payload.userAgent;
-                            }
-                            url = "".concat(opts.baseUrl, "/").concat(path);
-                            return [4 /*yield*/, opts._fetch(url, {
-                                    method: method,
-                                    headers: headers,
-                                    credentials: 'omit',
-                                    body: method == 'GET' ? undefined : JSON.stringify(payload),
-                                })];
-                        case 1:
-                            response = _a.sent();
-                            _a.label = 2;
-                        case 2:
-                            _a.trys.push([2, 4, , 5]);
-                            return [4 /*yield*/, response.json()];
-                        case 3:
-                            json = _a.sent();
-                            return [3 /*break*/, 5];
-                        case 4:
-                            err_1 = _a.sent();
-                            json = {
-                                errors: [err_1.message],
-                            };
-                            return [3 /*break*/, 5];
-                        case 5:
-                            if (this.config.requestLogger) {
-                                try {
-                                    this.config.requestLogger({
-                                        method: method,
-                                        url: url,
-                                        statusCode: response.status,
-                                        statusMessage: json.statusMessage,
-                                        requestId: json.requestId,
-                                    });
-                                }
-                                catch (err) {
-                                    // swallow errors if the request logger isn't set up correctly
-                                }
-                            }
-                            if (!response.ok) {
-                                throw new AlksError(response, json);
-                            }
-                            return [2 /*return*/, json];
-                    }
-                });
-            });
-        };
-        return Alks;
-    }());
-    ALKS.Alks = Alks;
-    var AlksError = /** @class */ (function (_super) {
-        __extends(AlksError, _super);
-        function AlksError(response, json) {
-            var _this = this;
-            var errors = Array.isArray(json === null || json === void 0 ? void 0 : json.errors) ? json.errors : [];
-            if (response.statusText) {
-                errors.unshift(response.statusText);
-            }
-            var message = errors.join('; ');
-            _this = _super.call(this, message) || this;
-            _this.status = response.status;
-            _this.message = message;
-            Object.assign(_this, json);
-            return _this;
-        }
-        return AlksError;
-    }(Error));
-    ALKS.AlksError = AlksError;
-    /**
-     * Encodes a string to base 64
+     * Returns a new instance of alks with pre-defined properties (which don't need to be supplied to every method).
      *
-     * @param str - the string to encode
-     * @private
-     * @returns the base64 encoded string
+     * Any of the properties required by other methods can be specified here.
+     *
+     * Properties present on the current object are carried through to the newly created one.
+     *
+     * @param {Object} props - An object containing settings for the new ALKS object
+     * @returns {alks}
      * @example
-     * var input = 'password';
-     * base64Encode(input);
+     * var myAlks = alks.create({
+     *   baseUrl: 'https://your.alks-host.com',
+     *   accessToken: 'abc123',
+     * })
+     *
+     * myAlks.getKeys({
+     *   account: 'anAccount',
+     *   role: 'PowerUser',
+     *   sessionTime: 2
+     * }).then((creds) => {
+     *   // creds.accessKey, creds.secretKey, creds.sessionToken
+     * })
      */
-    function base64Encode(str) {
-        if (str === void 0) { str = ''; }
-        return Buffer.from(str).toString('base64');
-    }
-    function pick(obj, props) {
-        return props.reduce(function (acc, prop) { return ((acc[prop] = obj[prop]), acc); }, {});
-    }
-    var defaultConfig = {
-        _fetch: fetch,
+    Alks.prototype.create = function (props) {
+        var config = __assign(__assign({}, this.config), props);
+        return new Alks(config);
     };
-    var defaultAlks = Alks.prototype.create.call({}, defaultConfig);
-    ALKS.create = Alks.prototype.create.bind(defaultAlks);
-    ALKS.getAccounts = Alks.prototype.getAccounts.bind(defaultAlks);
-    ALKS.getKeys = Alks.prototype.getKeys.bind(defaultAlks);
-    ALKS.getIAMKeys = Alks.prototype.getIAMKeys.bind(defaultAlks);
-    ALKS.getAllAWSRoleTypes = Alks.prototype.getAllAWSRoleTypes.bind(defaultAlks);
-    ALKS.getAWSRoleTypes = Alks.prototype.getAWSRoleTypes.bind(defaultAlks);
-    ALKS.getNonServiceAWSRoleTypes = Alks.prototype.getNonServiceAWSRoleTypes.bind(defaultAlks);
-    ALKS.createRole = Alks.prototype.createRole.bind(defaultAlks);
-    ALKS.createNonServiceRole = Alks.prototype.createNonServiceRole.bind(defaultAlks);
-    ALKS.awsAccountRoles = Alks.prototype.awsAccountRoles.bind(defaultAlks);
-    ALKS.listAWSAccountRoles = Alks.prototype.listAWSAccountRoles.bind(defaultAlks);
-    ALKS.getAccountRole = Alks.prototype.getAccountRole.bind(defaultAlks);
-    ALKS.updateRole = Alks.prototype.updateRole.bind(defaultAlks);
-    ALKS.deleteRole = Alks.prototype.deleteRole.bind(defaultAlks);
-    ALKS.addRoleMachineIdentity = Alks.prototype.addRoleMachineIdentity.bind(defaultAlks);
-    ALKS.deleteRoleMachineIdentity = Alks.prototype.deleteRoleMachineIdentity.bind(defaultAlks);
-    ALKS.getUserAccess = Alks.prototype.getUserAccess.bind(defaultAlks);
-    ALKS.getUserAccessByRole = Alks.prototype.getUserAccessByRole.bind(defaultAlks);
-    ALKS.getUserRoleAccess = Alks.prototype.getUserRoleAccess.bind(defaultAlks);
-    ALKS.getAccountOwners = Alks.prototype.getAccountOwners.bind(defaultAlks);
-    ALKS.createAccessKeys = Alks.prototype.createAccessKeys.bind(defaultAlks);
-    ALKS.getIamUser = Alks.prototype.getIamUser.bind(defaultAlks);
-    ALKS.updateIamUser = Alks.prototype.updateIamUser.bind(defaultAlks);
-    ALKS.deleteIAMUser = Alks.prototype.deleteIAMUser.bind(defaultAlks);
-    ALKS.version = Alks.prototype.version.bind(defaultAlks);
-    ALKS.getLoginRole = Alks.prototype.getLoginRole.bind(defaultAlks);
-    ALKS.getAccessToken = Alks.prototype.getAccessToken.bind(defaultAlks);
-    ALKS.getRefreshTokens = Alks.prototype.getRefreshTokens.bind(defaultAlks);
-    ALKS.revoke = Alks.prototype.revoke.bind(defaultAlks);
-    ALKS.getCostTotals = Alks.prototype.getCostTotals.bind(defaultAlks);
-})(ALKS || (ALKS = {}));
-var ALKS$1 = ALKS;
+    /**
+     * Returns a Promise for an array of AWS accounts (and roles) accessible by the user
+     *
+     * @param {Object} props - An object containing the following properties
+     * @param {string} props.baseUrl - The base URL of the ALKS service
+     * @param {string} props.accessToken - The OAuth2 access token used to authorize the request
+     * @returns {Promise<Account[]>}
+     * @example
+     * alks.getAccounts({
+     *   baseUrl: 'https://your.alks-host.com',
+     *   accessToken: 'abc123',
+     * }).then((accounts) => {
+     *   // accounts[0].account, accounts[0].role, accounts[0].iamKeyActive, accounts[0].maxKeyDuration, accounts[0].skypieaAccount
+     * })
+     */
+    Alks.prototype.getAccounts = function (props) {
+        return __awaiter(this, void 0, void 0, function () {
+            var results;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.internalFetch('getAccounts', props)];
+                    case 1:
+                        results = _a.sent();
+                        return [2 /*return*/, Object.keys(results.accountListRole).map(function (key) { return ({
+                                account: key,
+                                role: results.accountListRole[key][0].role,
+                                iamKeyActive: results.accountListRole[key][0].iamKeyActive,
+                                maxKeyDuration: results.accountListRole[key][0].maxKeyDuration,
+                                securityLevel: results.accountListRole[key][0].securityLevel,
+                                skypieaAccount: results.accountListRole[key][0].skypieaAccount,
+                            }); })];
+                }
+            });
+        });
+    };
+    /**
+     * Returns a Promise for AWS STS credentials from ALKS.
+     *
+     * @param {Object} props - An object containing the following properties
+     * @param {string} props.baseUrl - The base URL of the ALKS service
+     * @param {string} props.accessToken - The OAuth2 access token used to authorize the request
+     * @param {string} props.account - The AWS account to use when provisioning the credentials
+     * @param {string} props.role - The ALKS role to use when provisioning the credentials
+     * @param {string} props.sessionTime - The session length for the credentials, in hours
+     * @returns {Promise<Key>}
+     * @example
+     * alks.getKeys({
+     *   baseUrl: 'https://your.alks-host.com',
+     *   accessToken: 'abc123',
+     *   account: 'anAccount',
+     *   role: 'PowerUser',
+     *   sessionTime: 2
+     * }).then((creds) => {
+     *   // creds.accessKey, creds.secretKey, creds.sessionToken, creds.consoleURL
+     * })
+     */
+    Alks.prototype.getKeys = function (props) {
+        return __awaiter(this, void 0, void 0, function () {
+            var results;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.internalFetch('getKeys', props)];
+                    case 1:
+                        results = _a.sent();
+                        return [2 /*return*/, pick(results, [
+                                'accessKey',
+                                'secretKey',
+                                'sessionToken',
+                                'consoleURL',
+                                'sessionTime',
+                            ])];
+                }
+            });
+        });
+    };
+    /**
+     * Returns a Promise for AWS STS credentials with IAM permissions from ALKS.
+     *
+     * @param {Object} props - An object containing the following properties
+     * @param {string} props.baseUrl - The base URL of the ALKS service
+     * @param {string} props.accessToken - The OAuth2 access token used to authorize the request
+     * @param {string} props.account - The AWS account to use when provisioning the credentials
+     * @param {string} props.role - The ALKS role to use when provisioning the credentials
+     * @param {number} props.sessionTime - The session length for the credentials, in hours
+     * @returns {Promise<Key>}
+     * @example
+     * alks.getIAMKeys({
+     *   baseUrl: 'https://your.alks-host.com',
+     *   accessToken: 'abc123',
+     *   account: 'anAccount',
+     *   role: 'IAMAdmin',
+     *   sessionTime: 1
+     * }).then((creds) => {
+     *   // creds.accessKey, creds.secretKey, creds.sessionToken, creds.consoleURL
+     * })
+     */
+    Alks.prototype.getIAMKeys = function (props) {
+        return __awaiter(this, void 0, void 0, function () {
+            var results;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.internalFetch('getIAMKeys', props)];
+                    case 1:
+                        results = _a.sent();
+                        return [2 /*return*/, pick(results, [
+                                'accessKey',
+                                'secretKey',
+                                'sessionToken',
+                                'consoleURL',
+                                'sessionTime',
+                            ])];
+                }
+            });
+        });
+    };
+    /**
+     * Returns a Promise for an array of all available role types (AWS IAM role types, custom role types) and their details
+     *
+     * @param {Object} props - An object containing the following properties
+     * @param {string} props.baseUrl - The base URL of the ALKS service
+     * @param {string} props.accessToken - The OAuth2 access token used to authorize the request
+     * @param {boolean} [props.getDynamicValues] - Whether to include the names of any template variables in the response (defaults to false)
+     * @returns {Promise<Array<awsRoleType>>}
+     * @example
+     * alks.getAllAWSRoleTypes({
+     *   baseUrl: 'https://your.alks-host.com',
+     *   accessToken: 'abc123',
+     * }).then((roleTypes) {
+     *   // roleTypes[i].roleTypeName, roleTypes[i].defaultArns, roleTypes[i].trustRelationship
+     * })
+     *
+     * @example
+     * alks.getAllAWSRoleTypes({
+     *   baseUrl: 'https://your.alks-host.com',
+     *   accessToken: 'abc123',
+     *   getDynamicValues: true,
+     * }).then((roleTypes) {
+     *   // roleTypes[i].roleTypeName, roleTypes[i].defaultArns, roleTypes[i].trustRelationship, roleTypes[i].templateVariables[i]
+     * })
+     */
+    Alks.prototype.getAllAWSRoleTypes = function (props) {
+        return __awaiter(this, void 0, void 0, function () {
+            var url, results;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        url = props.getDynamicValues
+                            ? 'allAwsRoleTypes?getDynamicValues=true'
+                            : 'allAwsRoleTypes';
+                        return [4 /*yield*/, this.internalFetch(url, props, 'GET')];
+                    case 1:
+                        results = _a.sent();
+                        return [2 /*return*/, results.roleTypes];
+                }
+            });
+        });
+    };
+    /**
+     * Returns a Promise for an array of available AWS IAM role types
+     *
+     * @deprecated Replaced by getAllAWSRoleTypes which includes all AWS role types and their details
+     * @param {Object} props - An object containing the following properties
+     * @param {string} props.baseUrl - The base URL of the ALKS service
+     * @param {string} props.accessToken - The OAuth2 access token used to authorize the request
+     * @returns {Promise<Array<string>>}
+     * @example
+     * alks.getAWSRoleTypes({
+     *   baseUrl: 'https://your.alks-host.com',
+     *   accessToken: 'abc123',
+     * }).then((roleTypes) {
+     *   // ['AWS Lambda', 'Amazon EC2', ... ]
+     * })
+     */
+    Alks.prototype.getAWSRoleTypes = function (props) {
+        return __awaiter(this, void 0, void 0, function () {
+            var results;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.internalFetch('getAWSRoleTypes', props)];
+                    case 1:
+                        results = _a.sent();
+                        return [2 /*return*/, JSON.parse(results.roleTypes)];
+                }
+            });
+        });
+    };
+    /**
+     * Returns a Promise for an array of available custom role types
+     *
+     * @deprecated Replaced by getAllAWSRoleTypes which includes all AWS role types and their details
+     * @param {Object} props - An object containing the following properties
+     * @param {string} props.baseUrl - The base URL of the ALKS service
+     * @param {string} props.accessToken - The OAuth2 access token used to authorize the request
+     * @returns {Promise<Array<string>>}
+     * @example
+     * alks.getNonServiceAWSRoleTypes({
+     *   baseUrl: 'https://your.alks-host.com',
+     *   accessToken: 'abc123',
+     * }).then((roleTypes) => {
+     *   // ['AWS Lambda', 'Amazon EC2', ...]
+     * })
+     */
+    Alks.prototype.getNonServiceAWSRoleTypes = function (props) {
+        return __awaiter(this, void 0, void 0, function () {
+            var results;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.internalFetch('getNonServiceAWSRoleTypes', props)];
+                    case 1:
+                        results = _a.sent();
+                        return [2 /*return*/, JSON.parse(results.roleTypes)];
+                }
+            });
+        });
+    };
+    /**
+     * Returns a Promise for the results of creating a new custom AWS IAM account role
+     *
+     * @param {Object} props - An object containing the following properties
+     * @param {string} props.baseUrl - The base URL of the ALKS service
+     * @param {string} props.accessToken - The OAuth2 access token used to authorize the request
+     * @param {string} props.account - The user's account associated with the custom role
+     * @param {string} props.role - The user's role associated with the account
+     * @param {string} props.roleName - The name of the custom AWS IAM role to create
+     * @param {string} props.roleType - The type of AWS role to use when creating the new role
+     * @param {Object} props.trustPolicy
+     * @param {number} props.includeDefaultPolicy - Whether to include the default policy in the new role (1 = yes, 0 = no)
+     * @param {boolean} props.enableAlksAccess - Whether the role has a machine identity
+     * @param {Object} props.templateFields - An object whose keys are template variable names and values are the value to substitute for those template variables
+     * @param {Array.<Object>} props.tags - A list of tag objects, where each object is in the form {key: "tagKey" value: "tagValue"}
+     * @returns {Promise<Role>}
+     * @example
+     * alks.createRole({
+     *   baseUrl: 'https://your.alks-host.com',
+     *   accessToken: 'abc123',
+     *   account: 'anAccount',
+     *   role: 'IAMAdmin',
+     *   roleName: 'awsRoleName',
+     *   roleType: 'Amazon EC2',
+     *   includeDefaultPolicy: 1,
+     *   enableAlksAccess: true
+     * }).then((role) => {
+     *   // role.roleArn, role.denyArns, role.instanceProfileArn, role.addedRoleToInstanceProfile, role.tags
+     * })
+     * @example
+     * alks.createRole({
+     *   baseUrl: 'https://your.alks-host.com',
+     *   accessToken: 'abc123',
+     *   account: 'anAccount',
+     *   role: 'IAMAdmin',
+     *   roleName: 'awsRoleName',
+     *   trustPolicy: {
+     *      "Version": "2012-10-17",
+     *       "Statement": [
+     *           {
+     *               "Action": "sts:AssumeRole",
+     *               "Effect": "Allow",
+     *               "Principal": {
+     *                   "Service": "ec2.amazonaws.com"
+     *               }
+     *           }
+     *       ]
+     *   },
+     *   includeDefaultPolicy: 1,
+     *   enableAlksAccess: true
+     * }).then((role) => {
+     *   // role.roleArn, role.denyArns, role.instanceProfileArn, role.addedRoleToInstanceProfile, role.tags
+     * })
+     * @example
+     * alks.createRole({
+     *   baseUrl: 'https://your.alks-host.com',
+     *   accessToken: 'abc123',
+     *   account: 'anAccount',
+     *   role: 'IAMAdmin',
+     *   roleName: 'awsRoleName',
+     *   roleType: 'Amazon EKS IRSA',
+     *   includeDefaultPolicy: 1,
+     *   enableAlksAccess: false,
+     *   templateFields: {
+     *     OIDC_PROVIDER: 'oidc.eks.us-east-1.amazonaws.com/id/88G998884RBAD6687HBE3GETY67FQE04',
+     *     K8S_NAMESPACE: 'myNamespace',
+     *     K8S_SERVICE_ACCOUNT: 'myServiceAccount'
+     *   }
+     *   tags: [
+     *      {
+     *        key: "tagkey1",
+     *        value: "tagValue1"
+     *      },
+     *      {
+     *        key: "tagkey1",
+     *        value: "tagvalue2"
+     *      }
+     *   ],
+     * }).then((role) => {
+     *   // role.roleArn, role.denyArns, role.instanceProfileArn, role.addedRoleToInstanceProfile, role.tags
+     * })
+     */
+    Alks.prototype.createRole = function (props) {
+        return __awaiter(this, void 0, void 0, function () {
+            var roleTypeExists, trustPolicyExists, results;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        roleTypeExists = props.roleType != null;
+                        trustPolicyExists = props.trustPolicy != null;
+                        if (!(roleTypeExists !== trustPolicyExists)) return [3 /*break*/, 2];
+                        return [4 /*yield*/, this.internalFetch('createRole', props)];
+                    case 1:
+                        results = _a.sent();
+                        results.denyArns = results.denyArns.split(',');
+                        return [2 /*return*/, pick(results, [
+                                'roleArn',
+                                'denyArns',
+                                'instanceProfileArn',
+                                'addedRoleToInstanceProfile',
+                                'tags',
+                            ])];
+                    case 2: throw new Error("Must include roleType or trustPolicy, but not both.");
+                }
+            });
+        });
+    };
+    /**
+     * Returns a Promise for the results of creating a new custom AWS IAM trust role
+     *
+     * @param {Object} props - An object containing the following properties
+     * @param {string} props.baseUrl - The base URL of the ALKS service
+     * @param {string} props.accessToken - The OAuth2 access token used to authorize the request
+     * @param {string} props.account - The user's account associated with the custom role
+     * @param {string} props.role - The user's role associated with the account
+     * @param {string} props.roleName - The name of the custom AWS IAM role to create
+     * @param {string} props.roleType - The type of AWS role to use when creating the new role
+     * @param {number} props.includeDefaultPolicy - Whether to include the default policy in the new role (1 = yes, 0 = no)
+     * @param {string} props.trustArn - The Arn of the existing role to trust
+     * @param {string} props.trustType - Whether the trust is 'Cross Account' or 'Inner Account'
+     * @param {boolean} props.enableAlksAccess - Whether the role has a machine identity
+     * @param {Array.<Object>} props.tags - A list of tag objects, where each object is in the form {key: "tagKey" value: "tagValue"}
+     * @returns {Promise<Role>}
+     * @example
+     * alks.createNonServiceRole({
+     *   baseUrl: 'https://your.alks-host.com',
+     *   accessToken: 'abc123',
+     *   account: 'anAccount',
+     *   role: 'IAMAdmin',
+     *   roleName: 'awsRoleName',
+     *   roleType: 'Amazon EC2',
+     *   includeDefaultPolicy: 1,
+     *   trustArn: 'anExistingRoleArn',
+     *   trustType: 'Cross Account',
+     *   enableAlksAccess: true
+     * }).then((role) => {
+     *   // role.roleArn, role.denyArns, role.instanceProfileArn, role.addedRoleToInstanceProfile, role.tags
+     * })
+     * @@example
+     *      * alks.createNonServiceRole({
+     *   baseUrl: 'https://your.alks-host.com',
+     *   accessToken: 'abc123',
+     *   account: 'anAccount',
+     *   role: 'IAMAdmin',
+     *   roleName: 'awsRoleName',
+     *   roleType: 'Amazon EC2',
+     *   includeDefaultPolicy: 1,
+     *   trustArn: 'anExistingRoleArn',
+     *   trustType: 'Cross Account',
+     *   enableAlksAccess: true,
+     *   tags: [
+     *      {
+     *        key: "tagkey1",
+     *        value: "tagValue1"
+     *      },
+     *      {
+     *        key: "tagkey1",
+     *        value: "tagvalue2"
+     *      }
+     *   ],
+     * }).then((role) => {
+     *   // role.roleArn, role.denyArns, role.instanceProfileArn, role.addedRoleToInstanceProfile, role.tags
+     * })
+     */
+    Alks.prototype.createNonServiceRole = function (props) {
+        return __awaiter(this, void 0, void 0, function () {
+            var results;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.internalFetch('createNonServiceRole', props)];
+                    case 1:
+                        results = _a.sent();
+                        results.denyArns = results.denyArns.split(',');
+                        return [2 /*return*/, pick(results, [
+                                'roleArn',
+                                'denyArns',
+                                'instanceProfileArn',
+                                'addedRoleToInstanceProfile',
+                                'tags',
+                            ])];
+                }
+            });
+        });
+    };
+    /**
+     * Returns a Promise for an array of AWS account roles
+     *
+     * @param {Object} props - An object containing the following properties
+     * @param {string} props.baseUrl - The base URL of the ALKS service
+     * @param {string} props.accessToken - The OAuth2 access token used to authorize the request
+     * @param {string} props.account - The account number to get AWS roles for
+     * @returns {Promise<AwsAccountRole[]>}
+     * @example
+     * alks.awsAccountRoles({
+     *   baseUrl: 'https://your.alks-host.com',
+     *   accessToken: 'abc123',
+     *   account: '1234567890',
+     * }).then((roles) => {
+     *   // roles[i].roleArn, roles[i].isMachineIdentity, roles[i].assumeRolePolicyDocument
+     * })
+     */
+    Alks.prototype.awsAccountRoles = function (props) {
+        return __awaiter(this, void 0, void 0, function () {
+            var results;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.internalFetch("awsAccountRoles?account=".concat(props.account), props, 'GET')];
+                    case 1:
+                        results = _a.sent();
+                        return [2 /*return*/, results.awsRoleList];
+                }
+            });
+        });
+    };
+    /**
+     * Returns a Promise for an array of AWS custom AWS IAM account roles
+     *
+     * @deprecated Replaced by awsAccountRoles which includes AWS account roles and their details
+     * @param {Object} props - An object containing the following properties
+     * @param {string} props.baseUrl - The base URL of the ALKS service
+     * @param {string} props.accessToken - The OAuth2 access token used to authorize the request
+     * @param {string} props.account - The user's account associated with the custom role
+     * @param {string} props.role - The user's role associated with the account
+     * @returns {Promise<string[]>}
+     * @example
+     * alks.listAWSAccountRoles({
+     *   baseUrl: 'https://your.alks-host.com',
+     *   accessToken: 'abc123',
+     *   account: 'anAccount',
+     *   role: 'IAMAdmin',
+     * }).then((roleNames) => {
+     *   // ['customRole1', 'customRole2', ...]
+     * })
+     */
+    Alks.prototype.listAWSAccountRoles = function (props) {
+        return __awaiter(this, void 0, void 0, function () {
+            var results;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.internalFetch('listAWSAccountRoles', props)];
+                    case 1:
+                        results = _a.sent();
+                        return [2 /*return*/, JSON.parse(results.jsonAWSRoleList).map(function (r) { return r.split('/').slice(-1)[0]; })];
+                }
+            });
+        });
+    };
+    /**
+     * Returns a Promise for the Amazon Resource Name (ARN) of a custom AWS IAM account role
+     *
+     * @param {Object} props - An object containing the following properties
+     * @param {string} props.baseUrl - The base URL of the ALKS service
+     * @param {string} props.accessToken - The OAuth2 access token used to authorize the request
+     * @param {string} props.account - The user's account associated with the custom role
+     * @param {string} props.role - The user's role associated with the account
+     * @param {string} props.roleName - The name of the custom AWS IAM role
+     * @param {Array.<Object>} props.tags - A list of tag objects, where each object is in the form {key: "tagKey" value: "tagValue"}
+     * @returns {Promise<Role>}
+     * @example
+     * alks.getAccountRole({
+     *   baseUrl: 'https://your.alks-host.com',
+     *   accessToken: 'abc123',
+     *   account: 'anAccount',
+     *   role: 'IAMAdmin',
+     *   roleName: 'awsRoleName'
+     * }).then((role) => {
+     *    // role.roleArn, role.isMachineIdentity, role.instanceProfileArn, role.tags, role.maxSessionDurationInSeconds
+     * })
+     */
+    Alks.prototype.getAccountRole = function (props) {
+        return __awaiter(this, void 0, void 0, function () {
+            var results;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.internalFetch('getAccountRole', props)];
+                    case 1:
+                        results = _a.sent();
+                        if (!results.roleExists) {
+                            throw new Error("Role ".concat(props.roleName, " does not exist in this account"));
+                        }
+                        return [2 /*return*/, __assign(__assign({}, pick(results, [
+                                'roleArn',
+                                'isMachineIdentity',
+                                'tags',
+                                'maxSessionDurationInSeconds',
+                            ])), { instanceProfileArn: results.instanceProfileARN })];
+                }
+            });
+        });
+    };
+    /**
+     * Returns a Promise for the Amazon Resource Name (ARN) of a custom AWS IAM account role
+     *
+     * @param {Object} props - An object containing the following properties
+     * @param {string} props.baseUrl - The base URL of the ALKS service
+     * @param {string} props.accessToken - The OAuth2 access token used to authorize the request
+     * @param {string} props.account - The user's account associated with the custom role
+     * @param {string} props.role - The user's role associated with the account
+     * @param {string} props.roleName - The name of the custom AWS IAM role
+     * @param {Array.<Object>} [props.tags] - A list of tag objects, where each object is in the form {key: "tagKey", value: "tagValue"}
+     * @param {Object} [props.trustPolicy] - A trust policy object
+     * @returns {Promise<Role>}
+     * @example
+     * alks.updateRole({
+     *   baseUrl: 'https://your.alks-host.com',
+     *   accessToken: 'abc123',
+     *   account: 'anAccount',
+     *   role: 'IAMAdmin',
+     *   roleName: 'awsRoleName'
+     * }).then((role) => {
+     *    // role.roleArn, role.isMachineIdentity, role.instanceProfileArn, role.tags
+     * })
+     */
+    Alks.prototype.updateRole = function (props) {
+        return __awaiter(this, void 0, void 0, function () {
+            var results;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.internalFetch('role', props, 'PATCH')];
+                    case 1:
+                        results = _a.sent();
+                        if (!results.roleExists) {
+                            throw new Error("Role ".concat(props.roleName, " does not exist in this account"));
+                        }
+                        return [2 /*return*/, __assign(__assign({}, pick(results, ['roleArn', 'isMachineIdentity', 'tags'])), { instanceProfileArn: results.instanceProfileARN })];
+                }
+            });
+        });
+    };
+    /**
+     * Returns a Promise for a boolean "true" indicating the role was deleted
+     *
+     * @param {Object} props - An object containing the following properties
+     * @param {string} props.baseUrl - The base URL of the ALKS service
+     * @param {string} props.accessToken - The OAuth2 access token used to authorize the request
+     * @param {string} props.account - The user's account associated with the custom role
+     * @param {string} props.role - The user's role associated with the account
+     * @param {string} props.roleName - The name of the custom AWS IAM role
+     * @returns {Promise<boolean>}
+     * @example
+     * alks.deleteRole({
+     *   baseUrl: 'https://your.alks-host.com',
+     *   accessToken: 'abc123',
+     *   account: 'anAccount',
+     *   role: 'IAMAdmin',
+     *   roleName: 'awsRoleName'
+     * }).then(() => {
+     *   // success!
+     * })
+     */
+    Alks.prototype.deleteRole = function (props) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.internalFetch('deleteRole', props)];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/, true];
+                }
+            });
+        });
+    };
+    /**
+     * Returns a Promise for a string arn indicating the role was enabled for machine identity
+     *
+     * @param {Object} props - An object containing the following properties
+     * @param {string} props.baseUrl - The base URL of the ALKS service
+     * @param {string} props.accessToken - The OAuth2 access token used to authorize the request
+     * @param {string} props.roleArn - The Amazon Resource Name (ARN) associated with the role
+     * @returns {Promise<string>}
+     * @example
+     * alks.addRoleMachineIdentity({
+     *   baseUrl: 'https://your.alks-host.com',
+     *   accessToken: 'abc123',
+     *   roleARN: 'arn:aws:iam::123:role/acct-managed/awsRoleName'
+     * }).then((roleARN) => {
+     *   // arn:aws:iam::123:role/acct-managed/awsRoleName
+     * })
+     */
+    Alks.prototype.addRoleMachineIdentity = function (props) {
+        return __awaiter(this, void 0, void 0, function () {
+            var results;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.internalFetch('roleMachineIdentity', props)];
+                    case 1:
+                        results = _a.sent();
+                        return [2 /*return*/, pick(results, ['machineIdentityArn'])];
+                }
+            });
+        });
+    };
+    /**
+     * Returns a Promise for a string arn indicating the role was disabled for machine identity
+     *
+     * @param {Object} props - An object containing the following properties
+     * @param {string} props.baseUrl - The base URL of the ALKS service
+     * @param {string} props.accessToken - The OAuth2 access token used to authorize the request
+     * @param {string} props.roleArn - The Amazon Resource Name (ARN) associated with the role
+     * @returns {Promise<string>}
+     * @example
+     * alks.deleteRoleMachineIdentity({
+     *   baseUrl: 'https://your.alks-host.com',
+     *   accessToken: 'abc123',
+     *   roleARN: 'arn:aws:iam::123:role/acct-managed/awsRoleName'
+     * }).then((roleARN) => {
+     *   // arn:aws:iam::123:role/acct-managed/awsRoleName
+     * })
+     */
+    Alks.prototype.deleteRoleMachineIdentity = function (props) {
+        return __awaiter(this, void 0, void 0, function () {
+            var results;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.internalFetch('roleMachineIdentity', props, 'DELETE')];
+                    case 1:
+                        results = _a.sent();
+                        return [2 /*return*/, pick(results, ['machineIdentityArn'])];
+                }
+            });
+        });
+    };
+    /**
+     * Returns a Promise for a list of users who have access to the given account
+     *
+     * @param {Object} props  - An object containing the following properties
+     * @param {string} props.baseUrl - The base URL of the ALKS service
+     * @param {string} props.accessToken - The OAuth2 access token used to authorize the request
+     * @param {string} props.accountId - The accountId used to find which users have access to the account
+     * @returns {Promise<User[]>}
+     * @example
+     * alks.getUserAccess({
+     *    baseUrl: 'https://your.alks-host.com',
+     *    accessToken: 'abc123',
+     *    accountId: '012345678910',
+     * }).then((users) => {
+     *    // users[i].sAMAccountName, users[i].displayName, users[i].email, users[i].title, users[i].department
+     * })
+     */
+    Alks.prototype.getUserAccess = function (props) {
+        return __awaiter(this, void 0, void 0, function () {
+            var accountId, results;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        accountId = props.accountId;
+                        return [4 /*yield*/, this.internalFetch("userAccess/".concat(accountId), props, 'GET')];
+                    case 1:
+                        results = _a.sent();
+                        return [2 /*return*/, results.users];
+                }
+            });
+        });
+    };
+    /**
+     * Returns a Promise for a map of role names to the list of users with that role for a given account
+     *
+     * @param {Object} props  - An object containing the following properties
+     * @param {string} props.baseUrl - The base URL of the ALKS service
+     * @param {string} props.accessToken - The OAuth2 access token used to authorize the request
+     * @param {string} props.accountId - The accountId used to find which users have access to the account
+     * @returns {Promise<Object>}
+     * @example
+     * alks.getUserAccess({
+     *    baseUrl: 'https://your.alks-host.com',
+     *    accessToken: 'abc123',
+     *    accountId: '012345678910',
+     * }).then((users) => {
+     *    // users['Admin'].sAMAccountName, users['Admin'].displayName, users['Admin'].email, users['Admin'].title, users['Admin'].department
+     * })
+     */
+    Alks.prototype.getUserAccessByRole = function (props) {
+        return __awaiter(this, void 0, void 0, function () {
+            var accountId, results;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        accountId = props.accountId;
+                        return [4 /*yield*/, this.internalFetch("reports/users-by-role?accountId=".concat(accountId), props, 'GET')];
+                    case 1:
+                        results = _a.sent();
+                        return [2 /*return*/, results.users];
+                }
+            });
+        });
+    };
+    /**
+     * Returns a Promise for a list of roles a user has for a given account
+     *
+     * @param {Object} props - An object containing the following properties
+     * @param {string} props.baseUrl - The base URL of the ALKS service
+     * @param {string} props.accessToken - The OAuth2 access token used to authorize the request
+     * @param {string} props.accountId - The accountId used to find which users have access to the account
+     * @param {string} props.sAMAccountName - The network id of the user to lookup
+     * @returns {Promise<string[]>}
+     * @example
+     * alks.getUserRoleAccess({
+     *    baseUrl: 'https://your.alks-host.com',
+     *    accessToken: 'abc123',
+     *    accountId: '012345678910',
+     *    sAMAccountName: 'bob1',
+     * }).then((roles) => {
+     *    // ['Admin', 'LabAdmin', ...]
+     * })
+     */
+    Alks.prototype.getUserRoleAccess = function (props) {
+        return __awaiter(this, void 0, void 0, function () {
+            var accountId, results;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        accountId = props.accountId;
+                        return [4 /*yield*/, this.internalFetch("userAccess/roles/".concat(accountId), props)];
+                    case 1:
+                        results = _a.sent();
+                        return [2 /*return*/, results.roles];
+                }
+            });
+        });
+    };
+    /**
+     * Returns a Promise containing a list of the account owners for an account
+     *
+     * @param {Object} props - An object containing the following properties
+     * @param {string} props.baseUrl - The base URL of the ALKS service
+     * @param {string} props.accessToken - The OAuth2 access token used to authorize the request
+     * @param {string} props.accountId - The accountId used to find which users have access to the account
+     * @returns {Promise<Object[]>}
+     * @example
+     * alks.getAccountOwners({
+     *    baseUrl: 'https://your.alks-host.com',
+     *    accessToken: 'abc123',
+     *    accountId: '012345678910',
+     * }).then((owners) => {
+     *    // owners[0].sAMAccountName, owners[0].displayName, owners[0].email, owners[0].title, owners[0].department
+     * })
+     */
+    Alks.prototype.getAccountOwners = function (props) {
+        return __awaiter(this, void 0, void 0, function () {
+            var accountId, results;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        accountId = props.accountId;
+                        return [4 /*yield*/, this.internalFetch("userAccess/owners/".concat(accountId), props, 'GET')];
+                    case 1:
+                        results = _a.sent();
+                        return [2 /*return*/, results.accountOwners];
+                }
+            });
+        });
+    };
+    /**
+     * Returns a Promise for the results of creating new IAM user and long-term access keys
+     *
+     * @param {Object} props - An object containing the following properties
+     * @param {string} props.baseUrl - The base URL of the ALKS service
+     * @param {string} props.accessToken - The OAuth2 access token used to authorize the request
+     * @param {string} props.account - The user's account associated with the custom role
+     * @param {string} props.role - The user's role associated with the account
+     * @param {string} props.iamUserName - The name of the IAM user to create
+     * @returns {Promise<AccessKeys>}
+     * @example
+     * alks.createAccessKeys({
+     *   baseUrl: 'https://your.alks-host.com',
+     *   accessToken: 'abc123',
+     *   account: 'anAccount',
+     *   role: 'IAMAdmin',
+     *   iamUserName: 'iamUserName'
+     * }).then((user) => {
+     *   // user.iamUserArn, user.accessKey, user.secretKey, user.addedIAMUserToGroup
+     * })
+     * @example
+     * alks.createAccessKeys({
+     *   baseUrl: 'https://your.alks-host.com',
+     *   accessToken: 'abc123',
+     *   account: 'anAccount',
+     *   role: 'IAMAdmin',
+     *   iamUserName: 'iamUserName'
+     *   tags: [
+     *      {
+     *        key: "tagkey1",
+     *        value: "tagValue1"
+     *      },
+     *      {
+     *        key: "tagkey1",
+     *        value: "tagvalue2"
+     *      }
+     *   ],
+     * }).then((user) => {
+     *   // user.iamUserArn, user.accessKey, user.secretKey, user.addedIAMUserToGroup
+     * })
+     */
+    Alks.prototype.createAccessKeys = function (props) {
+        return __awaiter(this, void 0, void 0, function () {
+            var results;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.internalFetch('accessKeys', props)];
+                    case 1:
+                        results = _a.sent();
+                        return [2 /*return*/, pick(results, [
+                                'iamUserArn',
+                                'accessKey',
+                                'secretKey',
+                                'addedIAMUserToGroup',
+                                'tags',
+                            ])];
+                }
+            });
+        });
+    };
+    /**
+     * Returns a Promise for an IamUser
+     *
+     * @param {Object} props - An object containing the following properties
+     * @param {string} props.baseUrl - The base URL of the ALKS service
+     * @param {string} props.accessToken - The OAuth2 access token used to authorize the request
+     * @param {string} props.account - The user's account associated with the custom role
+     * @param {string} props.iamUserName - The name of the custom AWS IAM user
+     * @returns {Promise<User>}
+     * @example
+     * alks.getIamUser({
+     *   baseUrl: 'https://your.alks-host.com',
+     *   accessToken: 'abc123',
+     *   account: 'anAccount',
+     *   iamUserName: 'iamUserName'
+     * }).then((role) => {
+     *   user.iamUserArn, user.AccountId, user.userName, user.accessKey, user.tags
+     * })
+     */
+    Alks.prototype.getIamUser = function (props) {
+        return __awaiter(this, void 0, void 0, function () {
+            var results;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.internalFetch("iam-users/id/".concat(props.account, "/").concat(props.iamUserName), props, 'GET')];
+                    case 1:
+                        results = _a.sent();
+                        return [2 /*return*/, pick(results.item, [
+                                'arn',
+                                'accountId',
+                                'userName',
+                                'accessKey',
+                                'tags',
+                            ])];
+                }
+            });
+        });
+    };
+    /**
+     * Returns a Promise for the results of updating an IAM user
+     *
+     * @param {Object} props - An object containing the following properties
+     * @param {string} props.baseUrl - The base URL of the ALKS service
+     * @param {string} props.accessToken - The OAuth2 access token used to authorize the request
+     * @param {string} props.account - The user's account associated with the custom role
+     * @param {string} props.iamUserName - The name of the IAM user to update
+     * @param {Array.<Object>} props.tags - A list of tag objects, where each object is in the form {key: "tagKey" value: "tagValue"}
+     * @returns {Promise<IamUser>}
+     * @example
+     * alks.updateIamUser({
+     *   baseUrl: 'https://your.alks-host.com',
+     *   accessToken: 'abc123',
+     *   account: 'anAccount',
+     *   iamUserName: 'iamUserName',
+     * }).then((user) => {
+     *   // user.iamUserArn, user.AccountId, user.userName, user.accessKey, user.tags
+     * })
+     * @example
+     * alks.updateIamUser({
+     *   baseUrl: 'https://your.alks-host.com',
+     *   accessToken: 'abc123',
+     *   account: 'anAccount',
+     *   iamUserName: 'iamUserName'
+     *   tags: [
+     *      {
+     *        key: "tagkey1",
+     *        value: "tagValue1"
+     *      },
+     *      {
+     *        key: "tagkey1",
+     *        value: "tagvalue2"
+     *      }
+     *   ],
+     * }).then((user) => {
+     *   // user.iamUserArn, user.AccountId, user.userName, user.accessKey, user.tags
+     * })
+     */
+    Alks.prototype.updateIamUser = function (props) {
+        return __awaiter(this, void 0, void 0, function () {
+            var internalFetchProps, results;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        internalFetchProps = __assign(__assign({}, props), { user: {
+                                tags: props.tags,
+                            } });
+                        delete internalFetchProps.tags;
+                        return [4 /*yield*/, this.internalFetch("iam-users/id/".concat(props.account, "/").concat(props.iamUserName), internalFetchProps, 'PATCH')];
+                    case 1:
+                        results = _a.sent();
+                        return [2 /*return*/, pick(results.item, [
+                                'arn',
+                                'accountId',
+                                'userName',
+                                'accessKey',
+                                'tags',
+                            ])];
+                }
+            });
+        });
+    };
+    /**
+     * Returns a Promise for a boolean "true" indicating the IAM user and long-term access keys were deleted
+     *
+     * @param {Object} props - An object containing the following properties
+     * @param {string} props.baseUrl - The base URL of the ALKS service
+     * @param {string} props.accessToken - The OAuth2 access token used to authorize the request
+     * @param {string} props.account - The user's account associated with the custom role
+     * @param {string} props.role - The user's role associated with the account
+     * @param {string} props.iamUserName - The name of the IAM user to delete
+     * @returns {Promise<boolean>}
+     * @example
+     * alks.deleteIAMUser({
+     *   baseUrl: 'https://your.alks-host.com',
+     *   accessToken: 'abc123',
+     *   account: 'anAccount',
+     *   role: 'IAMAdmin',
+     *   iamUserName: 'iamUserName'
+     * }).then(() => {
+     *   // success!
+     * })
+     */
+    Alks.prototype.deleteIAMUser = function (props) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.internalFetch('IAMUser', props, 'DELETE')];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/, true];
+                }
+            });
+        });
+    };
+    /**
+     * Returns the version of the ALKS Rest API
+     *
+     * @param {Object} props - An object containing the following properties
+     * @returns {Promise<Object>}
+     * @example
+     * alks.version({
+     *   ...
+     * }).then((data) => {
+     *   // data.version
+     * })
+     */
+    Alks.prototype.version = function (props) {
+        return __awaiter(this, void 0, void 0, function () {
+            var results;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.internalFetch('version', props, 'GET')];
+                    case 1:
+                        results = _a.sent();
+                        return [2 /*return*/, pick(results, ['version'])];
+                }
+            });
+        });
+    };
+    /**
+     * Returns information about one of the roles used to generate keys
+     *
+     * @param {Object} props - An object containing the following properties
+     * @param {string} props.accountId - The 12-digit account ID associated with the custom role
+     * @param {string} props.role - The user's role associated with the account
+     * @returns {Promise<Object>}
+     * @example
+     * alks.getLoginRole({
+     *   ...
+     * }).then((loginRole) => {
+     *   // loginRole.account, loginRole.role, loginRole.iamKeyActive, loginRole.maxKeyDuration
+     * })
+     */
+    Alks.prototype.getLoginRole = function (props) {
+        return __awaiter(this, void 0, void 0, function () {
+            var accountId, role, results;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        accountId = props.accountId, role = props.role;
+                        return [4 /*yield*/, this.internalFetch("loginRoles/id/".concat(accountId, "/").concat(role), props, 'GET')];
+                    case 1:
+                        results = (_a.sent());
+                        // TODO we should probably update this function to include skypieaAccount in the result since it's already being fetched - Ben W 5/10/21
+                        return [2 /*return*/, pick(results.loginRole, [
+                                'account',
+                                'role',
+                                'iamKeyActive',
+                                'maxKeyDuration',
+                                'securityLevel',
+                            ])];
+                }
+            });
+        });
+    };
+    /**
+     * Exchanges a refresh token for an access token
+     *
+     * @param {Object} props - An object containing the following properties
+     * @param {string} props.refreshToken - the refresh token to exchange
+     * @returns {Promise<Object>}
+     * @example
+     * alks.getAccessToken({
+     *   ...
+     * }).then((data) => {
+     *   // data.accessToken, data.expiresIn
+     * })
+     */
+    Alks.prototype.getAccessToken = function (props) {
+        return __awaiter(this, void 0, void 0, function () {
+            var results;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.internalFetch('accessToken', props)];
+                    case 1:
+                        results = _a.sent();
+                        return [2 /*return*/, pick(results, ['accessToken', 'expiresIn'])];
+                }
+            });
+        });
+    };
+    /**
+     * Returns a list of a user's refresh tokens (Does not return the full token)
+     *
+     * @param {Object} props - An object containing the following properties
+     * @returns {Array<Object>}
+     * @example
+     * alks.getRefreshTokens({
+     *   ...
+     * }).then((tokens) => {
+     *   // token[i].clientId, token[i].id, token[i].userId, token[i].value
+     * })
+     */
+    Alks.prototype.getRefreshTokens = function (props) {
+        return __awaiter(this, void 0, void 0, function () {
+            var results;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.internalFetch('refreshTokens', props, 'GET')];
+                    case 1:
+                        results = (_a.sent());
+                        return [2 /*return*/, results.refreshTokens.map(function (token) {
+                                return pick(token, ['clientId', 'id', 'userId', 'value']);
+                            })];
+                }
+            });
+        });
+    };
+    /**
+     * Revokes a refresh or access token
+     *
+     * @param {Object} props - An object containing the following properties
+     * @param {string} [props.token] - the access or refresh token to revoke (Required if tokenId not specified)
+     * @param {string} [props.tokenId] - the ID of the refresh token to revoke (Required if token not specified)
+     * @returns {boolean}
+     * @example
+     * alks.revoke({
+     *   token: '...',
+     *   ...
+     * }).then((success) => {
+     *   // success == true
+     * })
+     *
+     * // or
+     *
+     * alks.revoke({
+     *   tokenId: '...',
+     *   ...
+     * }).then((success) => {
+     *   // success == true
+     * })
+     */
+    Alks.prototype.revoke = function (props) {
+        return __awaiter(this, void 0, void 0, function () {
+            var results;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.internalFetch('revoke', props)];
+                    case 1:
+                        results = _a.sent();
+                        return [2 /*return*/, results.statusMessage == 'Success'];
+                }
+            });
+        });
+    };
+    /**
+     * Returns cost totals for the specified account for the day, week, month, year, and a breakdown of costs by service for the day and month
+     *
+     * @param {Object} props - An object containing the following properties
+     * @param {String} props.accountId - the 12-digit AWS account ID to get cost data for
+     * @returns {Object}
+     * @example
+     * alks.getCostTotals({
+     *   accountId: '012345678910',
+     * }).then((costTotals) => {
+     *   // costTotals.awsAccountId, costTotals.daily, costTotals.weekly, etc.
+     * })
+     */
+    Alks.prototype.getCostTotals = function (props) {
+        return __awaiter(this, void 0, void 0, function () {
+            var results;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.internalFetch("costTotals/".concat(props.accountId), props, 'GET')];
+                    case 1:
+                        results = (_a.sent());
+                        return [2 /*return*/, pick(results.costTotals, [
+                                'awsAccountId',
+                                'yyyy',
+                                'mm',
+                                'dd',
+                                'daily',
+                                'weekly',
+                                'monthly',
+                                'yearly',
+                                'dailyCostsByService',
+                                'monthlyCostsByService',
+                            ])];
+                }
+            });
+        });
+    };
+    Alks.prototype.internalFetch = function (path_1) {
+        return __awaiter(this, arguments, void 0, function (path, args, method) {
+            var opts, payload, headers, credentials, url, response, json, err_1;
+            if (args === void 0) { args = {}; }
+            if (method === void 0) { method = 'POST'; }
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        opts = __assign(__assign({}, this.config), args);
+                        payload = __assign({}, opts);
+                        headers = {
+                            'Content-Type': 'application/json',
+                            'User-Agent': "AlksJS/".concat(packageJson.version),
+                        };
+                        if (isTokenAuth(opts)) {
+                            headers['Authorization'] = "Bearer ".concat(opts.accessToken);
+                            delete payload.accessToken;
+                        }
+                        else if (isStsAuth(opts)) {
+                            headers['ALKS-STS-Access-Key'] = opts.accessKey;
+                            headers['ALKS-STS-Secret-Key'] = opts.secretKey;
+                            headers['ALKS-STS-Session-Token'] = opts.sessionToken;
+                            delete payload.accessKey;
+                            delete payload.secretKey;
+                            delete payload.sessionToken;
+                        }
+                        else if (isPasswordAuth(opts)) {
+                            console.error('The userid and password properties are deprecated and should be replaced with an access token');
+                            credentials = base64Encode("".concat(opts.userid, ":").concat(opts.password));
+                            headers['Authorization'] = "Basic ".concat(credentials);
+                            delete payload.userid;
+                            delete payload.password;
+                        }
+                        else ;
+                        if (opts.userAgent) {
+                            headers['User-Agent'] += " ".concat(opts.userAgent);
+                            delete payload.userAgent;
+                        }
+                        url = "".concat(opts.baseUrl, "/").concat(path);
+                        return [4 /*yield*/, opts._fetch(url, {
+                                method: method,
+                                headers: headers,
+                                credentials: 'omit',
+                                body: method == 'GET' ? undefined : JSON.stringify(payload),
+                            })];
+                    case 1:
+                        response = _a.sent();
+                        _a.label = 2;
+                    case 2:
+                        _a.trys.push([2, 4, , 5]);
+                        return [4 /*yield*/, response.json()];
+                    case 3:
+                        json = _a.sent();
+                        return [3 /*break*/, 5];
+                    case 4:
+                        err_1 = _a.sent();
+                        json = {
+                            errors: [err_1.message],
+                        };
+                        return [3 /*break*/, 5];
+                    case 5:
+                        if (this.config.requestLogger) {
+                            try {
+                                this.config.requestLogger({
+                                    method: method,
+                                    url: url,
+                                    statusCode: response.status,
+                                    statusMessage: json.statusMessage,
+                                    requestId: json.requestId,
+                                });
+                            }
+                            catch (err) {
+                                // swallow errors if the request logger isn't set up correctly
+                            }
+                        }
+                        if (!response.ok) {
+                            throw new AlksError(response, json);
+                        }
+                        return [2 /*return*/, json];
+                }
+            });
+        });
+    };
+    return Alks;
+}());
+var AlksError = /** @class */ (function (_super) {
+    __extends(AlksError, _super);
+    function AlksError(response, json) {
+        var _this = this;
+        var errors = Array.isArray(json === null || json === void 0 ? void 0 : json.errors) ? json.errors : [];
+        if (response.statusText) {
+            errors.unshift(response.statusText);
+        }
+        var message = errors.join('; ');
+        _this = _super.call(this, message) || this;
+        _this.status = response.status;
+        _this.message = message;
+        Object.assign(_this, json);
+        return _this;
+    }
+    return AlksError;
+}(Error));
+/**
+ * Encodes a string to base 64
+ *
+ * @param str - the string to encode
+ * @private
+ * @returns the base64 encoded string
+ * @example
+ * var input = 'password';
+ * base64Encode(input);
+ */
+function base64Encode(str) {
+    if (str === void 0) { str = ''; }
+    return Buffer.from(str).toString('base64');
+}
+function pick(obj, props) {
+    return props.reduce(function (acc, prop) { return ((acc[prop] = obj[prop]), acc); }, {});
+}
+var defaultConfig = {
+    _fetch: fetch,
+};
+var defaultAlks = Alks.prototype.create.call({}, defaultConfig);
+var create = Alks.prototype.create.bind(defaultAlks);
+var getAccounts = Alks.prototype.getAccounts.bind(defaultAlks);
+var getKeys = Alks.prototype.getKeys.bind(defaultAlks);
+var getIAMKeys = Alks.prototype.getIAMKeys.bind(defaultAlks);
+var getAllAWSRoleTypes = Alks.prototype.getAllAWSRoleTypes.bind(defaultAlks);
+var getAWSRoleTypes = Alks.prototype.getAWSRoleTypes.bind(defaultAlks);
+var getNonServiceAWSRoleTypes = Alks.prototype.getNonServiceAWSRoleTypes.bind(defaultAlks);
+var createRole = Alks.prototype.createRole.bind(defaultAlks);
+var createNonServiceRole = Alks.prototype.createNonServiceRole.bind(defaultAlks);
+var awsAccountRoles = Alks.prototype.awsAccountRoles.bind(defaultAlks);
+var listAWSAccountRoles = Alks.prototype.listAWSAccountRoles.bind(defaultAlks);
+var getAccountRole = Alks.prototype.getAccountRole.bind(defaultAlks);
+var updateRole = Alks.prototype.updateRole.bind(defaultAlks);
+var deleteRole = Alks.prototype.deleteRole.bind(defaultAlks);
+var addRoleMachineIdentity = Alks.prototype.addRoleMachineIdentity.bind(defaultAlks);
+var deleteRoleMachineIdentity = Alks.prototype.deleteRoleMachineIdentity.bind(defaultAlks);
+var getUserAccess = Alks.prototype.getUserAccess.bind(defaultAlks);
+var getUserAccessByRole = Alks.prototype.getUserAccessByRole.bind(defaultAlks);
+var getUserRoleAccess = Alks.prototype.getUserRoleAccess.bind(defaultAlks);
+var getAccountOwners = Alks.prototype.getAccountOwners.bind(defaultAlks);
+var createAccessKeys = Alks.prototype.createAccessKeys.bind(defaultAlks);
+var getIamUser = Alks.prototype.getIamUser.bind(defaultAlks);
+var updateIamUser = Alks.prototype.updateIamUser.bind(defaultAlks);
+var deleteIAMUser = Alks.prototype.deleteIAMUser.bind(defaultAlks);
+var version = Alks.prototype.version.bind(defaultAlks);
+var getLoginRole = Alks.prototype.getLoginRole.bind(defaultAlks);
+var getAccessToken = Alks.prototype.getAccessToken.bind(defaultAlks);
+var getRefreshTokens = Alks.prototype.getRefreshTokens.bind(defaultAlks);
+var revoke = Alks.prototype.revoke.bind(defaultAlks);
+var getCostTotals = Alks.prototype.getCostTotals.bind(defaultAlks);
 
-export { ALKS$1 as default };
+var ALKS = /*#__PURE__*/Object.freeze({
+  __proto__: null,
+  Alks: Alks,
+  AlksError: AlksError,
+  get PseudoBoolean () { return PseudoBoolean; },
+  get TrustType () { return TrustType; },
+  addRoleMachineIdentity: addRoleMachineIdentity,
+  awsAccountRoles: awsAccountRoles,
+  create: create,
+  createAccessKeys: createAccessKeys,
+  createNonServiceRole: createNonServiceRole,
+  createRole: createRole,
+  deleteIAMUser: deleteIAMUser,
+  deleteRole: deleteRole,
+  deleteRoleMachineIdentity: deleteRoleMachineIdentity,
+  getAWSRoleTypes: getAWSRoleTypes,
+  getAccessToken: getAccessToken,
+  getAccountOwners: getAccountOwners,
+  getAccountRole: getAccountRole,
+  getAccounts: getAccounts,
+  getAllAWSRoleTypes: getAllAWSRoleTypes,
+  getCostTotals: getCostTotals,
+  getIAMKeys: getIAMKeys,
+  getIamUser: getIamUser,
+  getKeys: getKeys,
+  getLoginRole: getLoginRole,
+  getNonServiceAWSRoleTypes: getNonServiceAWSRoleTypes,
+  getRefreshTokens: getRefreshTokens,
+  getUserAccess: getUserAccess,
+  getUserAccessByRole: getUserAccessByRole,
+  getUserRoleAccess: getUserRoleAccess,
+  listAWSAccountRoles: listAWSAccountRoles,
+  revoke: revoke,
+  updateIamUser: updateIamUser,
+  updateRole: updateRole,
+  version: version
+});
+
+// Export everything from the main module, and re-export it as the default export for backwards compatibility
+
+export { Alks, AlksError, PseudoBoolean, TrustType, addRoleMachineIdentity, awsAccountRoles, create, createAccessKeys, createNonServiceRole, createRole, ALKS as default, deleteIAMUser, deleteRole, deleteRoleMachineIdentity, getAWSRoleTypes, getAccessToken, getAccountOwners, getAccountRole, getAccounts, getAllAWSRoleTypes, getCostTotals, getIAMKeys, getIamUser, getKeys, getLoginRole, getNonServiceAWSRoleTypes, getRefreshTokens, getUserAccess, getUserAccessByRole, getUserRoleAccess, listAWSAccountRoles, revoke, updateIamUser, updateRole, version };
