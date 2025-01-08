@@ -44,14 +44,13 @@
   },
   "dependencies": {
     "encoding": "^0.1.13",
-    "node-fetch": "^2.6.1",
     "tslib": "^2.3.1"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^19.0.0",
     "@rollup/plugin-node-resolve": "^13.0.0",
     "@rollup/plugin-typescript": "^8.2.1",
-    "@types/node": "^15.0.2",
+    "@types/node": "^15.14.9",
     "@types/node-fetch": "^2.5.10",
     "browserify": "^17.0.0",
     "chai": "^4.3.4",

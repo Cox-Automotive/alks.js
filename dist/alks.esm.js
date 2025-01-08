@@ -1,7 +1,6 @@
 var tslib_1 = require("tslib");
 var packageJson = tslib_1.__importStar(require("../package.json"));
 var buffer_1 = require("buffer");
-tslib_1.__importDefault(require("node-fetch"));
 var fetch = window.fetch.bind(window)
     ;
 var ALKS;

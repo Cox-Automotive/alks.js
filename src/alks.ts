@@ -1,16 +1,14 @@
 import * as packageJson from '../package.json';
 import { Buffer } from 'buffer';
-import nodeFetch, { Response } from 'node-fetch';
-import { RequestInit } from 'node-fetch';
 
 declare const window: any;
 
-// Let it be known that it is incredibly stupid that we still have to do this - Ben W 5/12/21
-type Fetch = typeof nodeFetch;
+// Using native fetch function that comes with node instead.
+type Fetch = (input: RequestInfo, init?: RequestInit) => Promise<Response>;
 
 const fetch: Fetch = (process as any).browser
   ? window.fetch.bind(window)
-  : nodeFetch;
+  : globalThis.fetch;
 
 namespace ALKS {
   interface BaseConfig {

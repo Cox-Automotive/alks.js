@@ -3,8 +3,7 @@
 var tslib_1 = require("tslib");
 var packageJson = tslib_1.__importStar(require("../package.json"));
 var buffer_1 = require("buffer");
-var node_fetch_1 = tslib_1.__importDefault(require("node-fetch"));
-var fetch = node_fetch_1.default;
+var fetch = globalThis.fetch;
 var ALKS;
 (function (ALKS) {
     function isStsAuth(a) {
