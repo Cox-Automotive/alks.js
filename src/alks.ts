@@ -9,6 +9,7 @@ type Fetch = (input: RequestInfo, init?: RequestInit) => Promise<Response>;
 const fetch: Fetch = (process as any).browser
   ? window.fetch.bind(window)
   : globalThis.fetch;
+//
 
 namespace ALKS {
   interface BaseConfig {

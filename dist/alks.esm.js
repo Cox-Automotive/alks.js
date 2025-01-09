@@ -3,6 +3,7 @@ var packageJson = tslib_1.__importStar(require("../package.json"));
 var buffer_1 = require("buffer");
 var fetch = window.fetch.bind(window)
     ;
+//
 var ALKS;
 (function (ALKS) {
     function isStsAuth(a) {
