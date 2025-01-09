@@ -1080,7 +1080,7 @@ declare namespace ALKS {
         constructor(response: Response, json: any);
     }
     export const create: (props: AlksProps) => Alks;
-    export const getAccounts: (props?: GetAccountsProps) => Promise<Account[]>;
+    export const getAccounts: (props?: GetAccountsProps | undefined) => Promise<Account[]>;
     export const getKeys: (props: GetKeysProps) => Promise<Key>;
     export const getIAMKeys: (props: GetIAMKeysProps) => Promise<Key>;
     export const getAllAWSRoleTypes: (props: GetAllAWSRoleTypesProps) => Promise<AwsRoleType[]>;

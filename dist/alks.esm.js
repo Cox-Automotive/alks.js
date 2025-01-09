@@ -3,7 +3,6 @@ var packageJson = tslib_1.__importStar(require("../package.json"));
 var buffer_1 = require("buffer");
 var fetch = window.fetch.bind(window)
     ;
-//
 var ALKS;
 (function (ALKS) {
     function isStsAuth(a) {
@@ -478,7 +477,7 @@ var ALKS;
                 var results;
                 return tslib_1.__generator(this, function (_a) {
                     switch (_a.label) {
-                        case 0: return [4 /*yield*/, this.internalFetch("awsAccountRoles?account=".concat(props.account), props, 'GET')];
+                        case 0: return [4 /*yield*/, this.internalFetch("awsAccountRoles?account=" + props.account, props, 'GET')];
                         case 1:
                             results = _a.sent();
                             return [2 /*return*/, results.awsRoleList];
@@ -550,7 +549,7 @@ var ALKS;
                         case 1:
                             results = _a.sent();
                             if (!results.roleExists) {
-                                throw new Error("Role ".concat(props.roleName, " does not exist in this account"));
+                                throw new Error("Role " + props.roleName + " does not exist in this account");
                             }
                             return [2 /*return*/, tslib_1.__assign(tslib_1.__assign({}, pick(results, [
                                     'roleArn',
@@ -594,7 +593,7 @@ var ALKS;
                         case 1:
                             results = _a.sent();
                             if (!results.roleExists) {
-                                throw new Error("Role ".concat(props.roleName, " does not exist in this account"));
+                                throw new Error("Role " + props.roleName + " does not exist in this account");
                             }
                             return [2 /*return*/, tslib_1.__assign(tslib_1.__assign({}, pick(results, ['roleArn', 'isMachineIdentity', 'tags'])), { instanceProfileArn: results.instanceProfileARN })];
                     }
@@ -718,7 +717,7 @@ var ALKS;
                     switch (_a.label) {
                         case 0:
                             accountId = props.accountId;
-                            return [4 /*yield*/, this.internalFetch("userAccess/".concat(accountId), props, 'GET')];
+                            return [4 /*yield*/, this.internalFetch("userAccess/" + accountId, props, 'GET')];
                         case 1:
                             results = _a.sent();
                             return [2 /*return*/, results.users];
@@ -750,7 +749,7 @@ var ALKS;
                     switch (_a.label) {
                         case 0:
                             accountId = props.accountId;
-                            return [4 /*yield*/, this.internalFetch("reports/users-by-role?accountId=".concat(accountId), props, 'GET')];
+                            return [4 /*yield*/, this.internalFetch("reports/users-by-role?accountId=" + accountId, props, 'GET')];
                         case 1:
                             results = _a.sent();
                             return [2 /*return*/, results.users];
@@ -784,7 +783,7 @@ var ALKS;
                     switch (_a.label) {
                         case 0:
                             accountId = props.accountId;
-                            return [4 /*yield*/, this.internalFetch("userAccess/roles/".concat(accountId), props)];
+                            return [4 /*yield*/, this.internalFetch("userAccess/roles/" + accountId, props)];
                         case 1:
                             results = _a.sent();
                             return [2 /*return*/, results.roles];
@@ -816,7 +815,7 @@ var ALKS;
                     switch (_a.label) {
                         case 0:
                             accountId = props.accountId;
-                            return [4 /*yield*/, this.internalFetch("userAccess/owners/".concat(accountId), props, 'GET')];
+                            return [4 /*yield*/, this.internalFetch("userAccess/owners/" + accountId, props, 'GET')];
                         case 1:
                             results = _a.sent();
                             return [2 /*return*/, results.accountOwners];
@@ -908,7 +907,7 @@ var ALKS;
                 var results;
                 return tslib_1.__generator(this, function (_a) {
                     switch (_a.label) {
-                        case 0: return [4 /*yield*/, this.internalFetch("iam-users/id/".concat(props.account, "/").concat(props.iamUserName), props, 'GET')];
+                        case 0: return [4 /*yield*/, this.internalFetch("iam-users/id/" + props.account + "/" + props.iamUserName, props, 'GET')];
                         case 1:
                             results = _a.sent();
                             return [2 /*return*/, pick(results.item, [
@@ -971,7 +970,7 @@ var ALKS;
                                     tags: props.tags,
                                 } });
                             delete internalFetchProps.tags;
-                            return [4 /*yield*/, this.internalFetch("iam-users/id/".concat(props.account, "/").concat(props.iamUserName), internalFetchProps, 'PATCH')];
+                            return [4 /*yield*/, this.internalFetch("iam-users/id/" + props.account + "/" + props.iamUserName, internalFetchProps, 'PATCH')];
                         case 1:
                             results = _a.sent();
                             return [2 /*return*/, pick(results.item, [
@@ -1064,7 +1063,7 @@ var ALKS;
                     switch (_a.label) {
                         case 0:
                             accountId = props.accountId, role = props.role;
-                            return [4 /*yield*/, this.internalFetch("loginRoles/id/".concat(accountId, "/").concat(role), props, 'GET')];
+                            return [4 /*yield*/, this.internalFetch("loginRoles/id/" + accountId + "/" + role, props, 'GET')];
                         case 1:
                             results = (_a.sent());
                             // TODO we should probably update this function to include skypieaAccount in the result since it's already being fetched - Ben W 5/10/21
@@ -1187,7 +1186,7 @@ var ALKS;
                 var results;
                 return tslib_1.__generator(this, function (_a) {
                     switch (_a.label) {
-                        case 0: return [4 /*yield*/, this.internalFetch("costTotals/".concat(props.accountId), props, 'GET')];
+                        case 0: return [4 /*yield*/, this.internalFetch("costTotals/" + props.accountId, props, 'GET')];
                         case 1:
                             results = (_a.sent());
                             return [2 /*return*/, pick(results.costTotals, [
@@ -1218,10 +1217,10 @@ var ALKS;
                             payload = tslib_1.__assign({}, opts);
                             headers = {
                                 'Content-Type': 'application/json',
-                                'User-Agent': "AlksJS/".concat(packageJson.version),
+                                'User-Agent': "AlksJS/" + packageJson.version,
                             };
                             if (isTokenAuth(opts)) {
-                                headers['Authorization'] = "Bearer ".concat(opts.accessToken);
+                                headers['Authorization'] = "Bearer " + opts.accessToken;
                                 delete payload.accessToken;
                             }
                             else if (isStsAuth(opts)) {
@@ -1234,17 +1233,17 @@ var ALKS;
                             }
                             else if (isPasswordAuth(opts)) {
                                 console.error('The userid and password properties are deprecated and should be replaced with an access token');
-                                credentials = base64Encode("".concat(opts.userid, ":").concat(opts.password));
-                                headers['Authorization'] = "Basic ".concat(credentials);
+                                credentials = base64Encode(opts.userid + ":" + opts.password);
+                                headers['Authorization'] = "Basic " + credentials;
                                 delete payload.userid;
                                 delete payload.password;
                             }
                             else ;
                             if (opts.userAgent) {
-                                headers['User-Agent'] += " ".concat(opts.userAgent);
+                                headers['User-Agent'] += " " + opts.userAgent;
                                 delete payload.userAgent;
                             }
-                            return [4 /*yield*/, opts._fetch("".concat(opts.baseUrl, "/").concat(path), {
+                            return [4 /*yield*/, opts._fetch(opts.baseUrl + "/" + path, {
                                     method: method,
                                     headers: headers,
                                     credentials: 'omit',
