@@ -1,3 +1,5 @@
 # Changelog
 
-* Updates dependency versions to mitigate vulnerabilities
+* Removes node-fetch
+* Updates fetch-mock to latest
+* Removes Karma

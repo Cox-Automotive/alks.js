@@ -1,5 +1,4 @@
-import nodeFetch, { Response } from 'node-fetch';
-declare type Fetch = typeof nodeFetch;
+declare type Fetch = (input: RequestInfo, init?: RequestInit) => Promise<Response>;
 declare namespace ALKS {
     interface BaseConfig {
         baseUrl: string;

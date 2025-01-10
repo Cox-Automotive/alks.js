@@ -44,3 +44,6 @@ lib/
 
 # macOS preference file
 .DS_Store
+
+# Ignore asdf tool files.
+.tool-versions

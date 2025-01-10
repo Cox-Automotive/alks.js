@@ -3,49 +3,52 @@ const chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
 const expect = chai.expect;
 const sinon = require('sinon');
-const fetchMock = require('fetch-mock');
+const fetchMock = require('fetch-mock').default;
 const libraryVersion = require('../package.json').version;
 
-var alks = require('../');
+fetchMock.mockGlobal();
+const alks = require('../');
+
+beforeEach(() => {
+  fetchMock.clearHistory();
+  fetchMock.removeRoutes();
+});
 
 describe('alks.js', function () {
   describe('getAccounts', () => {
     it('should return a list of accounts', async () => {
-      const _fetch = fetchMock
-        .sandbox()
-        .mock('https://your.alks-host.com/getAccounts', {
-          body: {
-            statusMessage: 'Success',
-            accountListRole: {
-              '1234 - foobar': [
-                {
-                  account: '1234',
-                  role: 'role1',
-                  iamKeyActive: true,
-                  maxKeyDuration: 2,
-                  securityLevel: '1',
-                  skypieaAccount: null,
-                },
-              ],
-              '2345 - foobar': [
-                {
-                  account: '2345',
-                  role: 'role2',
-                  iamKeyActive: false,
-                  maxKeyDuration: 36,
-                  securityLevel: '1',
-                  skypieaAccount: { label: '2345-label' },
-                },
-              ],
-            },
+      fetchMock.post('https://your.alks-host.com/getAccounts', {
+        body: {
+          statusMessage: 'Success',
+          accountListRole: {
+            '1234 - foobar': [
+              {
+                account: '1234',
+                role: 'role1',
+                iamKeyActive: true,
+                maxKeyDuration: 2,
+                securityLevel: '1',
+                skypieaAccount: null,
+              },
+            ],
+            '2345 - foobar': [
+              {
+                account: '2345',
+                role: 'role2',
+                iamKeyActive: false,
+                maxKeyDuration: 36,
+                securityLevel: '1',
+                skypieaAccount: { label: '2345-label' },
+              },
+            ],
           },
-          status: 200,
-        });
+        },
+        status: 200,
+      });
 
       const result = await alks.getAccounts({
         baseUrl: 'https://your.alks-host.com',
         accessToken: 'abc123',
-        _fetch,
       });
 
       expect(result).to.deep.include({
@@ -82,19 +85,17 @@ describe('alks.js', function () {
     });
 
     it('should return an access key, secret key, session token and console URL', async () => {
-      const _fetch = fetchMock
-        .sandbox()
-        .mock('https://your.alks-host.com/getKeys', {
-          body: {
-            accessKey: 'foo',
-            secretKey: 'bar',
-            sessionToken: 'baz',
-            consoleURL: 'https://foo.com',
-            sessionTime: 1,
-            statusMessage: 'Success',
-          },
-          status: 200,
-        });
+      fetchMock.post('https://your.alks-host.com/getKeys', {
+        body: {
+          accessKey: 'foo',
+          secretKey: 'bar',
+          sessionToken: 'baz',
+          consoleURL: 'https://foo.com',
+          sessionTime: 1,
+          statusMessage: 'Success',
+        },
+        status: 200,
+      });
 
       const result = await alks.getKeys({
         baseUrl: 'https://your.alks-host.com',
@@ -102,7 +103,6 @@ describe('alks.js', function () {
         role: 'PowerUser',
         sessionTime: 2,
         accessToken: 'abc123',
-        _fetch,
       });
 
       expect(result).to.have.keys(
@@ -118,17 +118,15 @@ describe('alks.js', function () {
       const userid = 'joebob123';
       const password = 'letmein';
       const base64Credentials = 'am9lYm9iMTIzOmxldG1laW4='; // Base64(username:password)
-      const _fetch = fetchMock
-        .sandbox()
-        .mock('https://your.alks-host.com/getKeys', {
-          body: {
-            accessKey: 'foo',
-            secretKey: 'bar',
-            sessionToken: 'baz',
-            statusMessage: 'Success',
-          },
-          status: 200,
-        });
+      fetchMock.post('https://your.alks-host.com/getKeys', {
+        body: {
+          accessKey: 'foo',
+          secretKey: 'bar',
+          sessionToken: 'baz',
+          statusMessage: 'Success',
+        },
+        status: 200,
+      });
 
       await alks.getKeys({
         baseUrl: 'https://your.alks-host.com',
@@ -137,47 +135,41 @@ describe('alks.js', function () {
         sessionTime: 2,
         userid,
         password,
-        _fetch,
       });
 
-      expect(_fetch.lastCall()[1].headers.Authorization).to.equal(
-        `Basic ${base64Credentials}`
-      );
+      expect(
+        fetchMock.callHistory.lastCall().args[1].headers.Authorization
+      ).to.equal(`Basic ${base64Credentials}`);
     });
 
     it('should send the library version via the User-Agent header', async () => {
-      const _fetch = fetchMock
-        .sandbox()
-        .mock('https://your.alks-host.com/getKeys', {
-          body: {
-            accessKey: 'foo',
-            secretKey: 'bar',
-            sessionToken: 'baz',
-            statusMessage: 'Success',
-          },
-          status: 200,
-        });
+      fetchMock.route('https://your.alks-host.com/getKeys', {
+        body: {
+          accessKey: 'foo',
+          secretKey: 'bar',
+          sessionToken: 'baz',
+          statusMessage: 'Success',
+        },
+        status: 200,
+      });
 
       await alks.getKeys({
         baseUrl: 'https://your.alks-host.com',
         account: 'anAccount',
         role: 'PowerUser',
         sessionTime: 2,
-        _fetch,
       });
 
-      expect(_fetch.lastCall()[1].headers['User-Agent']).to.contain(
-        libraryVersion
-      );
+      expect(
+        fetchMock.callHistory.lastCall().args[1].headers['User-Agent']
+      ).to.contain(libraryVersion);
     });
 
     it('rejects on error with ALKS statusMessage', async () => {
-      const _fetch = fetchMock
-        .sandbox()
-        .mock('https://your.alks-host.com/getKeys', {
-          body: { statusMessage: 'this is the statusMessage' },
-          status: 401,
-        });
+      fetchMock.route('https://your.alks-host.com/getKeys', {
+        body: { statusMessage: 'this is the statusMessage' },
+        status: 401,
+      });
 
       const result = alks.getKeys({
         baseUrl: 'https://your.alks-host.com',
@@ -185,7 +177,6 @@ describe('alks.js', function () {
         role: 'PowerUser',
         sessionTime: 2,
         accessToken: 'wrongToken',
-        _fetch,
       });
 
       expect(result).to.be.rejectedWith({
@@ -196,12 +187,10 @@ describe('alks.js', function () {
     });
 
     it('rejects on error with errors array', async () => {
-      const _fetch = fetchMock
-        .sandbox()
-        .mock('https://your.alks-host.com/getKeys', {
-          body: { errors: ['this is an error'], statusMessage: null },
-          status: 401,
-        });
+      fetchMock.route('https://your.alks-host.com/getKeys', {
+        body: { errors: ['this is an error'], statusMessage: null },
+        status: 401,
+      });
 
       const result = alks.getKeys({
         baseUrl: 'https://your.alks-host.com',
@@ -209,7 +198,6 @@ describe('alks.js', function () {
         role: 'PowerUser',
         sessionTime: 2,
         accessToken: 'wrongToken',
-        _fetch,
       });
 
       expect(result).to.be.rejectedWith({
@@ -220,9 +208,7 @@ describe('alks.js', function () {
     });
 
     it('handles a server error', async () => {
-      const _fetch = fetchMock
-        .sandbox()
-        .mock('https://your.alks-host.com/getKeys', { status: 500 });
+      fetchMock.route('https://your.alks-host.com/getKeys', { status: 500 });
 
       const result = alks.getKeys({
         baseUrl: 'https://your.alks-host.com',
@@ -230,7 +216,6 @@ describe('alks.js', function () {
         role: 'PowerUser',
         sessionTime: 2,
         accessToken: 'abc123',
-        _fetch,
       });
 
       expect(result).to.be.rejectedWith({
@@ -241,17 +226,15 @@ describe('alks.js', function () {
     });
 
     it('warns of userid/password deprecation', async () => {
-      const _fetch = fetchMock
-        .sandbox()
-        .mock('https://your.alks-host.com/getKeys', {
-          body: {
-            accessKey: 'foo',
-            secretKey: 'bar',
-            sessionToken: 'baz',
-            statusMessage: 'Success',
-          },
-          status: 200,
-        });
+      fetchMock.route('https://your.alks-host.com/getKeys', {
+        body: {
+          accessKey: 'foo',
+          secretKey: 'bar',
+          sessionToken: 'baz',
+          statusMessage: 'Success',
+        },
+        status: 200,
+      });
 
       await alks.getKeys({
         baseUrl: 'https://your.alks-host.com',
@@ -260,7 +243,6 @@ describe('alks.js', function () {
         sessionTime: 2,
         userid: 'testuser',
         password: 'testpass',
-        _fetch,
       });
 
       expect(consoleErrorSpy.calledWith(sinon.match('deprecated'))).to.be.true;
@@ -269,19 +251,17 @@ describe('alks.js', function () {
 
   describe('getIAMKeys', () => {
     it('should return an access key, secret key, session token and console URL', async () => {
-      const _fetch = fetchMock
-        .sandbox()
-        .mock('https://your.alks-host.com/getIAMKeys', {
-          body: {
-            accessKey: 'foo',
-            secretKey: 'bar',
-            sessionToken: 'baz',
-            consoleURL: 'https://foo.com',
-            sessionTime: 1,
-            statusMessage: 'Success',
-          },
-          status: 200,
-        });
+      fetchMock.route('https://your.alks-host.com/getIAMKeys', {
+        body: {
+          accessKey: 'foo',
+          secretKey: 'bar',
+          sessionToken: 'baz',
+          consoleURL: 'https://foo.com',
+          sessionTime: 1,
+          statusMessage: 'Success',
+        },
+        status: 200,
+      });
 
       const result = await alks.getIAMKeys({
         baseUrl: 'https://your.alks-host.com',
@@ -289,7 +269,6 @@ describe('alks.js', function () {
         role: 'IAMAdmin',
         sessionTime: 1,
         accessToken: 'abc123',
-        _fetch,
       });
 
       expect(result).to.have.keys(
@@ -340,21 +319,18 @@ describe('alks.js', function () {
         },
       ];
 
-      const _fetch = fetchMock
-        .sandbox()
-        .mock('https://your.alks-host.com/allAwsRoleTypes', {
-          body: {
-            statusMessage: 'Success',
-            requestId: 'reqId',
-            roleTypes: roleTypes,
-          },
-          status: 200,
-        });
+      fetchMock.route('https://your.alks-host.com/allAwsRoleTypes', {
+        body: {
+          statusMessage: 'Success',
+          requestId: 'reqId',
+          roleTypes: roleTypes,
+        },
+        status: 200,
+      });
 
       const result = await alks.getAllAWSRoleTypes({
         baseUrl: 'https://your.alks-host.com',
         accessToken: 'abc123',
-        _fetch,
       });
 
       expect(result).to.have.deep.members(roleTypes);
@@ -381,25 +357,22 @@ describe('alks.js', function () {
         },
       ];
 
-      const _fetch = fetchMock
-        .sandbox()
-        .mock(
-          'https://your.alks-host.com/allAwsRoleTypes?getDynamicValues=true',
-          {
-            body: {
-              statusMessage: 'Success',
-              requestId: 'reqId',
-              roleTypes: roleTypes,
-            },
-            status: 200,
-          }
-        );
+      fetchMock.route(
+        'https://your.alks-host.com/allAwsRoleTypes?getDynamicValues=true',
+        {
+          body: {
+            statusMessage: 'Success',
+            requestId: 'reqId',
+            roleTypes: roleTypes,
+          },
+          status: 200,
+        }
+      );
 
       const result = await alks.getAllAWSRoleTypes({
         baseUrl: 'https://your.alks-host.com',
         accessToken: 'abc123',
         getDynamicValues: true,
-        _fetch,
       });
 
       expect(result).to.have.deep.members(roleTypes);
@@ -408,20 +381,17 @@ describe('alks.js', function () {
 
   describe('getAWSRoleTypes', () => {
     it('should return a list of role types', async () => {
-      const _fetch = fetchMock
-        .sandbox()
-        .mock('https://your.alks-host.com/getAWSRoleTypes', {
-          body: {
-            roleTypes: '["AWS Lambda", "Amazon EC2"]',
-            statusMessage: 'Success',
-          },
-          status: 200,
-        });
+      fetchMock.route('https://your.alks-host.com/getAWSRoleTypes', {
+        body: {
+          roleTypes: '["AWS Lambda", "Amazon EC2"]',
+          statusMessage: 'Success',
+        },
+        status: 200,
+      });
 
       const result = await alks.getAWSRoleTypes({
         baseUrl: 'https://your.alks-host.com',
         accessToken: 'abc123',
-        _fetch,
       });
 
       expect(result).to.have.deep.members(['AWS Lambda', 'Amazon EC2']);
@@ -430,20 +400,17 @@ describe('alks.js', function () {
 
   describe('getNonServiceAWSRoleTypes', () => {
     it('should return a list of role types', async () => {
-      const _fetch = fetchMock
-        .sandbox()
-        .mock('https://your.alks-host.com/getNonServiceAWSRoleTypes', {
-          body: {
-            roleTypes: '["AWS Lambda", "Amazon EC2"]',
-            statusMessage: 'Success',
-          },
-          status: 200,
-        });
+      fetchMock.route('https://your.alks-host.com/getNonServiceAWSRoleTypes', {
+        body: {
+          roleTypes: '["AWS Lambda", "Amazon EC2"]',
+          statusMessage: 'Success',
+        },
+        status: 200,
+      });
 
       const result = await alks.getNonServiceAWSRoleTypes({
         baseUrl: 'https://your.alks-host.com',
         accessToken: 'abc123',
-        _fetch,
       });
 
       expect(result).to.have.deep.members(['AWS Lambda', 'Amazon EC2']);
@@ -452,22 +419,19 @@ describe('alks.js', function () {
 
   describe('getAccountRole', () => {
     it('should return the Role object representation of the https response', async () => {
-      const _fetch = fetchMock
-        .sandbox()
-        .mock('https://your.alks-host.com/getAccountRole', {
-          body: {
-            roleArn:
-              'arn:aws:iam::12391238912383:role/acct-managed/awsRoleName',
-            roleName: 'awsRoleName',
-            basicAuthUsed: false,
-            roleExists: true,
-            instanceProfileARN: 'anInstanceProfileArn',
-            isMachineIdentity: false,
-            statusMessage: 'Success',
-            maxSessionDurationInSeconds: '3600',
-          },
-          status: 200,
-        });
+      fetchMock.route('https://your.alks-host.com/getAccountRole', {
+        body: {
+          roleArn: 'arn:aws:iam::12391238912383:role/acct-managed/awsRoleName',
+          roleName: 'awsRoleName',
+          basicAuthUsed: false,
+          roleExists: true,
+          instanceProfileARN: 'anInstanceProfileArn',
+          isMachineIdentity: false,
+          statusMessage: 'Success',
+          maxSessionDurationInSeconds: '3600',
+        },
+        status: 200,
+      });
 
       const result = await alks.getAccountRole({
         baseUrl: 'https://your.alks-host.com',
@@ -475,7 +439,6 @@ describe('alks.js', function () {
         account: 'anAccount',
         role: 'Admin',
         roleName: 'awsRoleName',
-        _fetch,
       });
       expect(result).to.deep.include({
         roleArn: 'arn:aws:iam::12391238912383:role/acct-managed/awsRoleName',
@@ -485,26 +448,23 @@ describe('alks.js', function () {
       });
     });
     it('should return the Role object representation of the https response with tags', async () => {
-      const _fetch = fetchMock
-        .sandbox()
-        .mock('https://your.alks-host.com/getAccountRole', {
-          body: {
-            roleArn:
-              'arn:aws:iam::12391238912383:role/acct-managed/awsRoleName',
-            roleName: 'awsRoleName',
-            basicAuthUsed: false,
-            roleExists: true,
-            instanceProfileARN: 'anInstanceProfileArn',
-            isMachineIdentity: false,
-            tags: [
-              { key: 'key1', value: 'test:key1:value1' },
-              { key: 'key2', value: 'test:key2:value1' },
-            ],
-            maxSessionDurationInSeconds: '3600',
-            statusMessage: 'Success',
-          },
-          status: 200,
-        });
+      fetchMock.route('https://your.alks-host.com/getAccountRole', {
+        body: {
+          roleArn: 'arn:aws:iam::12391238912383:role/acct-managed/awsRoleName',
+          roleName: 'awsRoleName',
+          basicAuthUsed: false,
+          roleExists: true,
+          instanceProfileARN: 'anInstanceProfileArn',
+          isMachineIdentity: false,
+          tags: [
+            { key: 'key1', value: 'test:key1:value1' },
+            { key: 'key2', value: 'test:key2:value1' },
+          ],
+          maxSessionDurationInSeconds: '3600',
+          statusMessage: 'Success',
+        },
+        status: 200,
+      });
 
       const result = await alks.getAccountRole({
         baseUrl: 'https://your.alks-host.com',
@@ -512,8 +472,9 @@ describe('alks.js', function () {
         account: 'anAccount',
         role: 'Admin',
         roleName: 'awsRoleName',
-        _fetch,
       });
+      console.log(result);
+
       expect(result).to.deep.include({
         roleArn: 'arn:aws:iam::12391238912383:role/acct-managed/awsRoleName',
         instanceProfileArn: 'anInstanceProfileArn',
@@ -527,12 +488,10 @@ describe('alks.js', function () {
     });
 
     it('should reject with an error message when the role is not found', async () => {
-      const _fetch = fetchMock
-        .sandbox()
-        .mock('https://your.alks-host.com/getAccountRole', {
-          body: { roleARN: null, roleExists: false, statusMessage: 'Success' },
-          status: 200,
-        });
+      fetchMock.route('https://your.alks-host.com/getAccountRole', {
+        body: { roleARN: null, roleExists: false, statusMessage: 'Success' },
+        status: 200,
+      });
 
       const result = alks.getAccountRole({
         baseUrl: 'https://your.alks-host.com',
@@ -540,7 +499,6 @@ describe('alks.js', function () {
         account: 'anAccount',
         role: 'Admin',
         roleName: 'awsRoleName',
-        _fetch,
       });
 
       expect(result).to.be.rejectedWith(
@@ -551,7 +509,7 @@ describe('alks.js', function () {
 
   describe('updateRole', () => {
     it('should return the Role object representation of the https response', async () => {
-      const _fetch = fetchMock.sandbox().mock(
+      fetchMock.route(
         'https://your.alks-host.com/role',
         {
           body: {
@@ -575,7 +533,6 @@ describe('alks.js', function () {
         account: 'anAccount',
         role: 'Admin',
         roleName: 'awsRoleName',
-        _fetch,
       });
       expect(result).to.deep.include({
         roleArn: 'arn:aws:iam::12391238912383:role/acct-managed/awsRoleName',
@@ -584,7 +541,7 @@ describe('alks.js', function () {
       });
     });
     it('should return the Role object representation of the https response with tags', async () => {
-      const _fetch = fetchMock.sandbox().mock(
+      fetchMock.route(
         'https://your.alks-host.com/role',
         {
           body: {
@@ -612,7 +569,6 @@ describe('alks.js', function () {
         account: 'anAccount',
         role: 'Admin',
         roleName: 'awsRoleName',
-        _fetch,
       });
       expect(result).to.deep.include({
         roleArn: 'arn:aws:iam::12391238912383:role/acct-managed/awsRoleName',
@@ -626,7 +582,7 @@ describe('alks.js', function () {
     });
 
     it('should return success when a trust policy is updated', async () => {
-      const _fetch = fetchMock.sandbox().mock(
+      fetchMock.route(
         'https://your.alks-host.com/role',
         {
           body: {
@@ -659,7 +615,6 @@ describe('alks.js', function () {
           { key: 'key2', value: 'test:key2:value1' },
         ],
         trustPolicy: { key: 'foo', value: 'bar' },
-        _fetch,
       });
       expect(result).to.deep.include({
         roleArn: 'arn:aws:iam::12391238912383:role/acct-managed/awsRoleName',
@@ -673,7 +628,7 @@ describe('alks.js', function () {
     });
 
     it('should reject with an error message when the role is not found', async () => {
-      const _fetch = fetchMock.sandbox().mock(
+      fetchMock.route(
         'https://your.alks-host.com/role',
         {
           body: { roleARN: null, roleExists: false, statusMessage: 'Success' },
@@ -692,7 +647,6 @@ describe('alks.js', function () {
           { key: 'key1', value: 'test:key1:value1' },
           { key: 'key2', value: 'test:key2:value1' },
         ],
-        _fetch,
       });
 
       expect(result).to.be.rejectedWith(
@@ -703,18 +657,16 @@ describe('alks.js', function () {
 
   describe('createRole', () => {
     it('should return information about the newly created role', async () => {
-      const _fetch = fetchMock
-        .sandbox()
-        .mock('https://your.alks-host.com/createRole', {
-          body: {
-            roleArn: 'aRoleArn',
-            denyArns: 'denyArn1,denyArn2',
-            instanceProfileArn: 'anInstanceProfileArn',
-            addedRoleToInstanceProfile: true,
-            statusMessage: 'Success',
-          },
-          status: 200,
-        });
+      fetchMock.route('https://your.alks-host.com/createRole', {
+        body: {
+          roleArn: 'aRoleArn',
+          denyArns: 'denyArn1,denyArn2',
+          instanceProfileArn: 'anInstanceProfileArn',
+          addedRoleToInstanceProfile: true,
+          statusMessage: 'Success',
+        },
+        status: 200,
+      });
 
       const result = await alks.createRole({
         baseUrl: 'https://your.alks-host.com',
@@ -724,7 +676,6 @@ describe('alks.js', function () {
         roleName: 'awsRoleName',
         roleType: 'Amazon EC2',
         includeDefaultPolicy: 1,
-        _fetch,
       });
 
       expect(result).to.deep.include({
@@ -735,22 +686,20 @@ describe('alks.js', function () {
       });
     });
     it('should return information about the newly created role with tags', async () => {
-      const _fetch = fetchMock
-        .sandbox()
-        .mock('https://your.alks-host.com/createRole', {
-          body: {
-            roleArn: 'aRoleArn',
-            denyArns: 'denyArn1,denyArn2',
-            instanceProfileArn: 'anInstanceProfileArn',
-            addedRoleToInstanceProfile: true,
-            tags: [
-              { key: 'key1', value: 'value1' },
-              { key: 'key2', value: 'value2' },
-            ],
-            statusMessage: 'Success',
-          },
-          status: 200,
-        });
+      fetchMock.route('https://your.alks-host.com/createRole', {
+        body: {
+          roleArn: 'aRoleArn',
+          denyArns: 'denyArn1,denyArn2',
+          instanceProfileArn: 'anInstanceProfileArn',
+          addedRoleToInstanceProfile: true,
+          tags: [
+            { key: 'key1', value: 'value1' },
+            { key: 'key2', value: 'value2' },
+          ],
+          statusMessage: 'Success',
+        },
+        status: 200,
+      });
 
       const result = await alks.createRole({
         baseUrl: 'https://your.alks-host.com',
@@ -764,7 +713,6 @@ describe('alks.js', function () {
           { key: 'key1', value: 'value1' },
           { key: 'key2', value: 'value2' },
         ],
-        _fetch,
       });
 
       expect(result).to.deep.include({
@@ -779,18 +727,16 @@ describe('alks.js', function () {
       });
     });
     it('should return information about the newly created role with trust policy', async () => {
-      const _fetch = fetchMock
-        .sandbox()
-        .mock('https://your.alks-host.com/createRole', {
-          body: {
-            roleArn: 'aRoleArn',
-            denyArns: 'denyArn1,denyArn2',
-            instanceProfileArn: 'anInstanceProfileArn',
-            addedRoleToInstanceProfile: true,
-            statusMessage: 'Success',
-          },
-          status: 200,
-        });
+      fetchMock.route('https://your.alks-host.com/createRole', {
+        body: {
+          roleArn: 'aRoleArn',
+          denyArns: 'denyArn1,denyArn2',
+          instanceProfileArn: 'anInstanceProfileArn',
+          addedRoleToInstanceProfile: true,
+          statusMessage: 'Success',
+        },
+        status: 200,
+      });
 
       const result = await alks.createRole({
         baseUrl: 'https://your.alks-host.com',
@@ -800,7 +746,6 @@ describe('alks.js', function () {
         roleName: 'awsRoleName',
         trustPolicy: { key: 'foo' },
         includeDefaultPolicy: 1,
-        _fetch,
       });
 
       expect(result).to.deep.include({
@@ -812,11 +757,9 @@ describe('alks.js', function () {
     });
 
     it('should throw error if both trustPolicy and roleType provided', async () => {
-      const _fetch = fetchMock
-        .sandbox()
-        .mock('https://your.alks-host.com/createRole', {
-          body: {},
-        });
+      fetchMock.route('https://your.alks-host.com/createRole', {
+        body: {},
+      });
       const result = alks.createRole({
         baseUrl: 'https://your.alks-host.com',
         accessToken: 'abc123',
@@ -826,7 +769,6 @@ describe('alks.js', function () {
         roleType: 'Amazon EC2',
         trustPolicy: { key: 'foo' },
         includeDefaultPolicy: 1,
-        _fetch,
       });
 
       expect(result).to.be.rejectedWith(
@@ -834,11 +776,9 @@ describe('alks.js', function () {
       );
     });
     it('should throw error if neither trustPolicy or roleType provided', async () => {
-      const _fetch = fetchMock
-        .sandbox()
-        .mock('https://your.alks-host.com/createRole', {
-          body: {},
-        });
+      fetchMock.route('https://your.alks-host.com/createRole', {
+        body: {},
+      });
 
       const result = alks.createRole({
         baseUrl: 'https://your.alks-host.com',
@@ -847,7 +787,6 @@ describe('alks.js', function () {
         role: 'Admin',
         roleName: 'awsRoleName',
         includeDefaultPolicy: 1,
-        _fetch,
       });
 
       expect(result).to.be.rejectedWith(
@@ -858,18 +797,16 @@ describe('alks.js', function () {
 
   describe('createNonServiceRole', () => {
     it('should return information about the newly created role', async () => {
-      const _fetch = fetchMock
-        .sandbox()
-        .mock('https://your.alks-host.com/createNonServiceRole', {
-          body: {
-            roleArn: 'aRoleArn',
-            denyArns: 'denyArn1,denyArn2',
-            instanceProfileArn: 'anInstanceProfileArn',
-            addedRoleToInstanceProfile: true,
-            statusMessage: 'Success',
-          },
-          status: 200,
-        });
+      fetchMock.route('https://your.alks-host.com/createNonServiceRole', {
+        body: {
+          roleArn: 'aRoleArn',
+          denyArns: 'denyArn1,denyArn2',
+          instanceProfileArn: 'anInstanceProfileArn',
+          addedRoleToInstanceProfile: true,
+          statusMessage: 'Success',
+        },
+        status: 200,
+      });
 
       const result = await alks.createNonServiceRole({
         baseUrl: 'https://your.alks-host.com',
@@ -881,7 +818,6 @@ describe('alks.js', function () {
         includeDefaultPolicy: 1,
         trustArn: 'anExistingRole',
         trustType: 'Cross Account',
-        _fetch,
       });
 
       expect(result).to.deep.include({
@@ -892,22 +828,20 @@ describe('alks.js', function () {
       });
     });
     it('should return information about the newly created role with tags', async () => {
-      const _fetch = fetchMock
-        .sandbox()
-        .mock('https://your.alks-host.com/createNonServiceRole', {
-          body: {
-            roleArn: 'aRoleArn',
-            denyArns: 'denyArn1,denyArn2',
-            instanceProfileArn: 'anInstanceProfileArn',
-            addedRoleToInstanceProfile: true,
-            tags: [
-              { key: 'key1', value: 'value1' },
-              { key: 'key2', value: 'value2' },
-            ],
-            statusMessage: 'Success',
-          },
-          status: 200,
-        });
+      fetchMock.route('https://your.alks-host.com/createNonServiceRole', {
+        body: {
+          roleArn: 'aRoleArn',
+          denyArns: 'denyArn1,denyArn2',
+          instanceProfileArn: 'anInstanceProfileArn',
+          addedRoleToInstanceProfile: true,
+          tags: [
+            { key: 'key1', value: 'value1' },
+            { key: 'key2', value: 'value2' },
+          ],
+          statusMessage: 'Success',
+        },
+        status: 200,
+      });
 
       const result = await alks.createNonServiceRole({
         baseUrl: 'https://your.alks-host.com',
@@ -923,7 +857,6 @@ describe('alks.js', function () {
           { key: 'key1', value: 'value1' },
           { key: 'key2', value: 'value2' },
         ],
-        _fetch,
       });
 
       expect(result).to.deep.include({
@@ -976,22 +909,22 @@ describe('alks.js', function () {
         },
       ];
 
-      const _fetch = fetchMock
-        .sandbox()
-        .mock('https://your.alks-host.com/awsAccountRoles?account=1234567890', {
+      fetchMock.route(
+        'https://your.alks-host.com/awsAccountRoles?account=1234567890',
+        {
           body: {
             statusMessage: 'Success',
             requestId: 'reqId',
             awsRoleList: awsRoleList,
           },
           status: 200,
-        });
+        }
+      );
 
       const result = await alks.awsAccountRoles({
         baseUrl: 'https://your.alks-host.com',
         accessToken: 'abc123',
         account: '1234567890',
-        _fetch,
       });
 
       expect(result).to.have.deep.members(awsRoleList);
@@ -1000,23 +933,20 @@ describe('alks.js', function () {
 
   describe('listAWSAccountRoles', () => {
     it('should return a list of aws roles', async () => {
-      const _fetch = fetchMock
-        .sandbox()
-        .mock('https://your.alks-host.com/listAWSAccountRoles', {
-          body: {
-            jsonAWSRoleList:
-              '["arn:aws:iam::123:role/acct-managed/arn1","arn:aws:iam::123:role/acct-managed/arn2"]',
-            statusMessage: null,
-          },
-          status: 200,
-        });
+      fetchMock.route('https://your.alks-host.com/listAWSAccountRoles', {
+        body: {
+          jsonAWSRoleList:
+            '["arn:aws:iam::123:role/acct-managed/arn1","arn:aws:iam::123:role/acct-managed/arn2"]',
+          statusMessage: null,
+        },
+        status: 200,
+      });
 
       const result = await alks.listAWSAccountRoles({
         baseUrl: 'https://your.alks-host.com',
         accessToken: 'abc123',
         account: 'anAccount',
         role: 'Admin',
-        _fetch,
       });
 
       expect(result).to.have.members(['arn1', 'arn2']);
@@ -1025,12 +955,10 @@ describe('alks.js', function () {
 
   describe('deleteRole', () => {
     it('should return true when successful', async () => {
-      const _fetch = fetchMock
-        .sandbox()
-        .mock('https://your.alks-host.com/deleteRole', {
-          body: { statusMessage: 'Success' },
-          status: 200,
-        });
+      fetchMock.route('https://your.alks-host.com/deleteRole', {
+        body: { statusMessage: 'Success' },
+        status: 200,
+      });
 
       const result = await alks.deleteRole({
         baseUrl: 'https://your.alks-host.com',
@@ -1038,7 +966,6 @@ describe('alks.js', function () {
         account: 'anAccount',
         role: 'Admin',
         roleName: 'awsRoleName',
-        _fetch,
       });
 
       expect(result).to.be.true;
@@ -1047,17 +974,15 @@ describe('alks.js', function () {
 
   describe('createAccessKeys', () => {
     it('should return keys and information about the keys', async () => {
-      const _fetch = fetchMock
-        .sandbox()
-        .mock('https://your.alks-host.com/accessKeys', {
-          body: {
-            iamUserArn: 'anIAMUserArn',
-            accessKey: 'foo',
-            secretKey: 'bar',
-            addedIAMUserToGroup: true,
-          },
-          status: 200,
-        });
+      fetchMock.route('https://your.alks-host.com/accessKeys', {
+        body: {
+          iamUserArn: 'anIAMUserArn',
+          accessKey: 'foo',
+          secretKey: 'bar',
+          addedIAMUserToGroup: true,
+        },
+        status: 200,
+      });
 
       const result = await alks.createAccessKeys({
         baseUrl: 'https://your.alks-host.com',
@@ -1065,7 +990,6 @@ describe('alks.js', function () {
         account: 'anAccount',
         role: 'Admin',
         iamUserName: 'awsUserName',
-        _fetch,
       });
 
       expect(result).to.deep.include({
@@ -1079,7 +1003,7 @@ describe('alks.js', function () {
 
   describe('getIamUser', () => {
     it('should return accessKey and info about the user, including tags', async () => {
-      const _fetch = fetchMock.sandbox().mock(
+      fetchMock.route(
         'https://your.alks-host.com/iam-users/id/anAccountId/anIamUserName',
         {
           body: {
@@ -1104,7 +1028,6 @@ describe('alks.js', function () {
         accessToken: 'anAccessKey',
         account: 'anAccountId',
         iamUserName: 'anIamUserName',
-        _fetch,
       });
 
       expect(result).to.deep.include({
@@ -1119,7 +1042,7 @@ describe('alks.js', function () {
       });
     });
     it('should return keys and information about the user even when no tags present', async () => {
-      const _fetch = fetchMock.sandbox().mock(
+      fetchMock.route(
         'https://your.alks-host.com/iam-users/id/anAccountId/anIamUserName',
         {
           body: {
@@ -1140,7 +1063,6 @@ describe('alks.js', function () {
         accessToken: 'anAccessKey',
         account: 'anAccountId',
         iamUserName: 'anIamUserName',
-        _fetch,
       });
 
       expect(result).to.deep.include({
@@ -1154,7 +1076,7 @@ describe('alks.js', function () {
 
   describe('updateIamUser', () => {
     it('should return keys and information about the updated user', async () => {
-      const _fetch = fetchMock.sandbox().mock(
+      fetchMock.route(
         'https://your.alks-host.com/iam-users/id/anAccountId/anIamUserName',
         {
           body: {
@@ -1183,7 +1105,6 @@ describe('alks.js', function () {
           { key: 'key1', value: 'value1' },
           { key: 'key2', value: 'value2' },
         ],
-        _fetch,
       });
 
       expect(result).to.deep.include({
@@ -1198,7 +1119,7 @@ describe('alks.js', function () {
       });
     });
     it('should return keys and information about the updated user when no tags included in request', async () => {
-      const _fetch = fetchMock.sandbox().mock(
+      fetchMock.route(
         'https://your.alks-host.com/iam-users/id/anAccountId/anIamUserName',
         {
           body: {
@@ -1223,7 +1144,6 @@ describe('alks.js', function () {
         accessToken: 'anAccessKey',
         account: 'anAccountId',
         iamUserName: 'anIamUserName',
-        _fetch,
       });
 
       expect(result).to.deep.include({
@@ -1241,7 +1161,7 @@ describe('alks.js', function () {
 
   describe('deleteIAMUser', () => {
     it('should return true if successful', async () => {
-      const _fetch = fetchMock.sandbox().mock(
+      fetchMock.route(
         'https://your.alks-host.com/IAMUser',
         {
           body: { statusMessage: 'Success' },
@@ -1256,7 +1176,6 @@ describe('alks.js', function () {
         account: 'anAccount',
         role: 'Admin',
         riamUserName: 'awsUserName',
-        _fetch,
       });
 
       expect(result).to.be.true;
@@ -1265,22 +1184,19 @@ describe('alks.js', function () {
 
   describe('create', () => {
     it('should return a functional alks object', async () => {
-      const _fetch = fetchMock
-        .sandbox()
-        .mock('https://your.alks-host.com/getKeys', {
-          body: {
-            accessKey: 'foo',
-            secretKey: 'bar',
-            sessionToken: 'baz',
-            statusMessage: 'Success',
-          },
-          status: 200,
-        });
+      fetchMock.route('https://your.alks-host.com/getKeys', {
+        body: {
+          accessKey: 'foo',
+          secretKey: 'bar',
+          sessionToken: 'baz',
+          statusMessage: 'Success',
+        },
+        status: 200,
+      });
 
       const myAlks = alks.create({
         baseUrl: 'https://your.alks-host.com',
         accessToken: 'abc123',
-        _fetch,
       });
 
       const keys = await myAlks.getKeys({
@@ -1293,41 +1209,38 @@ describe('alks.js', function () {
     });
 
     it('should return a functional alks object without requiring any optional properties', async () => {
-      const _fetch = fetchMock
-        .sandbox()
-        .mock('https://your.alks-host.com/getAccounts', {
-          body: {
-            statusMessage: 'Success',
-            accountListRole: {
-              '1234 - foobar': [
-                {
-                  account: '1234',
-                  role: 'role1',
-                  iamKeyActive: true,
-                  maxKeyDuration: 2,
-                  securityLevel: '1',
-                  skypieaAccount: null,
-                },
-              ],
-              '2345 - foobar': [
-                {
-                  account: '2345',
-                  role: 'role2',
-                  iamKeyActive: false,
-                  maxKeyDuration: 36,
-                  securityLevel: '1',
-                  skypieaAccount: null,
-                },
-              ],
-            },
+      fetchMock.route('https://your.alks-host.com/getAccounts', {
+        body: {
+          statusMessage: 'Success',
+          accountListRole: {
+            '1234 - foobar': [
+              {
+                account: '1234',
+                role: 'role1',
+                iamKeyActive: true,
+                maxKeyDuration: 2,
+                securityLevel: '1',
+                skypieaAccount: null,
+              },
+            ],
+            '2345 - foobar': [
+              {
+                account: '2345',
+                role: 'role2',
+                iamKeyActive: false,
+                maxKeyDuration: 36,
+                securityLevel: '1',
+                skypieaAccount: null,
+              },
+            ],
           },
-          status: 200,
-        });
+        },
+        status: 200,
+      });
 
       const myAlks = alks.create({
         baseUrl: 'https://your.alks-host.com',
         accessToken: 'abc123',
-        _fetch,
       });
 
       const accounts = await myAlks.getAccounts();
@@ -1342,19 +1255,16 @@ describe('alks.js', function () {
     });
 
     it('should return a copy with defaults from the passed-in alks object', async () => {
-      const _fetch = fetchMock
-        .sandbox()
-        .mock('https://your.alks-host.com/version', {
-          body: {
-            version: '1.2.3.4',
-          },
-          status: 200,
-        });
+      fetchMock.route('https://your.alks-host.com/version', {
+        body: {
+          version: '1.2.3.4',
+        },
+        status: 200,
+      });
 
       const alks1 = alks.create({
         baseUrl: 'https://your.alks-host.com',
         accessToken: 'abc123',
-        _fetch,
       });
 
       const alks2 = await alks1.create({});
@@ -1369,19 +1279,16 @@ describe('alks.js', function () {
 
   describe('version', () => {
     it(`should return ALKS's version`, async () => {
-      const _fetch = fetchMock
-        .sandbox()
-        .mock('https://your.alks-host.com/version', {
-          body: {
-            version: '1.2.3.4',
-          },
-          status: 200,
-        });
+      fetchMock.route('https://your.alks-host.com/version', {
+        body: {
+          version: '1.2.3.4',
+        },
+        status: 200,
+      });
 
       const myAlks = alks.create({
         baseUrl: 'https://your.alks-host.com',
         accessToken: 'abc123',
-        _fetch,
       });
 
       const result = await myAlks.version();
@@ -1401,24 +1308,21 @@ describe('alks.js', function () {
       const iamKeyActive = true;
       const maxKeyDuration = 12;
 
-      const _fetch = fetchMock
-        .sandbox()
-        .mock(`${baseUrl}/loginRoles/id/${accountId}/${role}`, {
-          body: {
-            loginRole: {
-              account,
-              role,
-              iamKeyActive,
-              maxKeyDuration,
-            },
+      fetchMock.route(`${baseUrl}/loginRoles/id/${accountId}/${role}`, {
+        body: {
+          loginRole: {
+            account,
+            role,
+            iamKeyActive,
+            maxKeyDuration,
           },
-          status: 200,
-        });
+        },
+        status: 200,
+      });
 
       const myAlks = alks.create({
         baseUrl,
         accessToken: 'abc123',
-        _fetch,
       });
 
       const result = await myAlks.getLoginRole({
@@ -1441,7 +1345,7 @@ describe('alks.js', function () {
       const accessToken = 'abcde12345';
       const expiresIn = 3600;
 
-      const _fetch = fetchMock.sandbox().mock(`${baseUrl}/accessToken`, {
+      fetchMock.route(`${baseUrl}/accessToken`, {
         body: {
           accessToken,
           expiresIn,
@@ -1452,7 +1356,6 @@ describe('alks.js', function () {
       const myAlks = alks.create({
         baseUrl,
         accessToken: 'abc123',
-        _fetch,
       });
 
       const result = await myAlks.getAccessToken();
@@ -1482,7 +1385,7 @@ describe('alks.js', function () {
         },
       ];
 
-      const _fetch = fetchMock.sandbox().mock(`${baseUrl}/refreshTokens`, {
+      fetchMock.route(`${baseUrl}/refreshTokens`, {
         body: {
           refreshTokens,
         },
@@ -1492,7 +1395,6 @@ describe('alks.js', function () {
       const myAlks = alks.create({
         baseUrl,
         accessToken: 'abc123',
-        _fetch,
       });
 
       const result = await myAlks.getRefreshTokens();
@@ -1506,7 +1408,7 @@ describe('alks.js', function () {
       const baseUrl = 'https://your.alks-host.com';
       const tokenId = '01234';
 
-      const _fetch = fetchMock.sandbox().mock(`${baseUrl}/revoke`, {
+      fetchMock.route(`${baseUrl}/revoke`, {
         body: {
           statusMessage: 'Success',
         },
@@ -1516,7 +1418,6 @@ describe('alks.js', function () {
       const myAlks = alks.create({
         baseUrl,
         accessToken: 'abc123',
-        _fetch,
       });
 
       const result = await myAlks.revoke({ tokenId });
@@ -1530,20 +1431,16 @@ describe('alks.js', function () {
       const baseUrl = 'https://your.alks-host.com';
       const roleARN = 'arn:aws:iam::123:role/acct-managed/awsRoleName';
 
-      const _fetch = fetchMock
-        .sandbox()
-        .mock(`${baseUrl}/roleMachineIdentity`, {
-          body: {
-            machineIdentityArn:
-              'arn:aws:iam::123:role/acct-managed/awsRoleName',
-          },
-          status: 200,
-        });
+      fetchMock.route(`${baseUrl}/roleMachineIdentity`, {
+        body: {
+          machineIdentityArn: 'arn:aws:iam::123:role/acct-managed/awsRoleName',
+        },
+        status: 200,
+      });
 
       const myAlks = alks.create({
         baseUrl,
         accessToken: 'abc123',
-        _fetch,
       });
 
       const result = await myAlks.addRoleMachineIdentity({ roleARN });
@@ -1557,7 +1454,7 @@ describe('alks.js', function () {
       const baseUrl = 'https://your.alks-host.com';
       const roleARN = 'arn:aws:iam::123:role/acct-managed/awsRoleName';
 
-      const _fetch = fetchMock.sandbox().mock(
+      fetchMock.route(
         `${baseUrl}/roleMachineIdentity`,
         {
           body: {
@@ -1572,7 +1469,6 @@ describe('alks.js', function () {
       const myAlks = alks.create({
         baseUrl,
         accessToken: 'abc123',
-        _fetch,
       });
 
       const result = await myAlks.deleteRoleMachineIdentity({ roleARN });
@@ -1586,7 +1482,7 @@ describe('alks.js', function () {
       const baseUrl = 'https://your.alks-host.com';
       const accountId = '012345678910';
 
-      const _fetch = fetchMock.sandbox().mock(
+      fetchMock.route(
         `${baseUrl}/userAccess/${accountId}`,
         {
           body: {
@@ -1600,7 +1496,6 @@ describe('alks.js', function () {
       const myAlks = alks.create({
         baseUrl,
         accessToken: 'abc123',
-        _fetch,
       });
 
       const result = await myAlks.getUserAccess({ accountId });
@@ -1614,7 +1509,7 @@ describe('alks.js', function () {
       const baseUrl = 'https://your.alks-host.com';
       const accountId = '012345678910';
 
-      const _fetch = fetchMock.sandbox().mock(
+      fetchMock.route(
         `${baseUrl}/reports/users-by-role?accountId=${accountId}`,
         {
           body: {
@@ -1630,7 +1525,6 @@ describe('alks.js', function () {
       const myAlks = alks.create({
         baseUrl,
         accessToken: 'abc123',
-        _fetch,
       });
 
       const result = await myAlks.getUserAccessByRole({ accountId });
@@ -1647,7 +1541,7 @@ describe('alks.js', function () {
       const sAMAccountName = 'bob1';
       const roles = ['Admin', 'LabAdmin'];
 
-      const _fetch = fetchMock.sandbox().mock(
+      fetchMock.route(
         `${baseUrl}/userAccess/roles/${accountId}`,
         {
           body: {
@@ -1662,7 +1556,6 @@ describe('alks.js', function () {
       const myAlks = alks.create({
         baseUrl,
         accessToken: 'abc123',
-        _fetch,
       });
 
       const result = await myAlks.getUserRoleAccess({
@@ -1687,7 +1580,7 @@ describe('alks.js', function () {
         title: 'CEO',
       };
 
-      const _fetch = fetchMock.sandbox().mock(
+      fetchMock.route(
         `${baseUrl}/userAccess/owners/${accountId}`,
         {
           body: {
@@ -1701,7 +1594,6 @@ describe('alks.js', function () {
       const myAlks = alks.create({
         baseUrl,
         accessToken: 'abc123',
-        _fetch,
       });
 
       const result = await myAlks.getAccountOwners({ accountId });
@@ -1739,7 +1631,7 @@ describe('alks.js', function () {
         },
       };
 
-      const _fetch = fetchMock.sandbox().mock(
+      fetchMock.route(
         `${baseUrl}/costTotals/${accountId}`,
         {
           body: {
@@ -1753,7 +1645,6 @@ describe('alks.js', function () {
       const myAlks = alks.create({
         baseUrl,
         accessToken: 'abc123',
-        _fetch,
       });
 
       const result = await myAlks.getCostTotals({ accountId });
