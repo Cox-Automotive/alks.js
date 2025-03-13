@@ -236,6 +236,8 @@ declare namespace ALKS {
         account: string;
         role: string;
         sessionTime: number;
+        changeRequestNumber?: string;
+        primaryCI?: string;
     };
     export type GetAWSRoleTypesProps = Partial<AlksProps> & {};
     export type GetNonServiceAWSRoleTypesProps = Partial<AlksProps> & {};

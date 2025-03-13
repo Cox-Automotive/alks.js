@@ -286,6 +286,8 @@ namespace ALKS {
     account: string;
     role: string;
     sessionTime: number;
+    changeRequestNumber?: string;
+    primaryCI?: string;
   };
 
   export type GetAWSRoleTypesProps = Partial<AlksProps> & {};
