@@ -15,6 +15,7 @@ namespace ALKS {
     baseUrl: string;
     _fetch?: Fetch;
     userAgent?: string;
+    headers?: Record<string, string>;
   }
 
   function isStsAuth(a: Auth): a is StsAuth {
@@ -1510,6 +1511,13 @@ namespace ALKS {
       if (opts.userAgent) {
         headers['User-Agent'] += ` ${opts.userAgent}`;
         delete payload.userAgent;
+      }
+
+      if (opts.headers) {
+        for (const [key, value] of Object.entries(opts.headers)) {
+          headers[key] = value;
+        }
+        delete payload.headers;
       }
 
       const response = await (opts._fetch as Fetch)(`${opts.baseUrl}/${path}`, {
