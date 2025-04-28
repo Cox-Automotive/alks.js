@@ -1210,9 +1210,9 @@ var ALKS;
             if (args === void 0) { args = {}; }
             if (method === void 0) { method = 'POST'; }
             return tslib_1.__awaiter(this, void 0, void 0, function () {
-                var opts, payload, headers, credentials, response, json, err_1;
-                return tslib_1.__generator(this, function (_a) {
-                    switch (_a.label) {
+                var opts, payload, headers, _i, _a, _b, key, value, credentials, _c, _d, _e, key, value, response, json, err_1;
+                return tslib_1.__generator(this, function (_f) {
+                    switch (_f.label) {
                         case 0:
                             opts = tslib_1.__assign(tslib_1.__assign({}, this.config), args);
                             payload = tslib_1.__assign({}, opts);
@@ -1220,6 +1220,12 @@ var ALKS;
                                 'Content-Type': 'application/json',
                                 'User-Agent': "AlksJS/".concat(packageJson.version),
                             };
+                            if (opts.headers) {
+                                for (_i = 0, _a = Object.entries(opts.headers); _i < _a.length; _i++) {
+                                    _b = _a[_i], key = _b[0], value = _b[1];
+                                    headers[key] = value;
+                                }
+                            }
                             if (isTokenAuth(opts)) {
                                 headers['Authorization'] = "Bearer ".concat(opts.accessToken);
                                 delete payload.accessToken;
@@ -1244,6 +1250,13 @@ var ALKS;
                                 headers['User-Agent'] += " ".concat(opts.userAgent);
                                 delete payload.userAgent;
                             }
+                            if (opts.headers) {
+                                for (_c = 0, _d = Object.entries(opts.headers); _c < _d.length; _c++) {
+                                    _e = _d[_c], key = _e[0], value = _e[1];
+                                    headers[key] = value;
+                                }
+                                delete payload.headers;
+                            }
                             return [4 /*yield*/, opts._fetch("".concat(opts.baseUrl, "/").concat(path), {
                                     method: method,
                                     headers: headers,
@@ -1251,16 +1264,16 @@ var ALKS;
                                     body: method == 'GET' ? undefined : JSON.stringify(payload),
                                 })];
                         case 1:
-                            response = _a.sent();
-                            _a.label = 2;
+                            response = _f.sent();
+                            _f.label = 2;
                         case 2:
-                            _a.trys.push([2, 4, , 5]);
+                            _f.trys.push([2, 4, , 5]);
                             return [4 /*yield*/, response.json()];
                         case 3:
-                            json = _a.sent();
+                            json = _f.sent();
                             return [3 /*break*/, 5];
                         case 4:
-                            err_1 = _a.sent();
+                            err_1 = _f.sent();
                             json = {
                                 errors: [err_1.message],
                             };

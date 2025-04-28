@@ -4,6 +4,7 @@ declare namespace ALKS {
         baseUrl: string;
         _fetch?: Fetch;
         userAgent?: string;
+        headers?: Record<string, string>;
     }
     interface StsAuth {
         accessKey: string;
