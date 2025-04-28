@@ -1485,12 +1485,6 @@ namespace ALKS {
         'User-Agent': `AlksJS/${packageJson.version}`,
       };
 
-      if (opts.headers) {
-        for (const [key, value] of Object.entries(opts.headers)) {
-          headers[key] = value;
-        }
-      }
-
       if (isTokenAuth(opts)) {
         headers['Authorization'] = `Bearer ${opts.accessToken}`;
         delete payload.accessToken;
