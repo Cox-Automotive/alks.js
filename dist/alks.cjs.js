@@ -127,6 +127,7 @@ var ALKS;
                                     'sessionToken',
                                     'consoleURL',
                                     'sessionTime',
+                                    'changeRequestNumber',
                                 ])];
                     }
                 });
@@ -167,6 +168,7 @@ var ALKS;
                                     'sessionToken',
                                     'consoleURL',
                                     'sessionTime',
+                                    'changeRequestNumber',
                                 ])];
                     }
                 });

@@ -2688,6 +2688,7 @@
 	                                    'sessionToken',
 	                                    'consoleURL',
 	                                    'sessionTime',
+	                                    'changeRequestNumber',
 	                                ])];
 	                    }
 	                });
@@ -2728,6 +2729,7 @@
 	                                    'sessionToken',
 	                                    'consoleURL',
 	                                    'sessionTime',
+	                                    'changeRequestNumber',
 	                                ])];
 	                    }
 	                });

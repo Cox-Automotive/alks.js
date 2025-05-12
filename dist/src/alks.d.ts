@@ -103,6 +103,7 @@ declare namespace ALKS {
         sessionToken: string;
         consoleURL: string;
         sessionTime: number;
+        changeRequestNumber: string;
     }
     /**
      * Response containing access keys.
