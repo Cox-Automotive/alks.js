@@ -84,7 +84,7 @@ describe('alks.js', function () {
       consoleErrorSpy.restore();
     });
 
-    it('should return an access key, secret key, session token and console URL', async () => {
+    it('should return an access key, secret key, session token, console URL and change request number.', async () => {
       fetchMock.post('https://your.alks-host.com/getKeys', {
         body: {
           accessKey: 'foo',
@@ -107,6 +107,7 @@ describe('alks.js', function () {
 
       expect(result).to.have.keys(
         'accessKey',
+        'changeRequestNumber',
         'secretKey',
         'sessionToken',
         'consoleURL',
@@ -273,6 +274,7 @@ describe('alks.js', function () {
 
       expect(result).to.have.keys(
         'accessKey',
+        'changeRequestNumber',
         'secretKey',
         'sessionToken',
         'consoleURL',

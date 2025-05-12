@@ -136,6 +136,7 @@ namespace ALKS {
     sessionToken: string;
     consoleURL: string;
     sessionTime: number;
+    changeRequestNumber: string;
   }
 
   /**
@@ -523,6 +524,7 @@ namespace ALKS {
         'sessionToken',
         'consoleURL',
         'sessionTime',
+        'changeRequestNumber',
       ]);
     }
 
@@ -555,6 +557,7 @@ namespace ALKS {
         'sessionToken',
         'consoleURL',
         'sessionTime',
+        'changeRequestNumber',
       ]);
     }
 
