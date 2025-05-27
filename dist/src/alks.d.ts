@@ -34,6 +34,7 @@ declare namespace ALKS {
         iamKeyActive: boolean;
         maxKeyDuration: number;
         securityLevel: string;
+        accountType: string;
         skypieaAccount: SkypieaAccount | null;
     }
     /**

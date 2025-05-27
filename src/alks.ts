@@ -63,6 +63,7 @@ namespace ALKS {
     iamKeyActive: boolean;
     maxKeyDuration: number;
     securityLevel: string;
+    accountType: string;
     skypieaAccount: SkypieaAccount | null;
   }
 
@@ -491,6 +492,7 @@ namespace ALKS {
         iamKeyActive: results.accountListRole[key][0].iamKeyActive,
         maxKeyDuration: results.accountListRole[key][0].maxKeyDuration,
         securityLevel: results.accountListRole[key][0].securityLevel,
+        accountType: results.accountListRole[key][0].accountType,
         skypieaAccount: results.accountListRole[key][0].skypieaAccount,
       }));
     }
@@ -1357,6 +1359,7 @@ namespace ALKS {
         'iamKeyActive',
         'maxKeyDuration',
         'securityLevel',
+        'accountType',
       ]);
     }
 
