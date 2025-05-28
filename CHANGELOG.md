@@ -1,4 +1,5 @@
 # Changelog
 
-* Updates Client init to allow for custom headers
-* Updated tests to test for ChangeRequestNumber in getKeys calls.
+* Updates Account to have an accountType field.
+* Updates GetAccounts to return accounts with the new accountType field.
+* Updates getLoginRoles to return the accountType field.
