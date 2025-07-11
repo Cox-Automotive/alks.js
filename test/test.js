@@ -285,6 +285,34 @@ describe('alks.js', function () {
         'sessionTime'
       );
     });
+
+    it('should include category in the request payload when provided', async () => {
+      fetchMock.route('https://your.alks-host.com/getIAMKeys', {
+        body: {
+          accessKey: 'foo',
+          secretKey: 'bar',
+          sessionToken: 'baz',
+          consoleURL: 'https://foo.com',
+          sessionTime: 1,
+          statusMessage: 'Success',
+        },
+        status: 200,
+      });
+
+      const category = 'TestCategory';
+      await alks.getIAMKeys({
+        baseUrl: 'https://your.alks-host.com',
+        account: 'anAccount',
+        role: 'IAMAdmin',
+        sessionTime: 1,
+        accessToken: 'abc123',
+        category,
+      });
+
+      const lastCall = fetchMock.callHistory.lastCall();
+      const requestBody = JSON.parse(lastCall.args[1].body);
+      expect(requestBody.category).to.equal(category);
+    });
   });
 
   describe('getAllAWSRoleTypes', () => {
