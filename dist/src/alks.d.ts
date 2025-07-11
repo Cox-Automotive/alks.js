@@ -242,6 +242,7 @@ declare namespace ALKS {
         changeRequestNumber?: string;
         primaryCI?: string;
         description?: string;
+        category?: string;
     };
     export type GetAWSRoleTypesProps = Partial<AlksProps> & {};
     export type GetNonServiceAWSRoleTypesProps = Partial<AlksProps> & {};
