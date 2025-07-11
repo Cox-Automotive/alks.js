@@ -17,7 +17,7 @@ For browser usage, it expects `fetch` (and Promises) [to be available](http://ca
 
 ## Installation
 
-Install with [NPM](https://www.npmjs.com/package/alks.js) like this
+Install with [NPM](https://www.npmjs.com/package/alks.js) like this,
 ```
 npm install alks.js
 ```
