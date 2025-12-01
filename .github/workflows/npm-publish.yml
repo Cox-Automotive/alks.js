@@ -46,7 +46,7 @@ jobs:
         env:
           JF_URL: https://artifactory.coxautoinc.com
         with:
-          oidc-provider-name: ghes
+          oidc-provider-name: ghec
 
       - name: Configure npm to use Artifactory
         run: |
