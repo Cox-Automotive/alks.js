@@ -13,6 +13,8 @@ jobs:
   build-and-test:
 
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
 
     strategy:
       matrix:
@@ -24,13 +26,24 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
+
+    - name: Set up Artifactory Auth with OIDC
+      uses: jfrog/setup-jfrog-cli@v4
+      env:
+        JF_URL: https://artifactory.coxautoinc.com
+      with:
+        oidc-provider-name: ghes
+
+    - name: Configure npm to use Artifactory
+      run: |
+        jf npm-config --repo-resolve cai-npm --server-id-resolve setup-jfrog-cli-server
     
     # If this step is failing with an E401, it's probably because the package-lock.json is specifying dependencies that are not available in the public npm registry 
     # (which would happen if your local NPM is set up to use the CoxAuto private NPM registry). To fix this, delete the node_modules folder and package-lock.json
     # files, and then run `npm i --registry https://registry.npmjs.org` locally. This will generate a new package-lock.json file that only references packages 
     # available in the public npm registry.
     - name: Install dependencies
-      run: npm ci
+      run: jf npm ci
     - run: npm run build --if-present
     - name: Run tests
       run: npm test
