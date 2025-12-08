@@ -1,3 +1,3 @@
 # Changelog
 
-* Updates GetIAMKeys to include the optional Category field.
+* Updates to use CAI Artifactory to pull dependencies
