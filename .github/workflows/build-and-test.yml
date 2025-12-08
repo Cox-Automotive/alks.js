@@ -32,7 +32,7 @@ jobs:
       env:
         JF_URL: https://artifactory.coxautoinc.com
       with:
-        oidc-provider-name: ghec
+        oidc-provider-name: gh-public
 
     - name: Configure npm to use Artifactory
       run: |
