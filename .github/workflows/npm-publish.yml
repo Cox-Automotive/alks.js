@@ -27,6 +27,9 @@ jobs:
     needs: 
       - get_pull_request
     if: ${{ contains(needs.get_pull_request.outputs.pull_request_labels, 'release/patch') || contains(needs.get_pull_request.outputs.pull_request_labels, 'release/minor') || contains(needs.get_pull_request.outputs.pull_request_labels, 'release/major') }}
+    permissions:
+      id-token: write
+      contents: read
     steps:
       - name: Check out repository code
         uses: actions/checkout@v2
@@ -38,6 +41,17 @@ jobs:
           node-version: 20
           registry-url: https://registry.npmjs.org/
 
+      - name: Set up Artifactory Auth with OIDC
+        uses: jfrog/setup-jfrog-cli@v4
+        env:
+          JF_URL: https://artifactory.coxautoinc.com
+        with:
+          oidc-provider-name: gh-public
+
+      - name: Configure npm to use Artifactory
+        run: |
+          jf npm-config --repo-resolve cai-npm --server-id-resolve setup-jfrog-cli-server
+
       - name: Set github user
         run: |
           git config --global user.name 'github-actions[bot]'
@@ -45,7 +59,7 @@ jobs:
 
       # need to run npm install before npm version so that husky's precommit hooks rebuild the dist/ folder
       - name: install dependencies
-        run: npm ci
+        run: jf npm ci
 
       - name: Get the release level (major/minor/patch) from the labels
         uses: actions-ecosystem/action-release-label@955bf130fba6be3d99d2c14457d0dc7f176bc563

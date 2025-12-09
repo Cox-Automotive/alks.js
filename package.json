@@ -13,7 +13,7 @@
     "clean": "npm run rmdirs && npm run mkdirs",
     "rollup": "rollup -c rollup.config.js",
     "minify": "uglifyjs -m reserved=[\"global\"] -c < dist/alks.umd.js > dist/alks.min.js",
-    "build": "npm run clean && npm run compile && npm run rollup && npm run minify",
+    "build": "npm config get registry && npm run clean && npm run compile && npm run rollup && npm run minify",
     "lint": "prettier --write --no-error-on-unmatched-pattern {src,test}/**/*.{ts,js,json,md}",
     "test": "npm run build && npm run lint && npm run mocha",
     "mocha": "nyc mocha test/test.js",
