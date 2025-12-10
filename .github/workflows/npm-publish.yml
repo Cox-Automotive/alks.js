@@ -124,9 +124,11 @@ jobs:
           release_name: ${{ steps.previoustag.outputs.tag }}
           body: ${{ steps.get_changelog.outputs.contents }}
 
-      - name: Switch npm registry back to npmjs to publish package
-        run: npm config set registry https://registry.npmjs.org/
+      - name: Configure npm for npmjs publishing
+        run: |
+          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > .npmrc
+          echo "registry=https://registry.npmjs.org/" >> .npmrc
 
-      - run: npm publish --registry=https://registry.npmjs.org/
+      - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
