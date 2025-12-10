@@ -1,3 +1,3 @@
 # Changelog
 
-* Explicitly push to npmjs.org for npm publish
+* Push to npmjs.org for npm publish   
