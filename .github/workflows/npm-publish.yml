@@ -127,6 +127,6 @@ jobs:
       - name: Switch npm registry back to npmjs to publish package
         run: npm config set registry https://registry.npmjs.org/
 
-      - run: npm publish
+      - run: npm publish --registry=https://registry.npmjs.org/
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
