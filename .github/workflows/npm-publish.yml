@@ -128,4 +128,6 @@ jobs:
         run: |
           echo "registry=https://registry.npmjs.org/" > .npmrc
 
-      - run: npm publish
+      - run: |
+          unset NODE_AUTH_TOKEN
+          npm publish
