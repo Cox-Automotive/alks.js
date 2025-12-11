@@ -1,3 +1,3 @@
 # Changelog
 
-* Push to npmjs.org with OIDC 
+* Push to npmjs.org registry with OIDC
