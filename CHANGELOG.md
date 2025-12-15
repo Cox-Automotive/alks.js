@@ -1,3 +1,3 @@
 # Changelog
 
-* Fix npm publishing with OIDC provenance and proper token isolation between Artifactory and npmjs.org registries
+* Update node version to 22 in npm-publish 
