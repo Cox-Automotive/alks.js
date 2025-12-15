@@ -1,3 +1,3 @@
 # Changelog
 
-* Update node version to 22 in npm-publish 
+* Update node version to 24 in npm-publish 
