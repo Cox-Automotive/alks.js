@@ -36,10 +36,9 @@ jobs:
         with:
           token: ${{ secrets._GITHUB_TOKEN }}
 
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v4
         with:
           node-version: 20
-          registry-url: https://registry.npmjs.org/
 
       - name: Set up Artifactory Auth with OIDC
         uses: jfrog/setup-jfrog-cli@v4
@@ -128,6 +127,7 @@ jobs:
         run: |
           echo "registry=https://registry.npmjs.org/" > .npmrc
 
-      - run: |
+      - name: Publish to npm with OIDC provenance
+        run: |
           unset NODE_AUTH_TOKEN
-          npm publish
+          npm publish --provenance --access public
