@@ -1,3 +1,3 @@
 # Changelog
 
-* Push to npmjs.org registry with OIDC
+* Fix npm publishing with OIDC provenance and proper token isolation between Artifactory and npmjs.org registries
