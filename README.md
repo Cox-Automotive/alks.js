@@ -1,3 +1,5 @@
+> **This repository has moved.** The canonical source is now at [`ghe.coxautoinc.com/ETS-CloudAutomation/alks.js`](https://ghe.coxautoinc.com/ETS-CloudAutomation/alks.js). This repo is archived and no longer maintained.
+
 # alks.js
 
 ![Build Status](https://github.com/Cox-Automotive/alks.js/actions/workflows/build-and-test.yml/badge.svg)
